@@ -68,7 +68,7 @@ dom.onLoad(function onLoad(){
 
 				lastPosition = newPosition;
 
-				socketClient.reply('touchPadPosition', positionDifference);
+				socketClient.reply('touchPadMove', positionDifference);
 			};
 
 			var touchPadDrop = function(evt){
