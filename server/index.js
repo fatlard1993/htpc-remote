@@ -35,16 +35,22 @@ app.use('/fonts', staticServer(path.join(__dirname, '../client/fonts')));
 
 app.get('/home', sendPage('home'));
 
-socketServer.createEndpoint('touchPadMove', function(position){
-	exec(`xdotool mousemove_relative ${position.x} ${position.y}`);
-});
+socketServer.registerEndpoints({
+	touchPadMove: function(position){
+		log(`xdotool mousemove_relative ${position.x} ${position.y}`);
 
-socketServer.createEndpoint('rightMouseButton', function(){
-	exec('xdotool click --clearmodifiers 3');
-});
+		exec(`xdotool mousemove_relative ${position.x} ${position.y}`);
+	},
+	rightMouseButton: function(){
+		log('xdotool click --clearmodifiers 3');
 
-socketServer.createEndpoint('leftMouseButton', function(){
-	exec('xdotool click --clearmodifiers 1');
+		exec('xdotool click --clearmodifiers 3');
+	},
+	leftMouseButton: function(){
+		log('xdotool click --clearmodifiers 1');
+
+		exec('xdotool click --clearmodifiers 1');
+	}
 });
 
 stdin.addListener('data', function(data){

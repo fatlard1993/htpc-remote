@@ -22,10 +22,6 @@ if [ "$1" == "dev" ]; then
 	echo -e "Removing package-lock.json\n"
 
 	rm -f ./package-lock.json
-
-	echo -e "Setting key permissions\n"
-
-	chmod 400 ./etc/keys/dev
 fi
 
 git clean -xdf
