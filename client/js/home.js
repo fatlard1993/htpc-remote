@@ -46,8 +46,8 @@ dom.onLoad(function onLoad(){
 
 			var getPositionDifference = function(position1, position2){
 				return {
-					x: (position1.x - position2.x) * 10,
-					y: (position1.y - position2.y) * 10
+					x: position1.x - position2.x,
+					y: position1.y - position2.y
 				};
 			};
 
@@ -62,13 +62,13 @@ dom.onLoad(function onLoad(){
 
 				var positionDifference = getPositionDifference(newPosition, lastPosition);
 
-				if(Math.abs(positionDifference.x) < 100 || Math.abs(positionDifference.y) < 100) return;
+				if(!positionDifference.x || !positionDifference.y) return;
 
 				log(positionDifference);
 
-				lastPosition = newPosition;
-
 				socketClient.reply('touchPadMove', positionDifference);
+
+				lastPosition = newPosition;
 			};
 
 			var touchPadDrop = function(evt){
@@ -91,14 +91,10 @@ dom.onLoad(function onLoad(){
 		log('interact pointerUp', evt);
 
 		if(evt.target.id === 'leftMouseButton'){
-			notify('info', 'leftMouseButton');
-
 			socketClient.reply('leftMouseButton');
 		}
 
 		else if(evt.target.id === 'rightMouseButton'){
-			notify('info', 'rightMouseButton');
-
 			socketClient.reply('rightMouseButton');
 		}
 	});
