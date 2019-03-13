@@ -95,10 +95,16 @@ dom.onLoad(function onLoad(){
 		log('interact pointerUp', evt);
 
 		if(evt.target.id === 'leftMouseButton'){
+			evt.preventDefault();
+			dom.interact.pointerTarget = null;
+
 			socketClient.reply('leftMouseButton');
 		}
 
 		else if(evt.target.id === 'rightMouseButton'){
+			evt.preventDefault();
+			dom.interact.pointerTarget = null;
+
 			socketClient.reply('rightMouseButton');
 		}
 	});
