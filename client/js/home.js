@@ -46,8 +46,8 @@ dom.onLoad(function onLoad(){
 
 			var getPositionDifference = function(position1, position2){
 				return {
-					x: position1.x - position2.x,
-					y: position1.y - position2.y
+					x: (position1.x - position2.x) * 10,
+					y: (position1.y - position2.y) * 10
 				};
 			};
 
@@ -62,7 +62,7 @@ dom.onLoad(function onLoad(){
 
 				var positionDifference = getPositionDifference(newPosition, lastPosition);
 
-				if(!positionDifference.x || !positionDifference.y) return;
+				if(Math.abs(positionDifference.x) < 100 || Math.abs(positionDifference.y) < 100) return;
 
 				log(positionDifference);
 
