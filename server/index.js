@@ -41,10 +41,18 @@ socketServer.registerEndpoints({
 
 		if(!args.dev) exec(`xdotool mousemove_relative -- ${position.x} ${position.y}`);
 	},
-	touchPadScroll: function(direction){
-		log(`xdotool key ${direction ? 'Down' : 'Up'}`);
+	touchPadScroll: function(position){
+		if(Math.abs(position.y) > 50){
+			log(`xdotool key ${position.y < 1 ? 'Down' : 'Up'}`);
 
-		if(!args.dev) exec(`xdotool key ${direction ? 'Down' : 'Up'}`);
+			if(!args.dev) exec(`xdotool key ${position.y < 1 ? 'Down' : 'Up'}`);
+		}
+
+		if(Math.abs(position.x) > 50){
+			log(`xdotool key ${position.x > 1 ? 'Left' : 'Right'}`);
+
+			if(!args.dev) exec(`xdotool key ${position.x > 1 ? 'Left' : 'Right'}`);
+		}
 	},
 	rightMouseButton: function(){
 		log('xdotool click --clearmodifiers 3');

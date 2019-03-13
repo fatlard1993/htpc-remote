@@ -53,6 +53,7 @@ dom.onLoad(function onLoad(){
 
 			var lastPosition;
 			var multiplier = 2;
+			var scrollSpeed = 50;
 
 			var touchPadMove = function(evt){
 				evt.preventDefault();
@@ -63,9 +64,9 @@ dom.onLoad(function onLoad(){
 
 				var positionDifference = getPositionDifference(newPosition, lastPosition, multiplier);
 
-				if(!Math.abs(positionDifference.x) && !Math.abs(positionDifference.y)) return;
+				if(Math.abs(positionDifference.x) <= (evt.targetTouches.length === 2 ? scrollSpeed : 0) && Math.abs(positionDifference.y) <= (evt.targetTouches.length === 2 ? scrollSpeed : 0)) return;
 
-				socketClient.reply(evt.targetTouches.length === 2 ? 'touchPadScroll' : 'touchPadMove', evt.targetTouches.length === 2 ? positionDifference.y > 1 : positionDifference);
+				socketClient.reply(evt.targetTouches.length === 2 ? 'touchPadScroll' : 'touchPadMove', positionDifference);
 
 				lastPosition = newPosition;
 			};
