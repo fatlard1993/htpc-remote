@@ -62,7 +62,7 @@ dom.onLoad(function onLoad(){
 
 				var positionDifference = getPositionDifference(newPosition, lastPosition);
 
-				if(!positionDifference.x || !positionDifference.y) return;
+				if(Math.abs(positionDifference.x) < 5 && Math.abs(positionDifference.y) < 5) return;
 
 				log(positionDifference);
 
