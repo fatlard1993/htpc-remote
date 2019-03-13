@@ -48,14 +48,14 @@ dom.onLoad(function onLoad(){
 
 			var getPositionDifference = function(position1, position2, multiplier){
 				return {
-					x: (position1.x - position2.x) * multiplier,
-					y: (position1.y - position2.y) * multiplier
+					x: Math.round((position1.x - position2.x) * multiplier),
+					y: Math.round((position1.y - position2.y) * multiplier)
 				};
 			};
 
 			var lastPosition, moved, rightClick, triggered, newPosition, positionDifference;
-			var multiplier = 2;
-			var scrollSpeed = 50;
+			var multiplier = 1.5;
+			var scrollSpeed = 30;
 
 			var touchPadMove = function(evt){
 				evt.preventDefault();
