@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
+const { exec } = require('child_process');
 
 const args = require('yargs').argv;
 const log = require('log');
@@ -35,15 +36,15 @@ app.use('/fonts', staticServer(path.join(__dirname, '../client/fonts')));
 app.get('/home', sendPage('home'));
 
 socketServer.createEndpoint('touchPadMove', function(position){
-	log(`xdotool mousemove_relative ${position.x} ${position.y}`);
+	exec(`xdotool mousemove_relative ${position.x} ${position.y}`);
 });
 
 socketServer.createEndpoint('rightMouseButton', function(){
-	log('xdotool click --clearmodifiers 3');
+	exec('xdotool click --clearmodifiers 3');
 });
 
 socketServer.createEndpoint('leftMouseButton', function(){
-	log('xdotool click --clearmodifiers 1');
+	exec('xdotool click --clearmodifiers 1');
 });
 
 stdin.addListener('data', function(data){
