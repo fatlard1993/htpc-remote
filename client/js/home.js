@@ -51,7 +51,7 @@ dom.onLoad(function onLoad(){
 				};
 			};
 
-			var lastPosition;
+			var lastPosition, moved;
 			var multiplier = 2;
 			var scrollSpeed = 50;
 
@@ -64,15 +64,19 @@ dom.onLoad(function onLoad(){
 
 				var positionDifference = getPositionDifference(newPosition, lastPosition, multiplier);
 
-				if(Math.abs(positionDifference.x) <= (evt.targetTouches.length === 2 ? scrollSpeed : 0) && Math.abs(positionDifference.y) <= (evt.targetTouches.length === 2 ? scrollSpeed : 0)) return;
+				if(Math.abs(positionDifference.x) <= (evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? scrollSpeed : 0) && Math.abs(positionDifference.y) <= (evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? scrollSpeed : 0)) return;
 
-				socketClient.reply(evt.targetTouches.length === 2 ? 'touchPadScroll' : 'touchPadMove', positionDifference);
+				socketClient.reply(evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? 'touchPadScroll' : 'touchPadMove', positionDifference);
 
 				lastPosition = newPosition;
+
+				moved = true;
 			};
 
 			var touchPadDrop = function(evt){
 				evt.preventDefault();
+
+				if(!moved) socketClient.reply(evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? 'rightMouseButton' : 'leftMouseButton');
 
 				document.removeEventListener('mouseup', touchPadDrop);
 				document.removeEventListener('mousemove', touchPadMove);
