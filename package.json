@@ -29,6 +29,7 @@
 		"dialog": "github:fatlard1993/dialog",
 		"dom": "github:fatlard1993/dom",
 		"http-server": "github:fatlard1993/http-server",
+		"js-util": "github:fatlard1993/js-util",
 		"log": "github:fatlard1993/log",
 		"menu": "github:fatlard1993/menu",
 		"notify": "github:fatlard1993/notify",
