@@ -37,9 +37,9 @@ app.get('/home', sendPage('home'));
 
 socketServer.registerEndpoints({
 	touchPadMove: function(position){
-		log(`xdotool mousemove_relative ${position.x} ${position.y}`);
+		log(`xdotool mousemove_relative -- ${position.x} ${position.y}`);
 
-		exec(`xdotool mousemove_relative ${position.x} ${position.y}`);
+		exec(`xdotool mousemove_relative -- ${position.x} ${position.y}`);
 	},
 	rightMouseButton: function(){
 		log('xdotool click --clearmodifiers 3');
