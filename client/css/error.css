@@ -1,0 +1,13 @@
+// includes colors fonts
+
+body {
+	text-align: center;
+}
+
+button {
+	cursor: pointer;
+	border: 2px outset rgba(66, 66, 66, 0.6);
+	font-size: 24px;
+	border-radius: 2px;
+	padding: 5px 25px;
+}

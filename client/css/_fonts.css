@@ -1,0 +1,30 @@
+// includes fontAwesome
+
+@font-face {
+	font-display: swap;
+	font-family: 'Source Code Pro';
+	src: url('/fonts/SourceCodePro-Semibold.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-display: swap;
+	font-family: 'Source Code Pro';
+	src: url('/fonts/SourceCodePro-Bold.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+@font-face {
+	font-display: swap;
+	font-family: 'Source Sans Pro';
+	src: url('/fonts/SourceSansPro-Semibold.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-display: swap;
+	font-family: 'Source Sans Pro';
+	src: url('/fonts/SourceSansPro-Bold.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}

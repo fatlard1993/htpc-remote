@@ -1,0 +1,81 @@
+// includes colors fonts notify menu dialog
+
+html {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+
+	* {
+		font-family: "Source Sans Pro", sans-serif;
+		touch-action: manipulation;
+		-webkit-text-size-adjust: none;
+	}
+
+	*:not(input) {
+		cursor: default;
+		-webkit-tap-highlight-color: $transparent;
+		-webkit-touch-callout: none;
+		user-select: none;
+	}
+
+	.selectable {
+		cursor: text;
+		-webkit-tap-highlight-color: initial;
+		user-select: text;
+	}
+}
+
+body {
+	background-color: #222;
+	color: #e2e2e2;
+	font-size: 20px;
+}
+
+button {
+	cursor: pointer;
+	border: 2px outset rgba(66, 66, 66, 0.6);
+	font-size: 18px;
+	border-radius: 2px;
+	padding: 5px 25px;
+}
+
+div#content {
+	border: 2px solid $white;
+}
+
+button#menuButton {
+	background: $purple;
+	top: 0;
+	right: 0;
+	width: 100px;
+	line-height: 40px;
+	padding: 0;
+	position: absolute;
+	text-align: center;
+}
+
+div#touchPad {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+button#leftMouseButton, button#rightMouseButton {
+	width: 50%;
+	position: absolute;
+	bottom: 0;
+	height: 40px;
+}
+
+button#leftMouseButton {
+	left: 0;
+	background: $blue;
+}
+
+button#rightMouseButton {
+	right: 0;
+	background: $red;
+}

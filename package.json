@@ -1,0 +1,39 @@
+{
+	"name": "htpc-remote",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/index.js",
+	"author": "fatlard1993",
+	"license": "ISC",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/fatlard1993/htpc-remote.git"
+	},
+	"bugs": {
+		"url": "https://github.com/fatlard1993/htpc-remote/issues"
+	},
+	"homepage": "https://github.com/fatlard1993/htpc-remote#readme",
+	"eslintConfig": {
+		"extends": "rules"
+	},
+	"devDependencies": {
+		"babel-eslint": "^10.0.1",
+		"eslint": "^5.15.1",
+		"eslint-config-rules": "github:fatlard1993/eslint-config-rules"
+	},
+	"dependencies": {
+		"config-manager": "github:fatlard1993/config-manager",
+		"dialog": "github:fatlard1993/dialog",
+		"dom": "github:fatlard1993/dom",
+		"http-server": "github:fatlard1993/http-server",
+		"log": "github:fatlard1993/log",
+		"menu": "github:fatlard1993/menu",
+		"notify": "github:fatlard1993/notify",
+		"socket-client": "github:fatlard1993/socket-client",
+		"websocket-server": "github:fatlard1993/websocket-server",
+		"yargs": "^13.2.2"
+	}
+}
