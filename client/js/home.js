@@ -44,14 +44,15 @@ dom.onLoad(function onLoad(){
 				};
 			};
 
-			var getPositionDifference = function(position1, position2){
+			var getPositionDifference = function(position1, position2, multiplier){
 				return {
-					x: position1.x - position2.x,
-					y: position1.y - position2.y
+					x: (position1.x - position2.x) * multiplier,
+					y: (position1.y - position2.y) * multiplier
 				};
 			};
 
 			var lastPosition;
+			var multiplier = 2;
 
 			var touchPadMove = function(evt){
 				evt.preventDefault();
@@ -60,9 +61,9 @@ dom.onLoad(function onLoad(){
 
 				if(!lastPosition) lastPosition = newPosition;
 
-				var positionDifference = getPositionDifference(newPosition, lastPosition);
+				var positionDifference = getPositionDifference(newPosition, lastPosition, multiplier);
 
-				if(Math.abs(positionDifference.x) < 5 && Math.abs(positionDifference.y) < 5) return;
+				if(!Math.abs(positionDifference.x) && !Math.abs(positionDifference.y)) return;
 
 				log(positionDifference);
 
