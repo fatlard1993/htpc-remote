@@ -65,9 +65,7 @@ dom.onLoad(function onLoad(){
 
 				if(!Math.abs(positionDifference.x) && !Math.abs(positionDifference.y)) return;
 
-				log(evt.targetTouches);
-
-				socketClient.reply(evt.targetTouches[1] ? 'touchPadScroll' : 'touchPadMove', evt.targetTouches[1] ? positionDifference.y > 1 : positionDifference);
+				socketClient.reply(evt.targetTouches.length === 2 ? 'touchPadScroll' : 'touchPadMove', evt.targetTouches.length === 2 ? positionDifference.y > 1 : positionDifference);
 
 				lastPosition = newPosition;
 			};
