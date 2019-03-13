@@ -36,7 +36,9 @@ dom.onLoad(function onLoad(){
 	dom.interact.on('pointerDown', function(evt){
 		log('interact pointerDown', evt);
 
-		if(evt.target.id === 'touchPad'){
+		if(evt.target.id === 'touchPad' && evt.targetTouches.length === 1){
+			dom.interact.pointerTarget = null;
+
 			var resolvePosition = function(evt){
 				return {
 					x: (evt.targetTouches) ? evt.targetTouches[0].pageX : evt.clientX,
@@ -51,22 +53,24 @@ dom.onLoad(function onLoad(){
 				};
 			};
 
-			var lastPosition, moved;
+			var lastPosition, moved, rightClick, triggered, newPosition, positionDifference;
 			var multiplier = 2;
 			var scrollSpeed = 50;
 
 			var touchPadMove = function(evt){
 				evt.preventDefault();
 
-				var newPosition = resolvePosition(evt);
+				newPosition = resolvePosition(evt);
 
 				if(!lastPosition) lastPosition = newPosition;
 
-				var positionDifference = getPositionDifference(newPosition, lastPosition, multiplier);
+				positionDifference = getPositionDifference(newPosition, lastPosition, multiplier);
 
-				if(Math.abs(positionDifference.x) <= (evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? scrollSpeed : 0) && Math.abs(positionDifference.y) <= (evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? scrollSpeed : 0)) return;
+				rightClick = evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2;
 
-				socketClient.reply(evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? 'touchPadScroll' : 'touchPadMove', positionDifference);
+				if(Math.abs(positionDifference.x) <= (rightClick ? scrollSpeed : 0) && Math.abs(positionDifference.y) <= (rightClick ? scrollSpeed : 0)) return;
+
+				socketClient.reply(rightClick ? 'touchPadScroll' : 'touchPadMove', positionDifference);
 
 				lastPosition = newPosition;
 
@@ -76,7 +80,11 @@ dom.onLoad(function onLoad(){
 			var touchPadDrop = function(evt){
 				evt.preventDefault();
 
-				if(!moved) socketClient.reply(evt.which === 3 || evt.targetTouches && evt.targetTouches.length === 2 ? 'rightMouseButton' : 'leftMouseButton');
+				if(!triggered && !moved){
+					socketClient.reply(rightClick || evt.targetTouches && evt.targetTouches.length === 2 ? 'rightMouseButton' : 'leftMouseButton');
+
+					triggered = true;
+				}
 
 				document.removeEventListener('mouseup', touchPadDrop);
 				document.removeEventListener('mousemove', touchPadMove);
