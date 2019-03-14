@@ -8,7 +8,8 @@ const log = require('log');
 const ConfigManager = require('config-manager');
 
 var config = new ConfigManager(path.resolve('./config.json'), {
-	port: 8080
+	port: 8080,
+	sink: 1
 });
 
 const { app, sendPage, pageCompiler, staticServer } = require('http-server').init(args.port || config.current.port);
@@ -73,6 +74,21 @@ socketServer.registerEndpoints({
 		log('xdotool click --clearmodifiers 1');
 
 		if(!args.dev) exec('xdotool click --clearmodifiers 1');
+	},
+	volumeUp: function(amount){
+		log(`pactl set-sink-volume ${config.current.sink} +${amount}`);
+
+		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} +${amount}`);
+	},
+	volumeDown: function(amount){
+		log(`pactl set-sink-volume ${config.current.sink} -${amount}`);
+
+		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} -${amount}`);
+	},
+	volumeMute: function(){
+		log(`pactl set-sink-mute ${config.current.sink}`);
+
+		if(!args.dev) exec(`pactl set-sink-mute ${config.current.sink}`);
 	}
 });
 

@@ -4,7 +4,8 @@
 
 dom.onLoad(function onLoad(){
 	menu.init({
-		main: ['Send Return', 'Send Text', 'Settings']
+		main: ['Send Return', 'Send Text', 'Volume', 'Settings'],
+		volume: ['< Back', 'Up', 'Down', 'Mute']
 	});
 
 	notify.init();
@@ -15,6 +16,7 @@ dom.onLoad(function onLoad(){
 
 	if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 1.5);
 	if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
+	if(!dom.storage.get('volumeMod')) dom.storage.set('volumeMod', 10);
 
 	socketClient.on('open', function(evt){
 		log('socketClient open', evt);
@@ -130,7 +132,13 @@ dom.onLoad(function onLoad(){
 	menu.on('selection', function(evt){
 		log(this.isOpen, arguments);
 
-		if(evt.target.textContent === 'Send Text'){
+		if(this.isOpen === 'volume'){
+			if(evt.item === '< Back') menu.open('main');
+
+			else socketClient.reply(`volume${evt.item}`, dom.storage.get('volumeMod'));
+		}
+
+		else if(evt.item === 'Send Text'){
 			menu.close();
 
 			dialog('sendText', 'Send Text', '', 'Cancel|OK', function(){
@@ -144,12 +152,13 @@ dom.onLoad(function onLoad(){
 			};
 		}
 
-		else if(evt.target.textContent === 'Settings'){
+		else if(evt.item === 'Settings'){
 			menu.close();
 
 			var wrapper = dom.createElem('div');
 			var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper }) });
 			var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper }) });
+			var volumeMod = dom.createElem('input', { type: 'number', value: dom.storage.get('volumeMod'), appendTo: dom.createElem('label', { textContent: 'Volume Modifier', appendTo: wrapper }) });
 
 			dialog('settings', 'Settings', wrapper, 'Cancel|OK');
 
@@ -158,9 +167,10 @@ dom.onLoad(function onLoad(){
 
 				dom.storage.set('cursorSpeed', parseFloat(cursorSpeed.value) || 1.5);
 				dom.storage.set('scrollSpeed', parseFloat(scrollSpeed.value) || 30);
+				dom.storage.set('volumeMod', parseFloat(volumeMod.value) || 10);
 			};
 		}
 
-		else if(evt.target.textContent === 'Send Return') socketClient.reply('sendReturn');
+		else if(evt.item === 'Send Return') socketClient.reply('sendReturn');
 	});
 });
