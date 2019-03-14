@@ -4,7 +4,7 @@
 
 dom.onLoad(function onLoad(){
 	menu.init({
-		main: ['test', 'test2:~:red']
+		main: ['Send Text', 'Settings']
 	});
 
 	notify.init();
@@ -118,8 +118,30 @@ dom.onLoad(function onLoad(){
 	});
 
 	menu.on('selection', function(evt){
-		log(this.isOpen, evt);
+		log(this.isOpen, arguments);
 
-		dialog.err('test err');
+		if(evt.target.textContent === 'Send Text'){
+			dialog('sendText', 'Send Text', '', 'Cancel|OK', function(){
+				dom.createElem('input', { type: 'text', appendTo: dialog.active.content });
+			});
+
+			dialog.resolve.sendText = function(choice){
+				if(choice === 'Cancel') return;
+
+				socketClient.reply('sendText', dialog.active.content.children[0].value);
+			};
+		}
+
+		else if(evt.target.textContent === 'Settings'){
+			dialog('settings', 'Settings', '', 'Cancel|OK', function(){
+				dom.createElem('input', { type: 'text', appendTo: dom.createElem('label', { appendTo: dialog.active.content }) });
+			});
+
+			dialog.resolve.settings = function(choice){
+				if(choice === 'Cancel') return;
+
+				dialog.err(dialog.active.content.children[0].value);
+			};
+		}
 	});
 });

@@ -54,6 +54,11 @@ socketServer.registerEndpoints({
 			if(!args.dev) exec(`xdotool key ${position.x > 1 ? 'Left' : 'Right'}`);
 		}
 	},
+	sendText: function(text){
+		log(`xdotool type '${text}'`);
+
+		if(!args.dev) exec(`xdotool type '${text}'`);
+	},
 	rightMouseButton: function(){
 		log('xdotool click --clearmodifiers 3');
 
