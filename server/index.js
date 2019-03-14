@@ -65,6 +65,11 @@ socketServer.registerEndpoints({
 
 		if(!args.dev) exec('xdotool key --clearmodifiers Return');
 	},
+	sendCommand: function(command){
+		log(`xdotool keydown ${command.mod} && xdotool key ${command.key} && sleep 0.1 && xdotool keyup ${command.mod}`);
+
+		if(!args.dev) exec(`xdotool keydown ${command.mod} && xdotool key ${command.key} && sleep 0.1 && xdotool keyup ${command.mod}`);
+	},
 	rightMouseButton: function(){
 		log('xdotool click --clearmodifiers 3');
 

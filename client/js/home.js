@@ -4,7 +4,7 @@
 
 dom.onLoad(function onLoad(){
 	menu.init({
-		main: ['Send Return', 'Send Text', 'Volume', 'Settings'],
+		main: ['Send Return', 'Send Text', 'Send Command', 'Volume', 'Settings'],
 		volume: ['< Back', 'Up', 'Down', 'Mute']
 	});
 
@@ -141,9 +141,7 @@ dom.onLoad(function onLoad(){
 		else if(evt.item === 'Send Text'){
 			menu.close();
 
-			dialog('sendText', 'Send Text', '', 'Cancel|OK', function(){
-				dom.createElem('input', { type: 'text', appendTo: dialog.active.content });
-			});
+			dialog('sendText', 'Send Text', dom.createElem('input', { type: 'text' }), 'Cancel|OK');
 
 			dialog.resolve.sendText = function(choice){
 				if(choice === 'Cancel') return;
@@ -152,15 +150,31 @@ dom.onLoad(function onLoad(){
 			};
 		}
 
-		else if(evt.item === 'Settings'){
+		else if(evt.item === 'Send Command'){
 			menu.close();
 
 			var wrapper = dom.createElem('div');
-			var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper }) });
-			var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper }) });
-			var volumeMod = dom.createElem('input', { type: 'number', value: dom.storage.get('volumeMod'), appendTo: dom.createElem('label', { textContent: 'Volume Modifier', appendTo: wrapper }) });
+			var modifier = dom.createElem('input', { type: 'text', appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) });
+			var key = dom.createElem('input', { type: 'text', appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) });
 
-			dialog('settings', 'Settings', wrapper, 'Cancel|OK');
+			dialog('sendCommand', 'Send Command', wrapper, 'Cancel|OK');
+
+			dialog.resolve.sendCommand = function(choice){
+				if(choice === 'Cancel') return;
+
+				socketClient.reply('sendCommand', { mod: modifier.value, key: key.value });
+			};
+		}
+
+		else if(evt.item === 'Settings'){
+			menu.close();
+
+			var wrapper2 = dom.createElem('div');
+			var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper2 }) });
+			var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper2 }) });
+			var volumeMod = dom.createElem('input', { type: 'number', value: dom.storage.get('volumeMod'), appendTo: dom.createElem('label', { textContent: 'Volume Modifier', appendTo: wrapper2 }) });
+
+			dialog('settings', 'Settings', wrapper2, 'Cancel|OK');
 
 			dialog.resolve.settings = function(choice){
 				if(choice === 'Cancel') return;
