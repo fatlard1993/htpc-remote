@@ -4,7 +4,7 @@
 
 dom.onLoad(function onLoad(){
 	menu.init({
-		main: ['Send Text', 'Settings']
+		main: ['Send Return', 'Send Text', 'Settings']
 	});
 
 	notify.init();
@@ -12,6 +12,9 @@ dom.onLoad(function onLoad(){
 	dialog.init();
 
 	socketClient.init();
+
+	if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 1.5);
+	if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
 
 	socketClient.on('open', function(evt){
 		log('socketClient open', evt);
@@ -53,9 +56,16 @@ dom.onLoad(function onLoad(){
 				};
 			};
 
+			var getScrollDirections = function(position, speed){
+				return {
+					x: Math.abs(position.x) > speed && position.x,
+					y: Math.abs(position.y) > speed && position.y
+				};
+			};
+
 			var lastPosition, moved, rightClick, triggered, newPosition, positionDifference;
-			var multiplier = 1.5;
-			var scrollSpeed = 30;
+			var multiplier = parseFloat(dom.storage.get('cursorSpeed')) || 1.5;
+			var scrollSpeed = parseFloat(dom.storage.get('scrollSpeed')) || 30;
 
 			var touchPadMove = function(evt){
 				evt.preventDefault();
@@ -70,7 +80,7 @@ dom.onLoad(function onLoad(){
 
 				if(Math.abs(positionDifference.x) <= (rightClick ? scrollSpeed : 0) && Math.abs(positionDifference.y) <= (rightClick ? scrollSpeed : 0)) return;
 
-				socketClient.reply(rightClick ? 'touchPadScroll' : 'touchPadMove', positionDifference);
+				socketClient.reply(rightClick ? 'touchPadScroll' : 'touchPadMove', rightClick ? getScrollDirections(positionDifference) : positionDifference);
 
 				lastPosition = newPosition;
 
@@ -121,6 +131,8 @@ dom.onLoad(function onLoad(){
 		log(this.isOpen, arguments);
 
 		if(evt.target.textContent === 'Send Text'){
+			menu.close();
+
 			dialog('sendText', 'Send Text', '', 'Cancel|OK', function(){
 				dom.createElem('input', { type: 'text', appendTo: dialog.active.content });
 			});
@@ -133,15 +145,22 @@ dom.onLoad(function onLoad(){
 		}
 
 		else if(evt.target.textContent === 'Settings'){
-			dialog('settings', 'Settings', '', 'Cancel|OK', function(){
-				dom.createElem('input', { type: 'text', appendTo: dom.createElem('label', { appendTo: dialog.active.content }) });
-			});
+			menu.close();
+
+			var wrapper = dom.createElem('div');
+			var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper }) });
+			var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper }) });
+
+			dialog('settings', 'Settings', wrapper, 'Cancel|OK');
 
 			dialog.resolve.settings = function(choice){
 				if(choice === 'Cancel') return;
 
-				dialog.err(dialog.active.content.children[0].value);
+				dom.storage.set('cursorSpeed', parseFloat(cursorSpeed.value) || 1.5);
+				dom.storage.set('scrollSpeed', parseFloat(scrollSpeed.value) || 30);
 			};
 		}
+
+		else if(evt.target.textContent === 'Send Return') socketClient.reply('sendReturn');
 	});
 });
