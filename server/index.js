@@ -76,14 +76,14 @@ socketServer.registerEndpoints({
 		if(!args.dev) exec('xdotool click --clearmodifiers 1');
 	},
 	volumeUp: function(amount){
-		log(`pactl set-sink-volume ${config.current.sink} +${amount}`);
+		log(`pactl set-sink-volume ${config.current.sink} +${amount}%`);
 
-		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} +${amount}`);
+		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} +${amount}%`);
 	},
 	volumeDown: function(amount){
-		log(`pactl set-sink-volume ${config.current.sink} -${amount}`);
+		log(`pactl set-sink-volume ${config.current.sink} -${amount}%`);
 
-		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} -${amount}`);
+		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} -${amount}%`);
 	},
 	volumeMute: function(){
 		log(`pactl set-sink-mute ${config.current.sink}`);
