@@ -2,6 +2,10 @@
 
 echo " - Untracked files to be removed -"
 
+if [ "$1" == "dev" ]; then
+	echo -e "Would remove package-lock.json\n"
+fi
+
 git clean -xdn
 
 echo -e "\n - Packages that can be updated -"
