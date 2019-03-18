@@ -1,4 +1,4 @@
-// includes colors fonts notify menu dialog
+// includes colors fonts notify menu menuTheme dialog
 
 html {
 	position: fixed;
@@ -78,16 +78,4 @@ button#leftMouseButton {
 button#rightMouseButton {
 	right: 0;
 	background: $red;
-}
-
-ul#menu li {
-	color: $purple-dark;
-}
-
-ul#menu li:hover, ul#menu li.hovered {
-	color: $purple;
-}
-
-ul#menu li:active, ul#menu li.active {
-	background-color: $purple;
 }

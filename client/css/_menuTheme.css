@@ -1,0 +1,56 @@
+// includes colors
+
+ul#menu {
+	max-height: 90%;
+	right: 16px;
+	width: 180px;
+	top: 50px;
+	box-shadow: 3px 3px 18px 2px $grey;
+
+	li {
+		position: relative;
+		cursor: pointer;
+		word-wrap: break-word;
+		border-bottom: 1px solid;
+
+		border-color: $grey;
+		font-size: 15px;
+		padding: 12px 10px;
+		color: $purple-dark;
+		background-color: $white;
+	}
+	li:hover, li.hovered{
+		background-color: $grey;
+		color: $purple;
+	}
+	li:active, li.active{
+		background-color: $purple;
+		color: $grey !important;
+	}
+	li.red, li.lock{
+		color: $red;
+	}
+	li.red:hover, li.red.hovered, li.lock:hover, li.lock.hovered{
+		color: $red-dark;
+	}
+	li.red:active, li.lock:active, li.lock.locked:active, li.red.active, li.lock.active, li.lock.locked.active {
+		background-color: $red !important;
+	}
+	li.lock.locked {
+		background-color: $grey;
+		color: $red;
+	}
+	li.selected {
+		color: $blue;
+	}
+	li.selected:hover, li.selected.hovered, li.lock.locked:hover, li.lock.locked.hovered{
+		background-color: $grey;
+	}
+}
+
+@media (max-height: 420px) {
+	ul#menu {
+		top: 5%;
+		background-color: $grey;
+	}
+}
