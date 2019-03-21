@@ -18,6 +18,8 @@ const SocketServer = require('websocket-server');
 const socketServer = new SocketServer({ server: app.server });
 const stdin = process.openStdin();
 
+pageCompiler.buildFile('home');
+
 app.get('/testj', function(req, res){
 	log('Testing JSON...');
 
