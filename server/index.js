@@ -6,8 +6,11 @@ const { exec } = require('child_process');
 const args = require('yargs').argv;
 const log = require('log');
 const ConfigManager = require('config-manager');
+const findRoot = require('find-root');
 
-var config = new ConfigManager(path.resolve('./config.json'), {
+const rootFolder = findRoot(process.cwd());
+
+var config = new ConfigManager(path.join(rootFolder, 'config.json'), {
 	port: 8080,
 	sink: 1
 });
