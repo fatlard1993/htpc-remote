@@ -19,6 +19,10 @@ html {
 		user-select: none;
 	}
 
+	button {
+		cursor: pointer;
+	}
+
 	.selectable {
 		cursor: text;
 		-webkit-tap-highlight-color: initial;
