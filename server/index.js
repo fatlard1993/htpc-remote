@@ -5,23 +5,22 @@ const { exec } = require('child_process');
 
 const args = require('yargs').argv;
 const log = require('log');
-const ConfigManager = require('config-manager');
+const Config = require('config-manager');
 const findRoot = require('find-root');
+const rootFolder = findRoot(__dirname);
 
-const rootFolder = findRoot(process.cwd());
-
-var config = new ConfigManager(path.join(rootFolder, 'config.json'), {
+var config = new Config(path.join(rootFolder, 'config.json'), {
 	port: 8080,
 	sink: 1
 });
 
-const { app, sendPage, pageCompiler, staticServer } = require('http-server').init(args.port || config.current.port);
+const { app, sendPage, pageCompiler, staticServer } = require('http-server').init(args.port || config.current.port, rootFolder);
 const SocketServer = require('websocket-server');
 
 const socketServer = new SocketServer({ server: app.server });
 const stdin = process.openStdin();
 
-pageCompiler.buildFile('home');
+pageCompiler.buildFile('index');
 
 app.get('/testj', function(req, res){
 	log('Testing JSON...');
@@ -39,7 +38,7 @@ app.use('/resources', staticServer(path.join(__dirname, '../client/resources')))
 
 app.use('/fonts', staticServer(path.join(__dirname, '../client/fonts')));
 
-app.get('/home', sendPage('home'));
+app.get('/home', sendPage('index'));
 
 socketServer.registerEndpoints({
 	touchPadMove: function(position){

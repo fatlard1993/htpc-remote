@@ -29,7 +29,7 @@
 		"dialog": "github:fatlard1993/dialog#2.x.x",
 		"dom": "github:fatlard1993/dom#2.x.x",
 		"find-root": "^1.1.0",
-		"http-server": "github:fatlard1993/http-server#2.x.x",
+		"http-server": "github:fatlard1993/http-server#3.x.x",
 		"js-util": "github:fatlard1993/js-util#2.x.x",
 		"log": "github:fatlard1993/log#2.x.x",
 		"menu": "github:fatlard1993/menu#2.x.x",
