@@ -37,9 +37,9 @@ app.get('/test', function(req, res){
 	res.send('test');
 });
 
-app.use('/resources', staticServer(path.join(__dirname, '../client/resources')));
+app.use('/resources', staticServer(path.join(rootFolder, '../client/resources')));
 
-app.use('/fonts', staticServer(path.join(__dirname, '../client/fonts')));
+app.use('/fonts', staticServer(path.join(rootFolder, '../client/fonts')));
 
 app.get('/home', sendPage('index'));
 
