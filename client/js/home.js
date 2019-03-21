@@ -4,7 +4,9 @@
 
 dom.onLoad(function onLoad(){
 	menu.init({
-		main: ['Send Return', 'Send Text', 'Send Command', 'Volume', 'Settings'],
+		main: ['Send Return', 'Send Text', 'OS', 'Volume', 'Settings'],
+		os: ['< Back', 'Quit App', 'Launch App', 'Workspaces', 'Send Command'],
+		workspaces: ['< Back', '1', '2', '3', '4', '5'],
 		volume: ['< Back', 'Up', 'Down', 'Mute']
 	});
 
@@ -132,7 +134,37 @@ dom.onLoad(function onLoad(){
 	menu.on('selection', function(evt){
 		log(this.isOpen, arguments);
 
-		if(this.isOpen === 'volume'){
+		if(this.isOpen === 'os'){
+			if(evt.item === '< Back') menu.open('main');
+
+			else if(evt.item === 'Quit App') socketClient.reply('sendCommand', { mod: 'alt', key: 'q' });
+
+			else if(evt.item === 'Launch App') socketClient.reply('sendCommand', { mod: 'alt', key: 'space' });
+
+			else if(evt.item === 'Send Command'){
+				menu.close();
+
+				var wrapper = dom.createElem('div');
+				var modifier = dom.createElem('input', { type: 'text', autocapitalize: 'off', appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) });
+				var key = dom.createElem('input', { type: 'text', autocapitalize: 'off', appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) });
+
+				dialog('sendCommand', 'Send Command', wrapper, 'Cancel|OK');
+
+				dialog.resolve.sendCommand = function(choice){
+					if(choice === 'Cancel') return;
+
+					socketClient.reply('sendCommand', { mod: modifier.value, key: key.value });
+				};
+			}
+		}
+
+		else if(this.isOpen === 'workspaces'){
+			if(evt.item === '< Back') menu.open('os');
+
+			else socketClient.reply('sendCommand', { mod: 'alt', key: evt.item });
+		}
+
+		else if(this.isOpen === 'volume'){
 			if(evt.item === '< Back') menu.open('main');
 
 			else socketClient.reply(`volume${evt.item}`, dom.storage.get('volumeMod'));
@@ -141,28 +173,12 @@ dom.onLoad(function onLoad(){
 		else if(evt.item === 'Send Text'){
 			menu.close();
 
-			dialog('sendText', 'Send Text', dom.createElem('input', { type: 'text' }), 'Cancel|OK');
+			dialog('sendText', 'Send Text', dom.createElem('input', { type: 'text', autocapitalize: 'off' }), 'Cancel|OK');
 
 			dialog.resolve.sendText = function(choice){
 				if(choice === 'Cancel') return;
 
 				socketClient.reply('sendText', dialog.active.content.children[0].value);
-			};
-		}
-
-		else if(evt.item === 'Send Command'){
-			menu.close();
-
-			var wrapper = dom.createElem('div');
-			var modifier = dom.createElem('input', { type: 'text', appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) });
-			var key = dom.createElem('input', { type: 'text', appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) });
-
-			dialog('sendCommand', 'Send Command', wrapper, 'Cancel|OK');
-
-			dialog.resolve.sendCommand = function(choice){
-				if(choice === 'Cancel') return;
-
-				socketClient.reply('sendCommand', { mod: modifier.value, key: key.value });
 			};
 		}
 
