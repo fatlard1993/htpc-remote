@@ -24,8 +24,8 @@ ul#menu {
 		color: $purple;
 	}
 	li:active, li.active{
-		background-color: $purple;
-		color: $grey !important;
+		background-color: $purple !important;
+		color: $grey-dark !important;
 	}
 	li.red, li.lock{
 		color: $red;
@@ -52,5 +52,12 @@ ul#menu {
 	ul#menu {
 		top: 5%;
 		background-color: $grey;
+	}
+}
+
+body.mobile {
+  ul#menu li:hover {
+		color: $purple-dark;
+		background-color: $white;
 	}
 }
