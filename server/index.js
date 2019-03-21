@@ -3,11 +3,14 @@
 const path = require('path');
 const { exec } = require('child_process');
 
+const findRoot = require('find-root');
+const rootFolder = findRoot(__dirname);
+
+process.chdir(rootFolder);
+
 const args = require('yargs').argv;
 const log = require('log');
 const Config = require('config-manager');
-const findRoot = require('find-root');
-const rootFolder = findRoot(__dirname);
 
 var config = new Config(path.join(rootFolder, 'config.json'), {
 	port: 8080,
