@@ -108,6 +108,8 @@ dom.onLoad(function onLoad(){
 			evt.target.addEventListener('touchend', touchPadDrop);
 			evt.target.addEventListener('touchmove', touchPadMove);
 		}
+
+		else if(dom.isMobile) evt.target.classList.add('active');
 	});
 
 	dom.interact.on('pointerUp', function(evt){
@@ -126,6 +128,8 @@ dom.onLoad(function onLoad(){
 
 			socketClient.reply('click', 3);
 		}
+
+		if(dom.isMobile) evt.target.classList.remove('active');
 	});
 
 	menu.on('selection', function(evt){
