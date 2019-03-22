@@ -14,7 +14,7 @@ dom.onLoad(function onLoad(){
 
 	socketClient.init();
 
-	dom.mobileDetection();
+	dom.mobile.detect();
 
 	if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 2);
 	if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 20);
