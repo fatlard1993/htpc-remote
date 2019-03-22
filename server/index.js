@@ -62,45 +62,25 @@ socketServer.registerEndpoints({
 			if(!args.dev) exec(`xdotool key ${scroll.x > 1 ? 'Left' : 'Right'}`);
 		}
 	},
-	sendText: function(text){
+	type: function(text){
 		log(`xdotool type '${text}'`);
 
 		if(!args.dev) exec(`xdotool type '${text}'`);
 	},
-	sendReturn: function(){
-		log('xdotool key --clearmodifiers Return');
+	key: function(key){
+		log(`xdotool key --clearmodifiers ${key}`);
 
-		if(!args.dev) exec('xdotool key --clearmodifiers Return');
+		if(!args.dev) exec(`xdotool key --clearmodifiers ${key}`);
 	},
-	sendCommand: function(command){
+	command: function(command){
 		log(`xdotool keydown ${command.mod} && xdotool key ${command.key} && sleep 0.1 && xdotool keyup ${command.mod}`);
 
 		if(!args.dev) exec(`xdotool keydown ${command.mod} && xdotool key ${command.key} && sleep 0.1 && xdotool keyup ${command.mod}`);
 	},
-	rightMouseButton: function(){
-		log('xdotool click --clearmodifiers 3');
+	click: function(button){
+		log(`xdotool click --clearmodifiers ${button}`);
 
-		if(!args.dev) exec('xdotool click --clearmodifiers 3');
-	},
-	leftMouseButton: function(){
-		log('xdotool click --clearmodifiers 1');
-
-		if(!args.dev) exec('xdotool click --clearmodifiers 1');
-	},
-	volumeUp: function(amount){
-		log(`pactl set-sink-volume ${config.current.sink} +${amount}%`);
-
-		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} +${amount}%`);
-	},
-	volumeDown: function(amount){
-		log(`pactl set-sink-volume ${config.current.sink} -${amount}%`);
-
-		if(!args.dev) exec(`pactl set-sink-volume ${config.current.sink} -${amount}%`);
-	},
-	volumeMute: function(){
-		log(`pactl set-sink-mute ${config.current.sink}`);
-
-		if(!args.dev) exec(`pactl set-sink-mute ${config.current.sink}`);
+		if(!args.dev) exec(`xdotool click --clearmodifiers ${button}`);
 	}
 });
 

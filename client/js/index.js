@@ -12,20 +12,15 @@ dom.onLoad(function onLoad(){
 
 	notify.init();
 
-	dialog.init();
-
 	socketClient.init();
 
 	dom.mobileDetection();
 
-	if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 1.5);
-	if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
-	if(!dom.storage.get('volumeMod')) dom.storage.set('volumeMod', 10);
+	if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 2);
+	if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 20);
 
 	socketClient.on('open', function(evt){
 		log('socketClient open', evt);
-
-		socketClient.reply('type', 'payload');
 	});
 
 	socketClient.on('error', function(evt){
@@ -97,7 +92,7 @@ dom.onLoad(function onLoad(){
 				evt.preventDefault();
 
 				if(!triggered && !moved){
-					socketClient.reply(rightClick || (evt.targetTouches && evt.targetTouches.length === 2) ? 'rightMouseButton' : 'leftMouseButton');
+					socketClient.reply('click', rightClick || (evt.targetTouches && evt.targetTouches.length === 2) ? 3 : 1);
 
 					triggered = true;
 				}
@@ -122,14 +117,14 @@ dom.onLoad(function onLoad(){
 			evt.preventDefault();
 			dom.interact.pointerTarget = null;
 
-			socketClient.reply('leftMouseButton');
+			socketClient.reply('click', 1);
 		}
 
 		else if(evt.target.id === 'rightMouseButton'){
 			evt.preventDefault();
 			dom.interact.pointerTarget = null;
 
-			socketClient.reply('rightMouseButton');
+			socketClient.reply('click', 3);
 		}
 	});
 
@@ -139,23 +134,23 @@ dom.onLoad(function onLoad(){
 		if(this.isOpen === 'os'){
 			if(evt.item === '< Back') menu.open('main');
 
-			else if(evt.item === 'Quit App') socketClient.reply('sendCommand', { mod: 'alt', key: 'q' });
+			else if(evt.item === 'Quit App') socketClient.reply('command', { mod: 'alt', key: 'q' });
 
-			else if(evt.item === 'Launch App') socketClient.reply('sendCommand', { mod: 'alt', key: 'space' });
+			else if(evt.item === 'Launch App') socketClient.reply('command', { mod: 'alt', key: 'space' });
 
 			else if(evt.item === 'Send Command'){
 				menu.close();
 
 				var wrapper = dom.createElem('div');
-				var modifier = dom.createElem('input', { type: 'text', autocapitalize: 'off', appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) });
-				var key = dom.createElem('input', { type: 'text', autocapitalize: 'off', appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) });
+				var modifier = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) }));
+				var key = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) }));
 
 				dialog('sendCommand', 'Send Command', wrapper, 'Cancel|OK');
 
 				dialog.resolve.sendCommand = function(choice){
 					if(choice === 'Cancel') return;
 
-					socketClient.reply('sendCommand', { mod: modifier.value, key: key.value });
+					socketClient.reply('command', { mod: modifier.value, key: key.value });
 				};
 			}
 		}
@@ -163,24 +158,24 @@ dom.onLoad(function onLoad(){
 		else if(this.isOpen === 'workspaces'){
 			if(evt.item === '< Back') menu.open('os');
 
-			else socketClient.reply('sendCommand', { mod: 'alt', key: evt.item });
+			else socketClient.reply('command', { mod: 'alt', key: evt.item });
 		}
 
 		else if(this.isOpen === 'volume'){
 			if(evt.item === '< Back') menu.open('main');
 
-			else socketClient.reply(`volume${evt.item}`, dom.storage.get('volumeMod'));
+			else socketClient.reply('key', { Up: 'XF86AudioRaiseVolume', Down: 'XF86AudioLowerVolume', Mute: 'XF86AudioMute'}[evt.item]);
 		}
 
 		else if(evt.item === 'Send Text'){
 			menu.close();
 
-			dialog('sendText', 'Send Text', dom.createElem('input', { type: 'text', autocapitalize: 'off' }), 'Cancel|OK');
+			dialog('sendText', 'Send Text', dom.createElem('input', dom.basicTextElem()), 'Cancel|OK');
 
 			dialog.resolve.sendText = function(choice){
 				if(choice === 'Cancel') return;
 
-				socketClient.reply('sendText', dialog.active.content.children[0].value);
+				socketClient.reply('type', dialog.active.content.children[0].value);
 			};
 		}
 
@@ -190,7 +185,6 @@ dom.onLoad(function onLoad(){
 			var wrapper2 = dom.createElem('div');
 			var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper2 }) });
 			var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper2 }) });
-			var volumeMod = dom.createElem('input', { type: 'number', value: dom.storage.get('volumeMod'), appendTo: dom.createElem('label', { textContent: 'Volume Modifier', appendTo: wrapper2 }) });
 
 			dialog('settings', 'Settings', wrapper2, 'Cancel|OK');
 
@@ -199,10 +193,9 @@ dom.onLoad(function onLoad(){
 
 				dom.storage.set('cursorSpeed', parseFloat(cursorSpeed.value) || 1.5);
 				dom.storage.set('scrollSpeed', parseFloat(scrollSpeed.value) || 30);
-				dom.storage.set('volumeMod', parseFloat(volumeMod.value) || 10);
 			};
 		}
 
-		else if(evt.item === 'Send Return') socketClient.reply('sendReturn');
+		else if(evt.item === 'Send Return') socketClient.reply('key', 'return');
 	});
 });
