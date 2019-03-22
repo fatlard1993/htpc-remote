@@ -21,7 +21,6 @@ const { app, sendPage, pageCompiler, staticServer } = require('http-server').ini
 const SocketServer = require('websocket-server');
 
 const socketServer = new SocketServer({ server: app.server });
-const stdin = process.openStdin();
 
 pageCompiler.buildFile('index');
 
@@ -82,10 +81,4 @@ socketServer.registerEndpoints({
 
 		if(!args.dev) exec(`xdotool click --clearmodifiers ${button}`);
 	}
-});
-
-stdin.addListener('data', function(data){
-	var cmd = data.toString().trim();
-
-	log(`CMD: ${cmd}`);
 });
