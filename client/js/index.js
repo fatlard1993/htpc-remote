@@ -39,8 +39,6 @@ dom.onLoad(function onLoad(){
 		log('interact pointerDown', evt);
 
 		if(evt.target.id === 'touchPad' && (!evt.targetTouches || (evt.targetTouches && evt.targetTouches.length === 1))){
-			dom.interact.pointerTarget = null;
-
 			var resolvePosition = function(evt){
 				return {
 					x: (evt.targetTouches) ? evt.targetTouches[0].pageX : evt.clientX,
@@ -127,14 +125,12 @@ dom.onLoad(function onLoad(){
 
 		if(evt.target.id === 'leftMouseButton'){
 			evt.preventDefault();
-			dom.interact.pointerTarget = null;
 
 			socketClient.reply('click', 1);
 		}
 
 		else if(evt.target.id === 'rightMouseButton'){
 			evt.preventDefault();
-			dom.interact.pointerTarget = null;
 
 			socketClient.reply('click', 3);
 		}
