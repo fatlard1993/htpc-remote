@@ -1,6 +1,6 @@
-// includes dom log socket-client notify menu dialog
+// includes dom log socket-client menu dialog
 // babel
-/* global dom log socketClient notify menu dialog */
+/* global dom log socketClient menu dialog */
 
 dom.onLoad(function onLoad(){
 	menu.init({
@@ -148,9 +148,9 @@ dom.onLoad(function onLoad(){
 		if(this.isOpen === 'os'){
 			if(evt.item === '< Back') menu.open('main');
 
-			else if(evt.item === 'Quit App') socketClient.reply('command', { mod: 'alt', key: 'q' });
+			else if(evt.item === 'Quit App') socketClient.reply('command', { mod: 'Super_L', key: 'q' });
 
-			else if(evt.item === 'Launch App') socketClient.reply('command', { mod: 'alt', key: 'space' });
+			else if(evt.item === 'Launch App') socketClient.reply('command', { mod: 'Super_L', key: 'space' });
 
 			else if(evt.item === 'Send Command'){
 				menu.close();
@@ -172,7 +172,7 @@ dom.onLoad(function onLoad(){
 		else if(this.isOpen === 'workspaces'){
 			if(evt.item === '< Back') menu.open('os');
 
-			else socketClient.reply('command', { mod: 'alt', key: evt.item });
+			else socketClient.reply('command', { mod: 'Super_L', key: evt.item });
 		}
 
 		else if(this.isOpen === 'volume'){
@@ -210,6 +210,6 @@ dom.onLoad(function onLoad(){
 			};
 		}
 
-		else if(evt.item === 'Send Return') socketClient.reply('key', 'return');
+		else if(evt.item === 'Send Return') socketClient.reply('key', 'Return');
 	});
 });
