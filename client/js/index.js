@@ -98,16 +98,28 @@ dom.onLoad(function onLoad(){
 				document.removeEventListener('mouseup', touchPadDrop);
 				document.removeEventListener('mousemove', touchPadMove);
 				evt.target.removeEventListener('touchend', touchPadDrop);
+				evt.target.removeEventListener('touchcancel', touchPadDrop);
 				evt.target.removeEventListener('touchmove', touchPadMove);
 			};
 
 			document.addEventListener('mouseup', touchPadDrop);
 			document.addEventListener('mousemove', touchPadMove);
 			evt.target.addEventListener('touchend', touchPadDrop);
+			evt.target.addEventListener('touchcancel', touchPadDrop);
 			evt.target.addEventListener('touchmove', touchPadMove);
 		}
 
-		else if(dom.isMobile) evt.target.classList.add('active');
+		else if(dom.isMobile){
+			evt.target.classList.add('active');
+
+			if(evt.target.parentElement.id === 'menu'){
+				evt.target.addEventListener('pointerleave', function menuItemLeave(evt){
+					evt.target.classList.remove('active');
+
+					evt.target.removeEventListener('pointerleave', menuItemLeave);
+				});
+			}
+		}
 	});
 
 	dom.interact.on('pointerUp', function(evt){
