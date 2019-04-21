@@ -4,10 +4,6 @@ echo -e " - Untracked files to be removed -\n"
 
 git clean -xdn
 
-if [ "$1" == "dev" ]; then
-	echo "Would remove package-lock.json"
-fi
-
 if [ -e "$(which ncu)" ]; then
 	echo -e "\n - Packages that can be updated -\n"
 
@@ -22,12 +18,6 @@ if [ -e "$(which ncu)" ]; then
 
 		ncu -u
 	fi
-fi
-
-if [ "$1" == "dev" ]; then
-	echo -e "Removing package-lock.json\n"
-
-	rm -f ./package-lock.json
 fi
 
 git clean -xdf

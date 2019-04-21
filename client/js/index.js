@@ -10,8 +10,6 @@ dom.onLoad(function onLoad(){
 		volume: ['< Back', 'Up', 'Down', 'Mute']
 	});
 
-	notify.init();
-
 	socketClient.init();
 
 	dom.mobile.detect();
