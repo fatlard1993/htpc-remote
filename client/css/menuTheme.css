@@ -25,7 +25,7 @@ ul#menu {
 	}
 	li:active, li.active{
 		background-color: $purple !important;
-		color: $grey-dark !important;
+		color: $white !important;
 	}
 	li.red, li.lock{
 		color: $red;
