@@ -4,7 +4,7 @@
 
 dom.onLoad(function onLoad(){
 	menu.init({
-		main: ['Send Return', 'Send Text', 'OS', 'Volume', 'Settings'],
+		main: ['Send Return', 'Send Esc', 'Send Text', 'OS', 'Volume', 'Settings'],
 		os: ['< Back', 'Quit App', 'Launch App', 'Workspaces', 'Send Command'],
 		workspaces: ['< Back', '1', '2', '3', '4', '5'],
 		volume: ['< Back', 'Up', 'Down', 'Mute']
@@ -207,5 +207,7 @@ dom.onLoad(function onLoad(){
 		}
 
 		else if(evt.item === 'Send Return') socketClient.reply('key', 'Return');
+
+		else if(evt.item === 'Send Esc') socketClient.reply('key', 'Escape');
 	});
 });
