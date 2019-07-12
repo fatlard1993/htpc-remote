@@ -158,7 +158,8 @@ const htpcRemote = {
 		else if(evt.target.id === 'menuButton'){
 			evt.preventDefault();
 
-			menu.open('main');
+			if(menu.isOpen) menu.close();
+			else menu.open('main');
 		}
 
 		else if(evt.target.id === 'returnButton'){
