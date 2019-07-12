@@ -185,9 +185,25 @@ const htpcRemote = {
 		if(evt.target.id === 'typeInput'){
 			evt.preventDefault();
 
-			socketClient.reply('type', evt.target.value);
+			var input = evt.target.value.substr(-1);
 
-			evt.target.value = '';
+			dom.remove(evt.target);
+
+			var newInput = dom.createElem('input', dom.basicTextElem({ id: 'typeInput' }));
+
+			dom.prependChild(dialog.active.content, newInput);
+
+			newInput.focus();
+
+			var n = null, map = [n, n, n, n, n, n, n, n, 'BackSpace', 'Tab', n, n, n, 'Return', 'Return', n, n, n, n, n, n, n, n, n, n, n, n, 'Escape', n, n, n, n, 'Space', 'Next', 'Prior', 'End', 'Home', 'Left', 'Up', 'Right', 'Down', n, n, n, n, n, 'Delete', n, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', n, n, n, n, n, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '+', '|', '-', '.', '/', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19', 'F20', 'F21', 'F22', 'F23', 'F24', n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, '^', '!', '"', '#', '$', '%', '&', '_', '(', ')', '*', '+', '|', '-', '{', '}', '~', n, n, n, n, n, n, n, n, n, ';', '=', ',', '-', '.', '/', '`', n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, '[', '\\', ']', '\'', n, n, n, n, n, n, 'INPUT', n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n];
+
+			var pressed = map[evt.which || evt.keyCode];
+
+			if(pressed === 'INPUT') pressed = input;
+
+			if(!pressed) return;
+
+			socketClient.reply(pressed.length > 1 ? 'key' : 'type', evt.shiftKey ? pressed.toUpperCase() : pressed);
 		}
 	},
 	onMenuSelection: function(evt){
@@ -224,11 +240,9 @@ const htpcRemote = {
 			menu.close();
 
 			var typeInput = dom.createElem('input', dom.basicTextElem({ id: 'typeInput' }));
-			var returnButton = dom.createElem('button', { textContent: 'Return', id: 'returnButton' });
 			var escapeButton = dom.createElem('button', { textContent: 'Esc', id: 'escapeButton' });
-			var backspaceButton = dom.createElem('button', { textContent: 'BackSpace', id: 'backspaceButton' });
 
-			dialog('keyboard', 'Keyboard', dom.createElem('div', { appendChildren: [returnButton, typeInput, backspaceButton, escapeButton] }), 'Done');
+			dialog('keyboard ignoreReturn', 'Keyboard', dom.createElem('div', { appendChildren: [typeInput, escapeButton] }), 'Done');
 		}
 
 		else if(evt.item === 'Settings'){
