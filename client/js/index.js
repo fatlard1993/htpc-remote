@@ -141,8 +141,6 @@ const htpcRemote = {
 		}
 	},
 	onPointerUp: function(evt){
-		if(dom.isMobile && !evt.targetTouches) return;
-
 		log()('interact pointerUp', evt);
 
 		socketClient.stayConnected();
