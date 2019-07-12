@@ -173,6 +173,12 @@ const htpcRemote = {
 			socketClient.reply('key', 'Escape');
 		}
 
+		else if(evt.target.id === 'backspaceButton'){
+			evt.preventDefault();
+
+			socketClient.reply('key', 'BackSpace');
+		}
+
 		if(dom.isMobile) evt.target.classList.remove('active');
 	},
 	onKeyUp: function(evt){
@@ -220,8 +226,9 @@ const htpcRemote = {
 			var typeInput = dom.createElem('input', dom.basicTextElem({ id: 'typeInput' }));
 			var returnButton = dom.createElem('button', { textContent: 'Return', id: 'returnButton' });
 			var escapeButton = dom.createElem('button', { textContent: 'Esc', id: 'escapeButton' });
+			var backspaceButton = dom.createElem('button', { textContent: 'BackSpace', id: 'backspaceButton' });
 
-			dialog('keyboard', 'Keyboard', dom.createElem('div', { appendChildren: [returnButton, typeInput, escapeButton] }), 'Done');
+			dialog('keyboard', 'Keyboard', dom.createElem('div', { appendChildren: [returnButton, typeInput, backspaceButton, escapeButton] }), 'Done');
 		}
 
 		else if(evt.item === 'Settings'){
