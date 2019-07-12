@@ -45,6 +45,8 @@ const htpcRemote = {
 		document.addEventListener('touchstart', htpcRemote.onPointerDown);
 	},
 	onPointerDown: function(evt){
+		if(dom.isMobile && !evt.targetTouches) return;
+
 		log('interact pointerDown', evt);
 
 		if(evt.target.id === 'touchPad' && (!evt.targetTouches || (evt.targetTouches && evt.targetTouches.length === 1))){
@@ -139,6 +141,8 @@ const htpcRemote = {
 		}
 	},
 	onPointerUp: function(evt){
+		if(dom.isMobile && !evt.targetTouches) return;
+
 		log()('interact pointerUp', evt);
 
 		socketClient.stayConnected();
@@ -146,7 +150,8 @@ const htpcRemote = {
 		if(evt.target.id === 'menuButton'){
 			evt.preventDefault();
 
-			if(menu.isOpen) menu.close();
+			if(menu.isOpen) menu.close(1);
+
 			else menu.open('main');
 		}
 
