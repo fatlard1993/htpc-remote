@@ -2,41 +2,52 @@
 // babel
 /* global dom log socketClient menu dialog */
 
-dom.onLoad(function onLoad(){
-	menu.init({
-		main: ['Send Return', 'Send Esc', 'Send Text', 'OS', 'Volume', 'Settings'],
-		os: ['< Back', 'Quit App', 'Launch App', 'Workspaces', 'Send Command'],
-		workspaces: ['< Back', '1', '2', '3', '4', '5'],
-		volume: ['< Back', 'Up', 'Down', 'Mute']
-	});
+socketClient.stayConnected = function(){
+	if(socketClient.status === 'open') return;
 
-	socketClient.init();
+	var reload = 'soft';
 
-	dom.mobile.detect();
+	if(reload === 'soft' && dom.triedSoftReload) reload = 'hard';
 
-	if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 2);
-	if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
+	log()(`Reload: ${reload}`);
 
-	socketClient.on('open', function(evt){
-		log('socketClient open', evt);
-	});
+	if(reload === 'hard') return window.location.reload(false);
 
-	socketClient.on('error', function(evt){
-		log('socketClient error', evt);
-	});
+	socketClient.reconnect();
 
-	socketClient.on('message', function(evt){
-		log('socketClient message', evt);
-	});
+	dom.triedSoftReload = true;
 
-	socketClient.on('close', function(evt){
-		log('socketClient close', evt);
+	dom.resetSoftReset_TO = setTimeout(function(){ dom.triedSoftReload = false; }, 4000);
+};
 
-		socketClient.reconnect();
-	});
+const htpcRemote = {
+	load: function(){
+		menu.init({
+			main: ['Keyboard', 'OS', 'Volume', 'Settings'],
+			os: ['< Back', 'Quit App', 'Launch App', 'Workspaces', 'Send Command'],
+			workspaces: ['< Back', '1', '2', '3', '4', '5'],
+			volume: ['< Back', 'Up', 'Down', 'Mute']
+		});
 
-	dom.interact.on('pointerDown', function(evt){
+		socketClient.init();
+
+		dom.mobile.detect();
+
+		if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 2);
+		if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
+
+		dom.interact.on('pointerUp', htpcRemote.onPointerUp);
+		dom.interact.on('keyUp', htpcRemote.onKeyUp);
+
+		menu.on('selection', htpcRemote.onMenuSelection);
+
+		document.addEventListener('mousedown', htpcRemote.onPointerDown);
+		document.addEventListener('touchstart', htpcRemote.onPointerDown);
+	},
+	onPointerDown: function(evt){
 		log('interact pointerDown', evt);
+
+		socketClient.stayConnected();
 
 		if(evt.target.id === 'touchPad' && (!evt.targetTouches || (evt.targetTouches && evt.targetTouches.length === 1))){
 			var resolvePosition = function(evt){
@@ -93,18 +104,28 @@ dom.onLoad(function onLoad(){
 					triggered = true;
 				}
 
-				document.removeEventListener('mouseup', touchPadDrop);
-				document.removeEventListener('mousemove', touchPadMove);
-				evt.target.removeEventListener('touchend', touchPadDrop);
-				evt.target.removeEventListener('touchcancel', touchPadDrop);
-				evt.target.removeEventListener('touchmove', touchPadMove);
+				if(!evt.targetTouches){
+					document.removeEventListener('mousemove', touchPadMove);
+					document.removeEventListener('mouseup', touchPadDrop);
+				}
+
+				else{
+					document.removeEventListener('touchmove', touchPadMove);
+					document.removeEventListener('touchend', touchPadDrop);
+					document.removeEventListener('touchcancel', touchPadDrop);
+				}
 			};
 
-			document.addEventListener('mouseup', touchPadDrop);
-			document.addEventListener('mousemove', touchPadMove);
-			evt.target.addEventListener('touchend', touchPadDrop);
-			evt.target.addEventListener('touchcancel', touchPadDrop);
-			evt.target.addEventListener('touchmove', touchPadMove);
+			if(!evt.targetTouches){
+				document.addEventListener('mousemove', touchPadMove);
+				document.addEventListener('mouseup', touchPadDrop);
+			}
+
+			else{
+				document.addEventListener('touchmove', touchPadMove);
+				document.addEventListener('touchend', touchPadDrop);
+				document.addEventListener('touchcancel', touchPadDrop);
+			}
 		}
 
 		else if(dom.isMobile){
@@ -118,10 +139,9 @@ dom.onLoad(function onLoad(){
 				});
 			}
 		}
-	});
-
-	dom.interact.on('pointerUp', function(evt){
-		log('interact pointerUp', evt);
+	},
+	onPointerUp: function(evt){
+		log()('interact pointerUp', evt);
 
 		if(evt.target.id === 'leftMouseButton'){
 			evt.preventDefault();
@@ -135,16 +155,41 @@ dom.onLoad(function onLoad(){
 			socketClient.reply('click', 3);
 		}
 
+		else if(evt.target.id === 'menuButton'){
+			evt.preventDefault();
+
+			menu.open('main');
+		}
+
+		else if(evt.target.id === 'returnButton'){
+			evt.preventDefault();
+
+			socketClient.reply('key', 'Return');
+		}
+
+		else if(evt.target.id === 'escapeButton'){
+			evt.preventDefault();
+
+			socketClient.reply('key', 'Escape');
+		}
+
 		if(dom.isMobile) evt.target.classList.remove('active');
-	});
+	},
+	onKeyUp: function(evt){
+		if(evt.target.id === 'typeInput'){
+			evt.preventDefault();
 
-	menu.on('selection', function(evt){
-		log(this.isOpen, arguments);
+			evt.target.value = '';
 
-		if(this.isOpen === 'os'){
-			if(evt.item === '< Back') menu.open('main');
+			socketClient.reply('type', evt.key);
+		}
+	},
+	onMenuSelection: function(evt){
+		log()(this.isOpen, arguments);
+		if(evt.item === '< Back') menu.open({ os: 'main', volume: 'main', workspaces: 'os' }[menu.isOpen]);
 
-			else if(evt.item === 'Quit App') socketClient.reply('command', { mod: 'Super_L', key: 'q' });
+		else if(this.isOpen === 'os'){
+			if(evt.item === 'Quit App') socketClient.reply('command', { mod: 'Super_L', key: 'q' });
 
 			else if(evt.item === 'Launch App') socketClient.reply('command', { mod: 'Super_L', key: 'space' });
 
@@ -155,7 +200,7 @@ dom.onLoad(function onLoad(){
 				var modifier = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) }));
 				var key = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) }));
 
-				dialog('sendCommand', 'Send Command', wrapper, 'Cancel|OK');
+				dialog('sendCommand', 'Send Command', wrapper, 2);
 
 				dialog.resolve.sendCommand = function(choice){
 					if(choice === 'Cancel') return;
@@ -165,28 +210,18 @@ dom.onLoad(function onLoad(){
 			}
 		}
 
-		else if(this.isOpen === 'workspaces'){
-			if(evt.item === '< Back') menu.open('os');
+		else if(this.isOpen === 'workspaces') socketClient.reply('command', { mod: 'Super_L', key: evt.item });
 
-			else socketClient.reply('command', { mod: 'Super_L', key: evt.item });
-		}
+		else if(this.isOpen === 'volume') socketClient.reply('key', { Up: 'XF86AudioRaiseVolume', Down: 'XF86AudioLowerVolume', Mute: 'XF86AudioMute'}[evt.item]);
 
-		else if(this.isOpen === 'volume'){
-			if(evt.item === '< Back') menu.open('main');
-
-			else socketClient.reply('key', { Up: 'XF86AudioRaiseVolume', Down: 'XF86AudioLowerVolume', Mute: 'XF86AudioMute'}[evt.item]);
-		}
-
-		else if(evt.item === 'Send Text'){
+		else if(evt.item === 'Keyboard'){
 			menu.close();
 
-			dialog('sendText', 'Send Text', dom.createElem('input', dom.basicTextElem()), 'Cancel|OK');
+			var typeInput = dom.createElem('input', dom.basicTextElem({ id: 'typeInput' }));
+			var returnButton = dom.createElem('button', { textContent: 'Return', id: 'returnButton' });
+			var escapeButton = dom.createElem('button', { textContent: 'Esc', id: 'escapeButton' });
 
-			dialog.resolve.sendText = function(choice){
-				if(choice === 'Cancel') return;
-
-				socketClient.reply('type', dialog.active.content.children[0].value);
-			};
+			dialog('keyboard', 'Keyboard', dom.createElem('div', { appendChildren: [returnButton, typeInput, escapeButton] }), 'Done');
 		}
 
 		else if(evt.item === 'Settings'){
@@ -196,7 +231,7 @@ dom.onLoad(function onLoad(){
 			var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper2 }) });
 			var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper2 }) });
 
-			dialog('settings', 'Settings', wrapper2, 'Cancel|OK');
+			dialog('settings', 'Settings', wrapper2, 2);
 
 			dialog.resolve.settings = function(choice){
 				if(choice === 'Cancel') return;
@@ -205,9 +240,7 @@ dom.onLoad(function onLoad(){
 				dom.storage.set('scrollSpeed', parseFloat(scrollSpeed.value) || 30);
 			};
 		}
+	}
+};
 
-		else if(evt.item === 'Send Return') socketClient.reply('key', 'Return');
-
-		else if(evt.item === 'Send Esc') socketClient.reply('key', 'Escape');
-	});
-});
+dom.onLoad(htpcRemote.load);
