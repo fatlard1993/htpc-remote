@@ -179,9 +179,9 @@ const htpcRemote = {
 		if(evt.target.id === 'typeInput'){
 			evt.preventDefault();
 
-			evt.target.value = '';
+			socketClient.reply('type', evt.target.value);
 
-			socketClient.reply('type', evt.key);
+			evt.target.value = '';
 		}
 	},
 	onMenuSelection: function(evt){
