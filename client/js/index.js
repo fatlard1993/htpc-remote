@@ -47,8 +47,6 @@ const htpcRemote = {
 	onPointerDown: function(evt){
 		log('interact pointerDown', evt);
 
-		socketClient.stayConnected();
-
 		if(evt.target.id === 'touchPad' && (!evt.targetTouches || (evt.targetTouches && evt.targetTouches.length === 1))){
 			var resolvePosition = function(evt){
 				return {
@@ -143,41 +141,13 @@ const htpcRemote = {
 	onPointerUp: function(evt){
 		log()('interact pointerUp', evt);
 
-		if(evt.target.id === 'leftMouseButton'){
-			evt.preventDefault();
+		socketClient.stayConnected();
 
-			socketClient.reply('click', 1);
-		}
-
-		else if(evt.target.id === 'rightMouseButton'){
-			evt.preventDefault();
-
-			socketClient.reply('click', 3);
-		}
-
-		else if(evt.target.id === 'menuButton'){
+		if(evt.target.id === 'menuButton'){
 			evt.preventDefault();
 
 			if(menu.isOpen) menu.close();
 			else menu.open('main');
-		}
-
-		else if(evt.target.id === 'returnButton'){
-			evt.preventDefault();
-
-			socketClient.reply('key', 'Return');
-		}
-
-		else if(evt.target.id === 'escapeButton'){
-			evt.preventDefault();
-
-			socketClient.reply('key', 'Escape');
-		}
-
-		else if(evt.target.id === 'backspaceButton'){
-			evt.preventDefault();
-
-			socketClient.reply('key', 'BackSpace');
 		}
 
 		if(dom.isMobile) evt.target.classList.remove('active');
