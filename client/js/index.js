@@ -43,6 +43,10 @@ const htpcRemote = {
 
 		document.addEventListener('mousedown', htpcRemote.onPointerDown);
 		document.addEventListener('touchstart', htpcRemote.onPointerDown);
+
+		document.addEventListener('visibilitychange', function() {
+			if(document.visibilityState) socketClient.stayConnected();
+		});
 	},
 	onPointerDown: function(evt){
 		if(dom.isMobile && !evt.targetTouches) return;
@@ -182,16 +186,17 @@ const htpcRemote = {
 	},
 	onMenuSelection: function(evt){
 		log()(this.isOpen, arguments);
+
 		if(evt.item === '< Back') menu.open({ os: 'main', volume: 'main', workspaces: 'os' }[menu.isOpen]);
 
 		else if(this.isOpen === 'os'){
+			menu.close();
+
 			if(evt.item === 'Quit App') socketClient.reply('command', { mod: 'Super_L', key: 'q' });
 
 			else if(evt.item === 'Launch App') socketClient.reply('command', { mod: 'Super_L', key: 'space' });
 
 			else if(evt.item === 'Send Command'){
-				menu.close();
-
 				var wrapper = dom.createElem('div');
 				var modifier = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) }));
 				var key = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) }));
@@ -206,7 +211,11 @@ const htpcRemote = {
 			}
 		}
 
-		else if(this.isOpen === 'workspaces') socketClient.reply('command', { mod: 'Super_L', key: evt.item });
+		else if(this.isOpen === 'workspaces'){
+			menu.close();
+
+			socketClient.reply('command', { mod: 'Super_L', key: evt.item });
+		}
 
 		else if(this.isOpen === 'volume') socketClient.reply('key', { Up: 'XF86AudioRaiseVolume', Down: 'XF86AudioLowerVolume', Mute: 'XF86AudioMute'}[evt.item]);
 
