@@ -39,12 +39,7 @@ const htpcRemote = {
 
 		dom.interact.on('keyUp', htpcRemote.onKeyUp);
 
-		menu.on('selection', htpcRemote.onMenuSelection);
-
-		document.addEventListener('mousedown', htpcRemote.onPointerDown);
-		document.addEventListener('touchstart', htpcRemote.onPointerDown);
-
-		document.addEventListener('visibilitychange', function() {
+		document.addEventListener('visibilitychange', () => {
 			if(document.visibilityState) socketClient.stayConnected();
 		});
 	},
@@ -56,6 +51,8 @@ const htpcRemote = {
 		init: function(){
 			menu.init(htpcRemote.menu.items);
 
+			menu.on('selection', htpcRemote.menu.onSelection);
+
 			htpcRemote.menuButton = dom.getElemById('menuButton');
 
 			dom.onPointerUp(htpcRemote.menuButton, function(evt){
@@ -65,6 +62,62 @@ const htpcRemote = {
 
 				else menu.open('main');
 			});
+		},
+		onSelection: function(evt){
+			log()(this.isOpen, arguments);
+
+			htpcRemote.tactileResponse();
+
+			if(evt.item === '< Back') menu.open('main');
+
+			else if(this.isOpen === 'workspaces'){
+				menu.close();
+
+				socketClient.reply('command', { mod: 'Super_L', key: evt.item });
+			}
+
+			else if(this.isOpen === 'volume') socketClient.reply('key', { Up: 'XF86AudioRaiseVolume', Down: 'XF86AudioLowerVolume', Mute: 'XF86AudioMute'}[evt.item]);
+
+			else if(evt.item === 'Keyboard'){
+				menu.close();
+
+				dom[htpcRemote.keyboard.elem.classList.contains('disappear') ? 'show' : 'disappear'](htpcRemote.keyboard.elem);
+
+				htpcRemote.keyboard.fix();
+			}
+
+			if(evt.item === 'Quit App'){
+				menu.close();
+
+				socketClient.reply('command', { mod: 'Super_L', key: 'q' });
+			}
+
+			else if(evt.item === 'Launch App'){
+				menu.close();
+
+				socketClient.reply('command', { mod: 'Super_L', key: 'space' });
+
+				dom.show(htpcRemote.keyboard.elem);
+
+				htpcRemote.keyboard.fix();
+			}
+
+			else if(evt.item === 'Settings'){
+				menu.close();
+
+				var wrapper2 = dom.createElem('div');
+				var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper2 }) });
+				var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper2 }) });
+
+				dialog('settings', 'Settings', wrapper2, 2);
+
+				dialog.resolve.settings = function(choice){
+					if(choice === 'Cancel') return;
+
+					dom.storage.set('cursorSpeed', parseFloat(cursorSpeed.value) || 1.5);
+					dom.storage.set('scrollSpeed', parseFloat(scrollSpeed.value) || 30);
+				};
+			}
 		}
 	},
 	touchPad: {
@@ -242,62 +295,6 @@ const htpcRemote = {
 					++index;
 				}
 			}
-		}
-	},
-	onMenuSelection: function(evt){
-		log()(this.isOpen, arguments);
-
-		htpcRemote.tactileResponse();
-
-		if(evt.item === '< Back') menu.open('main');
-
-		else if(this.isOpen === 'workspaces'){
-			menu.close();
-
-			socketClient.reply('command', { mod: 'Super_L', key: evt.item });
-		}
-
-		else if(this.isOpen === 'volume') socketClient.reply('key', { Up: 'XF86AudioRaiseVolume', Down: 'XF86AudioLowerVolume', Mute: 'XF86AudioMute'}[evt.item]);
-
-		else if(evt.item === 'Keyboard'){
-			menu.close();
-
-			dom[htpcRemote.keyboard.elem.classList.contains('disappear') ? 'show' : 'disappear'](htpcRemote.keyboard.elem);
-
-			htpcRemote.keyboard.fix();
-		}
-
-		if(evt.item === 'Quit App'){
-			menu.close();
-
-			socketClient.reply('command', { mod: 'Super_L', key: 'q' });
-		}
-
-		else if(evt.item === 'Launch App'){
-			menu.close();
-
-			socketClient.reply('command', { mod: 'Super_L', key: 'space' });
-
-			dom.show(htpcRemote.keyboard.elem);
-
-			htpcRemote.keyboard.fix();
-		}
-
-		else if(evt.item === 'Settings'){
-			menu.close();
-
-			var wrapper2 = dom.createElem('div');
-			var cursorSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: wrapper2 }) });
-			var scrollSpeed = dom.createElem('input', { type: 'number', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: wrapper2 }) });
-
-			dialog('settings', 'Settings', wrapper2, 2);
-
-			dialog.resolve.settings = function(choice){
-				if(choice === 'Cancel') return;
-
-				dom.storage.set('cursorSpeed', parseFloat(cursorSpeed.value) || 1.5);
-				dom.storage.set('scrollSpeed', parseFloat(scrollSpeed.value) || 30);
-			};
 		}
 	}
 };
