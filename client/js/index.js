@@ -50,9 +50,7 @@ const htpcRemote = {
 	},
 	menu: {
 		items: {
-			main: ['Keyboard', 'OS', 'Volume', 'Settings'],
-			os: ['< Back', 'Quit App', 'Launch App', 'Workspaces', 'Send Command'],
-			workspaces: ['< Back', '1', '2', '3', '4', '5'],
+			main: ['Keyboard', 'Volume', 'Quit App', 'Launch App', 'Settings'],
 			volume: ['< Back', 'Up', 'Down', 'Mute']
 		},
 		init: function(){
@@ -251,29 +249,7 @@ const htpcRemote = {
 
 		htpcRemote.tactileResponse();
 
-		if(evt.item === '< Back') menu.open({ os: 'main', volume: 'main', workspaces: 'os' }[menu.isOpen]);
-
-		else if(this.isOpen === 'os'){
-			menu.close();
-
-			if(evt.item === 'Quit App') socketClient.reply('command', { mod: 'Super_L', key: 'q' });
-
-			else if(evt.item === 'Launch App') socketClient.reply('command', { mod: 'Super_L', key: 'space' });
-
-			else if(evt.item === 'Send Command'){
-				var wrapper = dom.createElem('div');
-				var modifier = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Modifier', appendTo: wrapper }) }));
-				var key = dom.createElem('input', dom.basicTextElem({ appendTo: dom.createElem('label', { textContent: 'Key', appendTo: wrapper }) }));
-
-				dialog('sendCommand', 'Send Command', wrapper, 2);
-
-				dialog.resolve.sendCommand = function(choice){
-					if(choice === 'Cancel') return;
-
-					socketClient.reply('command', { mod: modifier.value, key: key.value });
-				};
-			}
-		}
+		if(evt.item === '< Back') menu.open('main');
 
 		else if(this.isOpen === 'workspaces'){
 			menu.close();
@@ -288,7 +264,23 @@ const htpcRemote = {
 
 			dom[htpcRemote.keyboard.elem.classList.contains('disappear') ? 'show' : 'disappear'](htpcRemote.keyboard.elem);
 
-			dom.maintenance.run();
+			htpcRemote.keyboard.fix();
+		}
+
+		if(evt.item === 'Quit App'){
+			menu.close();
+
+			socketClient.reply('command', { mod: 'Super_L', key: 'q' });
+		}
+
+		else if(evt.item === 'Launch App'){
+			menu.close();
+
+			socketClient.reply('command', { mod: 'Super_L', key: 'space' });
+
+			dom.show(htpcRemote.keyboard.elem);
+
+			htpcRemote.keyboard.fix();
 		}
 
 		else if(evt.item === 'Settings'){
