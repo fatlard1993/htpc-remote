@@ -67,6 +67,106 @@ div#touchPad {
 	height: 100%;
 }
 
+div#keyboard {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+
+	button {
+		&.backspace:after {
+			@extend .fas;
+
+			content: "\f55a";
+		}
+
+		&.left:after {
+			@extend .fas;
+
+			content: "\f053";
+		}
+
+		&.up:after {
+			@extend .fas;
+
+			content: "\f077";
+		}
+
+		&.down:after {
+			@extend .fas;
+
+			content: "\f078";
+		}
+
+		&.right:after {
+			@extend .fas;
+
+			content: "\f054";
+		}
+
+		&.pgUp:after {
+			@extend .fas;
+
+			content: "\f3bf";
+		}
+
+		&.pgDown:after {
+			@extend .fas;
+
+			content: "\f3be";
+		}
+
+		&.home:after {
+			@extend .fas;
+
+			content: "\f015";
+		}
+
+		&.return:after {
+			@extend .fas;
+			@extend .fa-rotate-90;
+
+			content: "\f3be";
+		}
+
+		border: none;
+		padding: 0;
+		border-radius: unset;
+		height: 100%;
+		background-color: $black;
+		color: $white;
+		font-size: 16px;
+		height: 32px;
+		margin-bottom: 1px;
+		margin-right: 1px;
+		transition: transform .2s;
+
+		&.active, &:active {
+			background-color: $white;
+			color: $black;
+			height: 30px;
+			transform: scale(2) translateY(-30px);
+			transition: transform .05s;
+		}
+	}
+
+	div button:first-of-type.active, div button:first-of-type:active {
+		transform: scale(2) translateY(-30px) translateX(20px);
+	}
+
+	div button:last-of-type.active, div button:last-of-type:active {
+		transform: scale(2) translateY(-30px) translateX(-20px);
+	}
+
+	div:last-of-type button {
+		margin-bottom: 0px;
+	}
+
+	div button:last-of-type {
+		margin-right: 0px;
+	}
+}
+
 button#leftMouseButton, button#rightMouseButton {
 	width: 50%;
 	position: absolute;

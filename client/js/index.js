@@ -22,21 +22,21 @@ socketClient.stayConnected = function(){
 
 const htpcRemote = {
 	load: function(){
-		menu.init({
-			main: ['Keyboard', 'OS', 'Volume', 'Settings'],
-			os: ['< Back', 'Quit App', 'Launch App', 'Workspaces', 'Send Command'],
-			workspaces: ['< Back', '1', '2', '3', '4', '5'],
-			volume: ['< Back', 'Up', 'Down', 'Mute']
-		});
+		htpcRemote.menu.init();
+
+		htpcRemote.touchPad.init();
+
+		htpcRemote.keyboard.init();
 
 		socketClient.init();
 
 		dom.mobile.detect();
 
+		dom.maintenance.init([htpcRemote.keyboard.fix]);
+
 		if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 2);
 		if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
 
-		dom.interact.on('pointerUp', htpcRemote.onPointerUp);
 		dom.interact.on('keyUp', htpcRemote.onKeyUp);
 
 		menu.on('selection', htpcRemote.onMenuSelection);
@@ -48,144 +48,208 @@ const htpcRemote = {
 			if(document.visibilityState) socketClient.stayConnected();
 		});
 	},
-	onPointerDown: function(evt){
-		if(dom.isMobile && !evt.targetTouches) return;
+	menu: {
+		items: {
+			main: ['Keyboard', 'OS', 'Volume', 'Settings'],
+			os: ['< Back', 'Quit App', 'Launch App', 'Workspaces', 'Send Command'],
+			workspaces: ['< Back', '1', '2', '3', '4', '5'],
+			volume: ['< Back', 'Up', 'Down', 'Mute']
+		},
+		init: function(){
+			menu.init(htpcRemote.menu.items);
 
-		log('interact pointerDown', evt);
+			htpcRemote.menuButton = dom.getElemById('menuButton');
 
-		if(evt.target.id === 'touchPad' && (!evt.targetTouches || (evt.targetTouches && evt.targetTouches.length === 1))){
-			var resolvePosition = function(evt){
-				return {
-					x: (evt.targetTouches) ? evt.targetTouches[0].pageX : evt.clientX,
-					y: (evt.targetTouches) ? evt.targetTouches[0].pageY : evt.clientY
-				};
-			};
+			dom.onPointerUp(htpcRemote.menuButton, function(evt){
+				evt.stop();
 
-			var getPositionDifference = function(position1, position2, multiplier){
-				return {
-					x: Math.round((position1.x - position2.x) * multiplier),
-					y: Math.round((position1.y - position2.y) * multiplier)
-				};
-			};
+				if(menu.isOpen) menu.close(1);
 
-			var getScrollDirections = function(position, speed){
-				return {
-					x: (Math.abs(position.x) > speed) ? position.x : 0,
-					y: (Math.abs(position.y) > speed) ? position.y : 0
-				};
-			};
-
-			var lastPosition, moved, rightClick, triggered, newPosition, positionDifference;
-			var multiplier = parseFloat(dom.storage.get('cursorSpeed'));
-			var scrollSpeed = parseFloat(dom.storage.get('scrollSpeed'));
-
-			var touchPadMove = function(evt){
-				evt.preventDefault();
-
-				newPosition = resolvePosition(evt);
-
-				if(!lastPosition) lastPosition = newPosition;
-
-				positionDifference = getPositionDifference(newPosition, lastPosition, multiplier);
-
-				rightClick = evt.which === 3 || (evt.targetTouches && evt.targetTouches.length === 2);
-
-				if(Math.abs(positionDifference.x) <= (rightClick ? scrollSpeed : 0) && Math.abs(positionDifference.y) <= (rightClick ? scrollSpeed : 0)) return;
-
-				socketClient.reply(rightClick ? 'touchPadScroll' : 'touchPadMove', rightClick ? getScrollDirections(positionDifference, scrollSpeed) : positionDifference);
-
-				lastPosition = newPosition;
-
-				moved = true;
-			};
-
-			var touchPadDrop = function(evt){
-				evt.preventDefault();
-
-				if(!triggered && !moved){
-					socketClient.reply('click', rightClick || (evt.targetTouches && evt.targetTouches.length === 2) ? 3 : 1);
-
-					triggered = true;
-				}
-
-				if(!evt.targetTouches){
-					document.removeEventListener('mousemove', touchPadMove);
-					document.removeEventListener('mouseup', touchPadDrop);
-				}
-
-				else{
-					document.removeEventListener('touchmove', touchPadMove);
-					document.removeEventListener('touchend', touchPadDrop);
-					document.removeEventListener('touchcancel', touchPadDrop);
-				}
-			};
-
-			if(!evt.targetTouches){
-				document.addEventListener('mousemove', touchPadMove);
-				document.addEventListener('mouseup', touchPadDrop);
-			}
-
-			else{
-				document.addEventListener('touchmove', touchPadMove);
-				document.addEventListener('touchend', touchPadDrop);
-				document.addEventListener('touchcancel', touchPadDrop);
-			}
-		}
-
-		else if(dom.isMobile){
-			evt.target.classList.add('active');
-
-			if(evt.target.parentElement.id === 'menu'){
-				evt.target.addEventListener('pointerleave', function menuItemLeave(evt){
-					evt.target.classList.remove('active');
-
-					evt.target.removeEventListener('pointerleave', menuItemLeave);
-				});
-			}
+				else menu.open('main');
+			});
 		}
 	},
-	onPointerUp: function(evt){
-		log()('interact pointerUp', evt);
+	touchPad: {
+		init: function(){
+			htpcRemote.touchPad.elem = dom.getElemById('touchPad');
 
-		socketClient.stayConnected();
+			dom.onPointerDown(htpcRemote.touchPad.elem, htpcRemote.touchPad.touchStart);
+			dom.onPointerUp(htpcRemote.touchPad.elem, htpcRemote.touchPad.touchEnd);
+		},
+		getPositionDifference: function(position1, position2, multiplier){
+			return {
+				x: Math.round((position1.x - position2.x) * multiplier),
+				y: Math.round((position1.y - position2.y) * multiplier)
+			};
+		},
+		getScrollDirections: function(position, speed){
+			return {
+				x: (Math.abs(position.x) > speed) ? position.x : 0,
+				y: (Math.abs(position.y) > speed) ? position.y : 0
+			};
+		},
+		touchStart: function(evt){
+			evt.stop();
 
-		if(evt.target.id === 'menuButton'){
+			htpcRemote.touchPad.multiplier = parseFloat(dom.storage.get('cursorSpeed'));
+			htpcRemote.touchPad.scrollSpeed = parseFloat(dom.storage.get('scrollSpeed'));
+
+			document.addEventListener(`${evt.pointerType}move`, htpcRemote.touchPad.touchMove);
+		},
+		touchMove: function(evt){
 			evt.preventDefault();
 
-			if(menu.isOpen) menu.close(1);
+			var newPosition = dom.resolvePosition(evt);
 
-			else menu.open('main');
+			if(!htpcRemote.touchPad.lastPosition) htpcRemote.touchPad.lastPosition = newPosition;
+
+			var positionDifference = htpcRemote.touchPad.getPositionDifference(newPosition, htpcRemote.touchPad.lastPosition, htpcRemote.touchPad.multiplier);
+
+			htpcRemote.touchPad.rightClick  = evt.which === 3 || (evt.targetTouches && evt.targetTouches.length === 2);
+
+			if(Math.abs(positionDifference.x) <= (htpcRemote.touchPad.rightClick  ? htpcRemote.touchPad.scrollSpeed : 0) && Math.abs(positionDifference.y) <= (htpcRemote.touchPad.rightClick  ? htpcRemote.touchPad.scrollSpeed : 0)) return;
+
+			socketClient.reply(htpcRemote.touchPad.rightClick  ? 'touchPadScroll' : 'touchPadMove', htpcRemote.touchPad.rightClick  ? htpcRemote.touchPad.getScrollDirections(positionDifference, htpcRemote.touchPad.scrollSpeed) : positionDifference);
+
+			htpcRemote.touchPad.lastPosition = newPosition;
+
+			htpcRemote.touchPad.moved = true;
+		},
+		touchEnd: function(evt){
+			evt.stop();
+
+			if(!htpcRemote.touchPad.moved){
+				htpcRemote.tactileResponse();
+
+				socketClient.reply('click', htpcRemote.touchPad.rightClick || (evt.targetTouches && evt.targetTouches.length === 2) ? 3 : 1);
+
+				delete htpcRemote.touchPad.moved;
+				delete htpcRemote.touchPad.rightClick;
+				delete htpcRemote.touchPad.lastPosition;
+			}
+
+			document.removeEventListener(`${evt.pointerType}move`, htpcRemote.touchPad.touchMove);
 		}
-
-		if(dom.isMobile) evt.target.classList.remove('active');
 	},
-	onKeyUp: function(evt){
-		if(evt.target.id === 'typeInput'){
-			evt.preventDefault();
+	tactileResponse: function(){
+		if(!navigator.vibrate) return;
 
-			var input = evt.target.value.substr(-1);
+		navigator.vibrate(50);
+	},
+	keyboard: {
+		layout: [
+			['`:~:~', '[:~:{', ']:~:}', '\\:~:|', ';:~::', '\':~:"', ',:~:<', '.:~:>', '/:~:?', '-:~:_', '=:~:+'],
+			['Esc', '1:~:!', '2:~:@', '3:~:#', '4:~:$', '5:~:%', '6:~:^', '7:~:&', '8:~:*', '9:~:(', '0:~:)'],
+			['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+			['Tab', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+			['Alt', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
+			['Shift', 'Ctrl', 'left:~:home', 'up:~:pgUp', 'down:~:pgDown', 'right:~:End', 'Mod'],
+			['Alternates', 'Space', 'return']
+		],
+		controlKeys: {
+			Esc: 'Escape',
+			Tab: 'Tab',
+			Alt: 'Alt_L',
+			backspace: 'BackSpace',
+			Shift: 'Shift_L',
+			Ctrl: 'Control_L',
+			left: 'Left',
+			up: 'Up',
+			down: 'Down',
+			right: 'Right',
+			Mod: 'Super_L',
+			home: 'Home',
+			pgUp: 'Prior',
+			pgDown: 'Next',
+			End: 'End',
+			Space: 'Space',
+			return: 'Return'
+		},
+		modifiers: {
+			Alt: 1,
+			Shift: 1,
+			Ctrl: 1,
+			Mod: 1
+		},
+		keys: [],
+		init: function(){
+			htpcRemote.keyboard.elem = dom.getElemById('keyboard');
 
-			dom.remove(evt.target);
+			for(var x = 0, xCount = htpcRemote.keyboard.layout.length; x < xCount; ++x){
+				var keyRow = dom.createElem('div', { appendTo: htpcRemote.keyboard.elem });
 
-			var newInput = dom.createElem('input', dom.basicTextElem({ id: 'typeInput' }));
+				for(var y = 0, yCount = htpcRemote.keyboard.layout[x].length; y < yCount; ++y){
+					var keyText = htpcRemote.keyboard.layout[x][y].split(':~:')[0];
 
-			dom.prependChild(dialog.active.content, newInput);
+					var key = dom.createElem('button', {
+						className: keyText,
+						appendTo: keyRow,
+						textContent: { backspace: 1, left: 1, up: 1, down: 1, right: 1, return: 1, pgUp: 1, pgDown: 1, home: 1 }[keyText] ? '' : keyText,
+						onPointerDown: (evt) => {
+							evt.stop();
 
-			newInput.focus();
+							evt.target.classList.add('active');
+						},
+						onPointerUp: (evt) => {
+							evt.stop();
 
-			var n = null, map = [n, n, n, n, n, n, n, n, 'BackSpace', 'Tab', n, n, n, 'Return', 'Return', n, n, n, n, n, n, n, n, n, n, n, n, 'Escape', n, n, n, n, 'Space', 'Next', 'Prior', 'End', 'Home', 'Left', 'Up', 'Right', 'Down', n, n, n, n, n, 'Delete', n, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', n, n, n, n, n, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '+', '|', '-', '.', '/', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19', 'F20', 'F21', 'F22', 'F23', 'F24', n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, '^', '!', '"', '#', '$', '%', '&', '_', '(', ')', '*', '+', '|', '-', '{', '}', '~', n, n, n, n, n, n, n, n, n, ';', '=', ',', '-', '.', '/', '`', n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, '[', '\\', ']', '\'', n, n, n, n, n, n, 'INPUT', n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n];
+							evt.target.classList.remove('active');
 
-			var pressed = map[evt.which || evt.keyCode];
+							if(htpcRemote.keyboard.modifiers[evt.target.keyText]) htpcRemote.keyboard.currentModifier = htpcRemote.keyboard.controlKeys[evt.target.keyText];
 
-			if(pressed === 'INPUT') pressed = input;
+							else if(htpcRemote.keyboard.controlKeys[evt.target.keyText]) socketClient.reply('key', htpcRemote.keyboard.controlKeys[evt.target.keyText]);
 
-			if(!pressed) return;
+							else if(evt.target.keyText === 'Alternates') htpcRemote.keyboard.toggleAlternates();
 
-			socketClient.reply(pressed.length > 1 ? 'key' : 'type', evt.shiftKey ? pressed.toUpperCase() : pressed);
+							else{
+								if(htpcRemote.keyboard.currentModifier) socketClient.reply('command', { mod: htpcRemote.keyboard.currentModifier, key: evt.target.textContent });
+
+								else socketClient.reply('type', evt.target.textContent);
+							}
+
+							if(!htpcRemote.keyboard.modifiers[evt.target.keyText]) delete htpcRemote.keyboard.currentModifier;
+
+							htpcRemote.tactileResponse();
+						}
+					});
+
+					key.keyText = keyText;
+					key.alternateText = htpcRemote.keyboard.layout[x][y].split(':~:')[1] || (keyText.length > 1 ? keyText : keyText.toUpperCase());
+
+					htpcRemote.keyboard.keys.push(key);
+				}
+			}
+		},
+		toggleAlternates: function(on){
+			if(typeof on === 'undefined') on = !htpcRemote.keyboard.showAlternates;
+
+			if(htpcRemote.keyboard.showAlternates === on) return;
+
+			htpcRemote.keyboard.showAlternates = on;
+
+			for(var x = 0, count = htpcRemote.keyboard.keys.length; x < count; ++x){
+				var text = htpcRemote.keyboard.keys[x][(on ? 'alternate' : 'key') +'Text'];
+
+				htpcRemote.keyboard.keys[x].className = text;
+				htpcRemote.keyboard.keys[x].textContent = { backspace: 1, left: 1, up: 1, down: 1, right: 1, return: 1, pgUp: 1, pgDown: 1, home: 1 }[text] ? '' : text;
+			}
+		},
+		fix: function(){
+			if(!htpcRemote.keyboard.keys.length) return;
+
+			for(var x = 0, xCount = htpcRemote.keyboard.layout.length, index = 0; x < xCount; ++x){
+				for(var y = 0, yCount = htpcRemote.keyboard.layout[x].length; y < yCount; ++y){
+					htpcRemote.keyboard.keys[index].style.width = ((htpcRemote.keyboard.elem.clientWidth / yCount) - (y + 1 === yCount ? 0 : 1)) +'px';
+
+					++index;
+				}
+			}
 		}
 	},
 	onMenuSelection: function(evt){
 		log()(this.isOpen, arguments);
+
+		htpcRemote.tactileResponse();
 
 		if(evt.item === '< Back') menu.open({ os: 'main', volume: 'main', workspaces: 'os' }[menu.isOpen]);
 
@@ -222,10 +286,9 @@ const htpcRemote = {
 		else if(evt.item === 'Keyboard'){
 			menu.close();
 
-			var typeInput = dom.createElem('input', dom.basicTextElem({ id: 'typeInput' }));
-			var escapeButton = dom.createElem('button', { textContent: 'Esc', id: 'escapeButton' });
+			dom[htpcRemote.keyboard.elem.classList.contains('disappear') ? 'show' : 'disappear'](htpcRemote.keyboard.elem);
 
-			dialog('keyboard ignoreReturn', 'Keyboard', dom.createElem('div', { appendChildren: [typeInput, escapeButton] }), 'Done');
+			dom.maintenance.run();
 		}
 
 		else if(evt.item === 'Settings'){
