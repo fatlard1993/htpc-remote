@@ -127,10 +127,10 @@ const htpcRemote = {
 			dom.onPointerDown(htpcRemote.touchPad.elem, htpcRemote.touchPad.touchStart);
 			dom.onPointerUp(htpcRemote.touchPad.elem, htpcRemote.touchPad.touchEnd);
 		},
-		getPositionDifference: function(position1, position2, multiplier){
+		getPositionDifference: function(position1, position2){
 			return {
-				x: Math.round((position1.x - position2.x) * multiplier),
-				y: Math.round((position1.y - position2.y) * multiplier)
+				x: Math.round((position1.x - position2.x) * htpcRemote.touchPad.multiplier),
+				y: Math.round((position1.y - position2.y) * htpcRemote.touchPad.multiplier)
 			};
 		},
 		getScrollDirections: function(position, speed){
@@ -154,13 +154,13 @@ const htpcRemote = {
 
 			if(!htpcRemote.touchPad.lastPosition) htpcRemote.touchPad.lastPosition = newPosition;
 
-			var positionDifference = htpcRemote.touchPad.getPositionDifference(newPosition, htpcRemote.touchPad.lastPosition, htpcRemote.touchPad.multiplier);
+			var positionDifference = htpcRemote.touchPad.getPositionDifference(newPosition, htpcRemote.touchPad.lastPosition);
 
-			htpcRemote.touchPad.rightClick  = evt.which === 3 || (evt.targetTouches && evt.targetTouches.length === 2);
+			htpcRemote.touchPad.rightClick = evt.which === 3 || (evt.targetTouches && evt.targetTouches.length === 2);
 
-			if(Math.abs(positionDifference.x) <= (htpcRemote.touchPad.rightClick  ? htpcRemote.touchPad.scrollSpeed : 0) && Math.abs(positionDifference.y) <= (htpcRemote.touchPad.rightClick  ? htpcRemote.touchPad.scrollSpeed : 0)) return;
+			if(Math.abs(positionDifference.x) <= (htpcRemote.touchPad.rightClick ? htpcRemote.touchPad.scrollSpeed : 0) && Math.abs(positionDifference.y) <= (htpcRemote.touchPad.rightClick ? htpcRemote.touchPad.scrollSpeed : 0)) return;
 
-			socketClient.reply(htpcRemote.touchPad.rightClick  ? 'touchPadScroll' : 'touchPadMove', htpcRemote.touchPad.rightClick  ? htpcRemote.touchPad.getScrollDirections(positionDifference, htpcRemote.touchPad.scrollSpeed) : positionDifference);
+			socketClient.reply(htpcRemote.touchPad.rightClick  ? 'touchPadScroll' : 'touchPadMove', htpcRemote.touchPad.rightClick ? htpcRemote.touchPad.getScrollDirections(positionDifference, htpcRemote.touchPad.scrollSpeed) : positionDifference);
 
 			htpcRemote.touchPad.lastPosition = newPosition;
 
@@ -173,11 +173,11 @@ const htpcRemote = {
 				htpcRemote.tactileResponse();
 
 				socketClient.reply('click', htpcRemote.touchPad.rightClick || (evt.targetTouches && evt.targetTouches.length === 2) ? 3 : 1);
-
-				delete htpcRemote.touchPad.moved;
-				delete htpcRemote.touchPad.rightClick;
-				delete htpcRemote.touchPad.lastPosition;
 			}
+
+			delete htpcRemote.touchPad.moved;
+			delete htpcRemote.touchPad.rightClick;
+			delete htpcRemote.touchPad.lastPosition;
 
 			document.removeEventListener(`${evt.pointerType}move`, htpcRemote.touchPad.touchMove);
 		}
