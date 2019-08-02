@@ -43,6 +43,11 @@ const htpcRemote = {
 			if(document.visibilityState) socketClient.stayConnected();
 		});
 	},
+	tactileResponse: function(){
+		if(!navigator.vibrate) return;
+
+		navigator.vibrate(50);
+	},
 	menu: {
 		items: {
 			main: ['Keyboard', 'Volume', 'Quit App', 'Launch App', 'Settings'],
@@ -81,9 +86,7 @@ const htpcRemote = {
 			else if(evt.item === 'Keyboard'){
 				menu.close();
 
-				dom[htpcRemote.keyboard.elem.classList.contains('disappear') ? 'show' : 'disappear'](htpcRemote.keyboard.elem);
-
-				htpcRemote.keyboard.fix();
+				htpcRemote.keyboard[htpcRemote.keyboard.elem.classList.contains('disappear') ? 'show' : 'hide']();
 			}
 
 			if(evt.item === 'Quit App'){
@@ -97,9 +100,7 @@ const htpcRemote = {
 
 				socketClient.reply('command', { mod: 'Super_L', key: 'space' });
 
-				dom.show(htpcRemote.keyboard.elem);
-
-				htpcRemote.keyboard.fix();
+				htpcRemote.keyboard.show();
 			}
 
 			else if(evt.item === 'Settings'){
@@ -148,7 +149,13 @@ const htpcRemote = {
 			document.addEventListener(`${evt.pointerType}move`, htpcRemote.touchPad.touchMove);
 		},
 		touchMove: function(evt){
-			evt.preventDefault();
+			if(evt.cancelable) evt.preventDefault();
+
+			var thisMoveTime = performance.now();
+
+			if(thisMoveTime - htpcRemote.touchPad.lastMoveTime < 30) return;
+
+			htpcRemote.touchPad.lastMoveTime = thisMoveTime;
 
 			var newPosition = dom.resolvePosition(evt);
 
@@ -182,20 +189,16 @@ const htpcRemote = {
 			document.removeEventListener(`${evt.pointerType}move`, htpcRemote.touchPad.touchMove);
 		}
 	},
-	tactileResponse: function(){
-		if(!navigator.vibrate) return;
-
-		navigator.vibrate(50);
-	},
 	keyboard: {
 		layout: [
+			['Esc', 'Tab', 'Shift', 'Ctrl', 'Mod',  'Alt', 'backspace'],
 			['`:~:~', '[:~:{', ']:~:}', '\\:~:|', ';:~::', '\':~:"', ',:~:<', '.:~:>', '/:~:?', '-:~:_', '=:~:+'],
-			['Esc', '1:~:!', '2:~:@', '3:~:#', '4:~:$', '5:~:%', '6:~:^', '7:~:&', '8:~:*', '9:~:(', '0:~:)'],
+			['1:~:!', '2:~:@', '3:~:#', '4:~:$', '5:~:%', '6:~:^', '7:~:&', '8:~:*', '9:~:(', '0:~:)'],
 			['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-			['Tab', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-			['Alt', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
-			['Shift', 'Ctrl', 'left:~:home', 'up:~:pgUp', 'down:~:pgDown', 'right:~:End', 'Mod'],
-			['Alternates', 'Space', 'return']
+			['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+			['z', 'x', 'c', 'v', 'b', 'n', 'm'],
+			['Alternates', 'Space', 'return'],
+			['left:~:home', 'up:~:pgUp', 'down:~:pgDown', 'right:~:End']
 		],
 		controlKeys: {
 			Esc: 'Escape',
@@ -213,7 +216,7 @@ const htpcRemote = {
 			pgUp: 'Prior',
 			pgDown: 'Next',
 			End: 'End',
-			Space: 'Space',
+			Space: 'space',
 			return: 'Return'
 		},
 		modifiers: {
@@ -246,19 +249,21 @@ const htpcRemote = {
 
 							evt.target.classList.remove('active');
 
-							if(htpcRemote.keyboard.modifiers[evt.target.keyText]) htpcRemote.keyboard.currentModifier = htpcRemote.keyboard.controlKeys[evt.target.keyText];
+							var keyText = evt.target[(htpcRemote.keyboard.showAlternates ? 'alternate' : 'key') +'Text'];
 
-							else if(htpcRemote.keyboard.controlKeys[evt.target.keyText]) socketClient.reply('key', htpcRemote.keyboard.controlKeys[evt.target.keyText]);
+							if(htpcRemote.keyboard.modifiers[keyText]) htpcRemote.keyboard.currentModifier = htpcRemote.keyboard.controlKeys[keyText];
 
-							else if(evt.target.keyText === 'Alternates') htpcRemote.keyboard.toggleAlternates();
+							else if(htpcRemote.keyboard.controlKeys[keyText]) socketClient.reply('key', htpcRemote.keyboard.controlKeys[keyText]);
+
+							else if(keyText === 'Alternates') htpcRemote.keyboard.toggleAlternates();
 
 							else{
-								if(htpcRemote.keyboard.currentModifier) socketClient.reply('command', { mod: htpcRemote.keyboard.currentModifier, key: evt.target.textContent });
+								if(htpcRemote.keyboard.currentModifier) socketClient.reply('command', { mod: htpcRemote.keyboard.currentModifier, key: keyText });
 
-								else socketClient.reply('type', evt.target.textContent);
+								else socketClient.reply('type', keyText);
 							}
 
-							if(!htpcRemote.keyboard.modifiers[evt.target.keyText]) delete htpcRemote.keyboard.currentModifier;
+							if(!htpcRemote.keyboard.modifiers[keyText]) delete htpcRemote.keyboard.currentModifier;
 
 							htpcRemote.tactileResponse();
 						}
@@ -284,6 +289,12 @@ const htpcRemote = {
 				htpcRemote.keyboard.keys[x].className = text;
 				htpcRemote.keyboard.keys[x].textContent = { backspace: 1, left: 1, up: 1, down: 1, right: 1, return: 1, pgUp: 1, pgDown: 1, home: 1 }[text] ? '' : text;
 			}
+		},
+		show: function(){
+			dom.show(htpcRemote.keyboard.elem, '', htpcRemote.keyboard.fix);
+		},
+		hide: function(){
+			dom.disappear(htpcRemote.keyboard.elem);
 		},
 		fix: function(){
 			if(!htpcRemote.keyboard.keys.length) return;
