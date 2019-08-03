@@ -143,6 +143,8 @@ const htpcRemote = {
 		touchStart: function(evt){
 			if(evt.cancelable) evt.preventDefault();
 
+			htpcRemote.touchPad.started = true;
+
 			htpcRemote.touchPad.multiplier = parseFloat(dom.storage.get('cursorSpeed'));
 			htpcRemote.touchPad.scrollSpeed = parseFloat(dom.storage.get('scrollSpeed'));
 
@@ -174,6 +176,8 @@ const htpcRemote = {
 			htpcRemote.touchPad.moved = true;
 		},
 		touchEnd: function(evt){
+			if(!htpcRemote.touchPad.started) return;
+
 			evt.stop();
 
 			if(!htpcRemote.touchPad.moved){
@@ -182,6 +186,7 @@ const htpcRemote = {
 				socketClient.reply('click', htpcRemote.touchPad.rightClick || (evt.targetTouches && evt.targetTouches.length === 2) ? 3 : 1);
 			}
 
+			delete htpcRemote.touchPad.started;
 			delete htpcRemote.touchPad.moved;
 			delete htpcRemote.touchPad.rightClick;
 			delete htpcRemote.touchPad.lastPosition;
