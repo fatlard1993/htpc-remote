@@ -37,8 +37,6 @@ const htpcRemote = {
 		if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 2);
 		if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
 
-		dom.interact.on('keyUp', htpcRemote.onKeyUp);
-
 		document.addEventListener('visibilitychange', () => {
 			if(document.visibilityState) socketClient.stayConnected();
 		});
