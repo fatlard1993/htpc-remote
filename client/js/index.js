@@ -153,7 +153,7 @@ const htpcRemote = {
 
 			var thisMoveTime = performance.now();
 
-			if(thisMoveTime - htpcRemote.touchPad.lastMoveTime < 30) return;
+			if(thisMoveTime - htpcRemote.touchPad.lastMoveTime < 40) return;
 
 			htpcRemote.touchPad.lastMoveTime = thisMoveTime;
 
