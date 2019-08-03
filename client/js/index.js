@@ -37,6 +37,8 @@ const htpcRemote = {
 		if(!dom.storage.get('cursorSpeed')) dom.storage.set('cursorSpeed', 2);
 		if(!dom.storage.get('scrollSpeed')) dom.storage.set('scrollSpeed', 30);
 
+		dom.interact.on('pointerDown', socketClient.stayConnected);
+
 		document.addEventListener('visibilitychange', () => {
 			if(document.visibilityState) socketClient.stayConnected();
 		});
@@ -139,7 +141,7 @@ const htpcRemote = {
 			};
 		},
 		touchStart: function(evt){
-			evt.stop();
+			if(evt.cancelable) evt.preventDefault();
 
 			htpcRemote.touchPad.multiplier = parseFloat(dom.storage.get('cursorSpeed'));
 			htpcRemote.touchPad.scrollSpeed = parseFloat(dom.storage.get('scrollSpeed'));
@@ -238,7 +240,7 @@ const htpcRemote = {
 						appendTo: keyRow,
 						textContent: { backspace: 1, left: 1, up: 1, down: 1, right: 1, return: 1, pgUp: 1, pgDown: 1, home: 1 }[keyText] ? '' : keyText,
 						onPointerDown: (evt) => {
-							evt.stop();
+							if(evt.cancelable) evt.preventDefault();
 
 							evt.target.classList.add('active');
 						},
