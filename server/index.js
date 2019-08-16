@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const { exec } = require('child_process');
 
+const robot = require('robotjs');
 const findRoot = require('find-root');
 const rootFolder = findRoot(__dirname);
 
@@ -13,8 +13,7 @@ const log = require('log');
 const Config = require('config-manager');
 
 var config = new Config(path.join(rootFolder, 'config.json'), {
-	port: 8080,
-	sink: 1
+	port: 8080
 });
 
 const { app, sendPage, pageCompiler, staticServer } = require('http-server').init(args.port || config.current.port, rootFolder);
@@ -24,18 +23,6 @@ const socketServer = new SocketServer({ server: app.server });
 
 pageCompiler.buildFile('index');
 
-app.get('/testj', function(req, res){
-	log('Testing JSON...');
-
-	res.json({ test: 1 });
-});
-
-app.get('/test', function(req, res){
-	log('Testing...');
-
-	res.send('test');
-});
-
 app.use('/resources', staticServer(path.join(rootFolder, 'client/resources')));
 
 app.use('/fonts', staticServer(path.join(rootFolder, 'client/fonts')));
@@ -44,41 +31,58 @@ app.get('/home', sendPage('index'));
 
 socketServer.registerEndpoints({
 	touchPadMove: function(position){
-		log(`xdotool mousemove_relative -- ${position.x} ${position.y}`);
+		log(`move mouse -- ${position.x} ${position.y}`);
 
-		if(!args.dev) exec(`xdotool mousemove_relative -- ${position.x} ${position.y}`);
+		var currentPosition = robot.getMousePos();
+
+		if(!args.dev) robot.moveMouse(currentPosition.x + position.x, currentPosition.y + position.y);
 	},
 	touchPadScroll: function(scroll){
 		if(scroll.y){
-			log(`xdotool key ${scroll.y < 1 ? 'Down' : 'Up'}`);
+			log(`scroll ${scroll.y < 1 ? 'down' : 'up'} ${scroll.y}`);
 
-			if(!args.dev) exec(`xdotool key ${scroll.y < 1 ? 'Down' : 'Up'}`);
+			if(!args.dev) robot.scrollMouse(0, scroll.y);
 		}
 
 		if(scroll.x){
-			log(`xdotool key ${scroll.x > 1 ? 'Left' : 'Right'}`);
+			log(`scroll ${scroll.x > 1 ? 'left' : 'right'} ${scroll.x}`);
 
-			if(!args.dev) exec(`xdotool key ${scroll.x > 1 ? 'Left' : 'Right'}`);
+			if(!args.dev) robot.scrollMouse(scroll.x, 0);
 		}
 	},
 	type: function(text){
-		log(`xdotool type '${text}'`);
+		log(`type '${text}'`);
 
-		if(!args.dev) exec(`xdotool type '${text}'`);
+		if(!args.dev) robot.typeString(text);
 	},
-	key: function(key){
-		log(`xdotool key --clearmodifiers ${key}`);
+	keyPress: function(evt){
+		log(`key press${evt.mod ? ' mod: '+ evt.mod : ''} ${evt.key}`);
 
-		if(!args.dev) exec(`xdotool key --clearmodifiers ${key}`);
+		if(!args.dev) robot.keyTap(evt.key, evt.mod);
 	},
-	command: function(command){
-		log(`xdotool keydown ${command.mod} && xdotool key ${command.key} && sleep 0.1 && xdotool keyup ${command.mod}`);
+	keyDown: function(evt){
+		log(`key down${evt.mod ? ' mod: '+ evt.mod : ''}${evt.key}`);
 
-		if(!args.dev) exec(`xdotool keydown ${command.mod} && xdotool key ${command.key} && sleep 0.1 && xdotool keyup ${command.mod}`);
+		if(!args.dev) robot.keyToggle(evt.key, 'down', evt.mod || []);
+	},
+	keyUp: function(evt){
+		log(`key up${evt.mod ? ' mod: '+ evt.mod : ''}${evt.key}`);
+
+		if(!args.dev) robot.keyToggle(evt.key, 'up', evt.mod || []);
+	},
+	mouseDown: function(button){
+		log(`mouse down ${button}`);
+
+		if(!args.dev) robot.mouseToggle('down', button);
+	},
+	mouseUp: function(button){
+		log(`mouse up ${button}`);
+
+		if(!args.dev) robot.mouseToggle('up', button);
 	},
 	click: function(button){
-		log(`xdotool click --clearmodifiers ${button}`);
+		log(`click ${button}`);
 
-		if(!args.dev) exec(`xdotool click --clearmodifiers ${button}`);
+		if(!args.dev) robot.mouseClick(button);
 	}
 });

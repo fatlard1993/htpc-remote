@@ -1,4 +1,4 @@
-// includes colors fonts notify menu menuTheme dialog
+// includes colors fonts notify menu menuTheme dialog keyboard
 
 html {
 	position: fixed;
@@ -36,6 +36,14 @@ body {
 	font-size: 20px;
 }
 
+input:focus {
+	outline: none;
+}
+
+input.active {
+	border-color: $teal;
+}
+
 button {
 	cursor: pointer;
 	border: 2px outset rgba(66, 66, 66, 0.6);
@@ -65,121 +73,18 @@ div#touchPad {
 	left: 0;
 	width: 100%;
 	height: 100%;
-}
+	background-size: 16px 16px !important;
+	background-color: $grey-darker;
+	background-image: linear-gradient(to right, $grey-darkest 1px, transparent 1px), linear-gradient(to bottom, $grey-darkest 1px, transparent 1px) !important;
 
-div#keyboard {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-
-	button {
-		&.backspace:after {
-			@extend .fas;
-
-			content: "\f55a";
-		}
-
-		&.left:after {
-			@extend .fas;
-
-			content: "\f053";
-		}
-
-		&.up:after {
-			@extend .fas;
-
-			content: "\f077";
-		}
-
-		&.down:after {
-			@extend .fas;
-
-			content: "\f078";
-		}
-
-		&.right:after {
-			@extend .fas;
-
-			content: "\f054";
-		}
-
-		&.pgUp:after {
-			@extend .fas;
-
-			content: "\f3bf";
-		}
-
-		&.pgDown:after {
-			@extend .fas;
-
-			content: "\f3be";
-		}
-
-		&.home:after {
-			@extend .fas;
-
-			content: "\f015";
-		}
-
-		&.return:after {
-			@extend .fas;
-			@extend .fa-rotate-90;
-
-			content: "\f3be";
-		}
-
-		border: none;
-		padding: 0;
-		border-radius: unset;
-		height: 100%;
-		background-color: $black;
-		color: $white;
-		font-size: 16px;
-		height: 38px;
-		margin-bottom: 1px;
-		margin-right: 1px;
-		transition: transform .2s;
-
-		&.active, &:active {
-			background-color: $white;
-			color: $black;
-			height: 30px;
-			transform: scale(2) translateY(-30px);
-			transition: transform .05s;
-		}
+	div.pointer {
+		position: absolute;
+		pointer-events: none;
+		background-color: $teal-dark;
+		border: 3px double $black;
+		opacity: 0.3;
+		border-radius: 50%;
+		z-index: 99999;
+		will-change: transform;
 	}
-
-	div button:first-of-type.active, div button:first-of-type:active {
-		transform: scale(2) translateY(-30px) translateX(20px);
-	}
-
-	div button:last-of-type.active, div button:last-of-type:active {
-		transform: scale(2) translateY(-30px) translateX(-20px);
-	}
-
-	div:last-of-type button {
-		margin-bottom: 0px;
-	}
-
-	div button:last-of-type {
-		margin-right: 0px;
-	}
-}
-
-button#leftMouseButton, button#rightMouseButton {
-	width: 50%;
-	position: absolute;
-	bottom: 0;
-	height: 80px;
-}
-
-button#leftMouseButton {
-	left: 0;
-	background: $blue;
-}
-
-button#rightMouseButton {
-	right: 0;
-	background: $red;
 }
