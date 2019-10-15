@@ -1,6 +1,6 @@
 # htpc-remote
 
-Provides BYOD style control of your Linux based HTPC via a node.js server.
+Provides BYOD style control of your Linux or Windows(untested) based HTPC via a node.js server.
 
 ## robotjs
 
