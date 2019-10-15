@@ -1,33 +1,76 @@
 #!/usr/bin/env node
 
 const path = require('path');
+const fs = require('fs');
 
-const robot = require('robotjs');
-const findRoot = require('find-root');
-const rootFolder = findRoot(__dirname);
+const yargs = require('yargs');
+
+yargs.version(false);
+
+yargs.alias({
+	h: 'help',
+	c: 'color',
+	ver: 'version',
+	v: 'verbosity',
+	p: 'port',
+	dbg: 'debug',
+	i: 'interval'
+});
+
+yargs.boolean(['h', 'c', 'ver']);
+
+yargs.default({
+	v: 1,
+	i: 10
+});
+
+yargs.describe({
+	h: 'This',
+	c: 'Enables colored logs',
+	ver: 'Wraps --color ... Prints the version then exits',
+	v: '<level>',
+	p: '<port>',
+	dbg: 'Wraps --color --verbosity',
+});
+
+var args = yargs.argv;
+
+if(args.n) args.dbg = args.n;
+
+if(args.dbg){
+	args.c = true;
+	args.v = Number(args.dbg);
+}
+
+else if(args.v) args.v = Number(args.v);
+
+//log args polyfill
+process.env.DBG = args.v;
+process.env.COLOR = args.ver || args.c;
+
+const rootFolder = process.env.ROOT_FOLDER = require('find-root')(__dirname);
 
 process.chdir(rootFolder);
 
-const args = require('yargs').argv;
-const log = require('log');
+var log = require('log');
+const robot = require('robotjs');
 const Config = require('config-manager');
 
 var config = new Config(path.join(rootFolder, 'config.json'), {
 	port: 8080
 });
 
-const { app, sendPage, pageCompiler, staticServer } = require('http-server').init(args.port || config.current.port, rootFolder);
-const SocketServer = require('websocket-server');
+const { app, staticServer } = require('http-server').init(args.port || config.current.port, rootFolder);
 
-const socketServer = new SocketServer({ server: app.server });
-
-pageCompiler.buildFile('index');
+const socketServer = new (require('websocket-server'))({ server: app.server });
 
 app.use('/resources', staticServer(path.join(rootFolder, 'client/resources')));
 
 app.use('/fonts', staticServer(path.join(rootFolder, 'client/fonts')));
 
-app.get('/home', sendPage('index'));
+app.get('/home', function(req, res, next){
+	res.sendPage('index');
+});
 
 socketServer.registerEndpoints({
 	touchPadMove: function(position){
