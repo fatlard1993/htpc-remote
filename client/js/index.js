@@ -135,7 +135,7 @@ const htpcRemote = {
 				],
 				fullFakeShift: [
 					['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-					['esc', 'volMute', 'volDown', 'volUp', 'prev', 'play', 'pause', 'next', 'f8', 'f8', 'f9', 'f10', 'f11', 'f12', 'delete'],
+					['esc', 'volMute', 'volDown', 'volUp', 'prev', 'play', 'pause', 'next', 'settings', 'f8', 'f9', 'f10', 'f11', 'f12', 'delete'],
 					['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'backspace'],
 					['tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|'],
 					['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'return'],
@@ -223,7 +223,8 @@ const htpcRemote = {
 					['tab', 'left', 'up', 'down', 'right']
 				],
 				mouse: [
-					['lmb', 'keyboard', 'rmb'],
+					['lmb', 'rmb'],
+					['up', 'keyboard', 'down'],
 					['home', 'pgUp', 'pgDown', 'end']
 				],
 				hide: [
@@ -244,7 +245,7 @@ const htpcRemote = {
 
 			if({ lmb: 1, rmb: 1 }[evt.key]) socketClient.reply('mouseDown', evt.key === 'rmb' ? 'right' : 'left');
 
-			else if(evt.key === 'fakeShift') return;
+			else if({ fakeShift: 1, settings: 1 }[evt.key]) return;
 
 			else if(evt.key) socketClient.reply('keyDown', evt);
 		});
