@@ -380,7 +380,7 @@ const htpcRemote = {
 			htpcRemote.touchPad.pointers[id].elem.style.height = radiusY +'px';
 		},
 		touchStart: function(evt){
-			evt.stop();
+			evt.preventDefault();
 
 			htpcRemote.touchPad.pointerCount = evt.targetTouches ? evt.targetTouches.length : 1;
 
@@ -426,7 +426,7 @@ const htpcRemote = {
 		touchEnd: function(evt){
 			if(!htpcRemote.touchPad.started) return;
 
-			evt.stop();
+			evt.preventDefault();
 
 			var id = evt.changedTouches ? evt.changedTouches[0].identifier : evt.which;
 
