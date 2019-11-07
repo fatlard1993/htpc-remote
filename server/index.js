@@ -1,76 +1,52 @@
 #!/usr/bin/env node
 
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 
 const yargs = require('yargs');
+const rootFolder = require('find-root')(__dirname);
 
-yargs.version(false);
+function rootPath(){ return path.join(rootFolder, ...arguments); }
 
 yargs.alias({
 	h: 'help',
-	c: 'color',
 	ver: 'version',
 	v: 'verbosity',
 	p: 'port',
-	dbg: 'debug',
-	i: 'interval'
+	s: 'simulate'
 });
 
-yargs.boolean(['h', 'c', 'ver']);
+yargs.boolean(['h', 'ver', 's']);
 
 yargs.default({
 	v: 1,
-	i: 10
+	p: 80
 });
 
 yargs.describe({
-	h: 'This',
-	c: 'Enables colored logs',
-	ver: 'Wraps --color ... Prints the version then exits',
 	v: '<level>',
 	p: '<port>',
-	dbg: 'Wraps --color --verbosity',
+	s: 'See what would happen, without making any changes'
 });
 
-var args = yargs.argv;
+var opts = yargs.argv;
 
-if(args.n) args.dbg = args.n;
+opts.rootFolder = rootFolder;
 
-if(args.dbg){
-	args.c = true;
-	args.v = Number(args.dbg);
-}
+delete opts._;
+delete opts.$0;
+delete opts.v;
+delete opts.p;
+delete opts.s;
 
-else if(args.v) args.v = Number(args.v);
+opts.verbosity = Number(opts.verbosity);
 
 //log args polyfill
-process.env.DBG = args.v;
-process.env.COLOR = args.ver || args.c;
+process.env.DBG = opts.verbosity;
+process.env.COLOR = true;
 
-const rootFolder = process.env.ROOT_FOLDER = require('find-root')(__dirname);
+const log = require('log');
 
-process.chdir(rootFolder);
+log(1)(opts);
 
-var log = require('log');
-const Config = require('config-manager');
-const htpcRemote = require('./htpcRemote');
-
-var config = new Config(path.join(rootFolder, 'config.json'), {
-	port: 8080
-});
-
-config.dev = args.dev;
-
-const { app, staticServer } = require('http-server').init(args.port || config.current.port, rootFolder);
-const socketServer = new (require('websocket-server'))({ server: app.server });
-
-app.use('/resources', staticServer(path.join(rootFolder, 'client/resources')));
-
-app.use('/fonts', staticServer(path.join(rootFolder, 'client/fonts')));
-
-app.get('/home', function(req, res, next){
-	res.sendPage('index');
-});
-
-htpcRemote.init(config, socketServer);
+(require('./htpcRemote')).init(opts);
