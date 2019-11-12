@@ -56,17 +56,6 @@ div#content {
 	border: 2px solid $white;
 }
 
-button#menuButton {
-	background: $purple;
-	top: 0;
-	right: 0;
-	width: 100px;
-	line-height: 40px;
-	padding: 0;
-	position: absolute;
-	text-align: center;
-}
-
 div#touchPad {
 	position: absolute;
 	top: 0;
