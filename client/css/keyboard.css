@@ -1,0 +1,217 @@
+// includes keyboard font-awesome
+
+soft-keyboard {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	z-index: 999;
+
+	button {
+		background-color: $black;
+		height: 38px;
+		color: $white;
+		font-size: 18px;
+		transition: transform .2s;
+
+		&.os:after {
+			@extend .fab;
+
+			content: "\f7df";
+		}
+
+		&.backspace:after {
+			@extend .fas;
+
+			content: "\f55a";
+		}
+
+		&.mouse:after {
+			@extend .fas;
+
+			content: "\f245";
+		}
+
+		&.hide {
+			opacity: 1 !important;
+
+			&:after {
+				@extend .fas;
+
+				content: "\f070";
+			}
+		}
+
+		&.delete:after {
+			@extend .fas;
+			@extend .fa-flip-horizontal;
+
+			content: "\f55a";
+		}
+
+		&.tab:after {
+			@extend .fas;
+
+			content: "\f362";
+		}
+
+		&.volUp:after {
+			@extend .fas;
+
+			content: "\f028";
+		}
+
+		&.volDown:after {
+			@extend .fas;
+
+			content: "\f027";
+		}
+
+		&.volMute:after {
+			@extend .fas;
+
+			content: "\f6a9";
+		}
+
+		&.play:after {
+			@extend .fas;
+
+			content: "\f04b";
+		}
+
+		&.pause:after {
+			@extend .fas;
+
+			content: "\f04c";
+		}
+
+		&.stop:after {
+			@extend .fas;
+
+			content: "\f04d";
+		}
+
+		&.next:after {
+			@extend .fas;
+
+			content: "\f04e";
+		}
+
+		&.prev:after {
+			@extend .fas;
+
+			content: "\f04a";
+		}
+
+		&.left:after {
+			@extend .fas;
+
+			content: "\f053";
+		}
+
+		&.up:after {
+			@extend .fas;
+
+			content: "\f077";
+		}
+
+		&.down:after {
+			@extend .fas;
+
+			content: "\f078";
+		}
+
+		&.right:after {
+			@extend .fas;
+
+			content: "\f054";
+		}
+
+		&.pgUp:after {
+			@extend .fas;
+
+			content: "\f3bf";
+		}
+
+		&.pgDown:after {
+			@extend .fas;
+
+			content: "\f3be";
+		}
+
+		&.home:after {
+			@extend .fas;
+
+			content: "\f015";
+		}
+
+		&.space:after, &.lmb:after, &.rmb:after {
+			@extend .fas;
+
+			content: "";
+		}
+
+		&.settings:after {
+			@extend .fas;
+
+			content: "\f013";
+		}
+
+		&.shift:after {
+			@extend .fas;
+
+			content: "\f35b";
+		}
+
+		&.keyboard:after {
+			@extend .fas;
+
+			content: "\f11c";
+		}
+
+		&.return:after {
+			@extend .fas;
+			@extend .fa-rotate-90;
+
+			content: "\f3be";
+		}
+
+		&.active {
+			background-color: $white;
+			color: $black;
+			transform: scale(2) translateY(-30px);
+			transition: transform .05s;
+		}
+
+		&.mod.active {
+			transform: unset !important
+		}
+
+		&:first-of-type.active:not(:only-child) {
+			transform: scale(2) translateY(-30px) translateX(20px);
+		}
+
+		&:last-of-type.active:not(:only-child) {
+			transform: scale(2) translateY(-30px) translateX(-20px);
+		}
+	}
+}
+
+@media (min-height: 600px) {
+	soft-keyboard button {
+		height: 48px;
+		font-size: 20px;
+	}
+}
+
+@media (max-width: 600px) {
+	soft-keyboard button {
+		font-size: 16px;
+	}
+}
+
+@media (max-width: 400px) {
+	soft-keyboard button {
+		font-size: 14px;
+	}
+}

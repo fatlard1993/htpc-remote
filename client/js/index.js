@@ -1,6 +1,6 @@
-// includes dom log socket-client dialog keyboard js-util
+// includes dom log socket-client dialog _keyboardExtensions js-util
 // babel
-/* global dom log socketClient dialog Keyboard util */
+/* global dom log socketClient dialog util */
 
 socketClient.stayConnected = function(){
 	if(socketClient.status === 'open') return;
@@ -37,266 +37,7 @@ const htpcRemote = {
 		if(!htpcRemote.options.scrollSpeed) htpcRemote.setOption('scrollSpeed', 1);
 
 		htpcRemote.touchPad.init();
-
-		dom.getElemById('wrapper').appendChild(htpcRemote.touchPad.elem);
-
-		htpcRemote.keyboard = new Keyboard({
-			keyDefinitions: {
-				esc: { key: 'escape', text: 'Esc' },
-				backspace: { text: '' },
-				tab: { text: '' },
-				delete: { text: '' },
-				space: { text: '' },
-				settings: { text: '' },
-				mouse: { text: '' },
-				hide: { text: '' },
-				lmb: { text: '' },
-				rmb: { text: '' },
-				home: { text: '' },
-				left: { text: '' },
-				up: { text: '' },
-				down: { text: '' },
-				right: { text: '' },
-				end: { text: 'End' },
-				shift: { class: 'mod', text: '' },
-				fakeShift: { class: 'shift', text: '' },
-				ctrl: { key: 'control', text: 'Ctrl', class: 'mod' },
-				os: { key: 'command', class: 'mod os', text: '' },
-				alt: { class: 'mod', text: 'Alt' },
-				return: { key: 'enter', class: 'return', text: '' },
-				pgUp: { key: 'pageup', text: '' },
-				pgDown: { key: 'pagedown', text: '' },
-				volUp: { key: 'audio_vol_up', text: '' },
-				volDown: { key: 'audio_vol_down', text: '' },
-				volMute: { key: 'audio_mute', text: '' },
-				play: { key: 'audio_play', text: '' },
-				pause: { key: 'audio_pause', text: '' },
-				stop: { key: 'audio_stop', text: '' },
-				next: { key: 'audio_next', text: '' },
-				prev: { key: 'audio_prev', text: '' },
-				keyboard: { key: 'basic', class: 'keyboard', text: '' },
-				'!': { mod: 'shift', key: '1' },
-				'@': { mod: 'shift', key: '2' },
-				'#': { mod: 'shift', key: '3' },
-				'$': { mod: 'shift', key: '4' },
-				'%': { mod: 'shift', key: '5' },
-				'^': { mod: 'shift', key: '6' },
-				'&': { mod: 'shift', key: '7' },
-				'*': { mod: 'shift', key: '8' },
-				'(': { mod: 'shift', key: '9' },
-				')': { mod: 'shift', key: '0' },
-				'~': { mod: 'shift', key: '`' },
-				'_': { mod: 'shift', key: '-' },
-				'+': { mod: 'shift', key: '=' },
-				'{': { mod: 'shift', key: '[' },
-				'}': { mod: 'shift', key: ']' },
-				'|': { mod: 'shift', key: '\\' },
-				':': { mod: 'shift', key: ';' },
-				'"': { mod: 'shift', key: `'` },
-				'<': { mod: 'shift', key: ',' },
-				'>': { mod: 'shift', key: '.' },
-				'?': { mod: 'shift', key: '/' },
-				'Q': { mod: 'shift', key: 'q' },
-				'W': { mod: 'shift', key: 'w' },
-				'E': { mod: 'shift', key: 'e' },
-				'R': { mod: 'shift', key: 'r' },
-				'T': { mod: 'shift', key: 't' },
-				'Y': { mod: 'shift', key: 'y' },
-				'U': { mod: 'shift', key: 'u' },
-				'I': { mod: 'shift', key: 'i' },
-				'O': { mod: 'shift', key: 'o' },
-				'P': { mod: 'shift', key: 'p' },
-				'A': { mod: 'shift', key: 'a' },
-				'S': { mod: 'shift', key: 's' },
-				'D': { mod: 'shift', key: 'd' },
-				'F': { mod: 'shift', key: 'f' },
-				'G': { mod: 'shift', key: 'g' },
-				'H': { mod: 'shift', key: 'h' },
-				'J': { mod: 'shift', key: 'j' },
-				'K': { mod: 'shift', key: 'k' },
-				'L': { mod: 'shift', key: 'l' },
-				'Z': { mod: 'shift', key: 'z' },
-				'X': { mod: 'shift', key: 'x' },
-				'C': { mod: 'shift', key: 'c' },
-				'V': { mod: 'shift', key: 'v' },
-				'B': { mod: 'shift', key: 'b' },
-				'N': { mod: 'shift', key: 'n' },
-				'M': { mod: 'shift', key: 'm' }
-			},
-			layouts: {
-				full: [
-					['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-					['esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f8', 'f9', 'f10', 'f11', 'f12', 'delete'],
-					['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace'],
-					['tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
-					['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', `'`, 'return'],
-					['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'shift'],
-					['ctrl', 'os', 'alt', 'space', 'left', 'up', 'down', 'right']
-				],
-				fullFakeShift: [
-					['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-					['esc', 'volMute', 'volDown', 'volUp', 'prev', 'play', 'pause', 'next', 'settings', 'f8', 'f9', 'f10', 'f11', 'f12', 'delete'],
-					['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'backspace'],
-					['tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|'],
-					['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'return'],
-					['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 'shift'],
-					['ctrl', 'os', 'alt', 'space', 'home', 'pgUp', 'pgDown', 'end']
-				],
-				basic: [
-					['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-					['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-					['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-					['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-					['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
-					['os', 'space', 'ctrl'],
-					['left', 'up', 'down', 'right']
-				],
-				basicFakeShift: [
-					['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-					['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'],
-					['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-					['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-					['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'backspace'],
-					['os', 'space', 'ctrl'],
-					['left', 'up', 'down', 'right']
-				],
-				numpad: [
-					['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-					['1', '2', '3', 'backspace', 'delete'],
-					['4', '5', '6', '+', '-'],
-					['7', '8', '9', '*', '/'],
-					['.', '0', ',', 'tab', 'return'],
-					['left', 'up', 'down', 'right']
-				],
-				media: [
-					['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-					['esc', 'volMute', 'volDown', 'volUp'],
-					['play', 'pause', 'prev', 'next'],
-					['f', 'space', 'f11']
-				],
-				everything: [
-					['esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f8', 'f9', 'f10', 'f11', 'f12'],
-					['volMute', 'volDown', 'volUp', 'prev', 'play', 'pause', 'next', ':', '"', '<', '>', '?'],
-					['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'delete'],
-					['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'backspace'],
-					['tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
-					['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', `'`, 'return'],
-					['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'shift'],
-					['ctrl', 'os', 'alt', 'space', 'left', 'up', 'down', 'right']
-				],
-				'abc1': [
-					['hide', 'ABC!', 'numbers', 'symbols', 'full', 'mouse'],
-					['esc', 'tab', 'delete', 'settings'],
-					['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-					['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-					['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-					['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
-					['os', 'space', 'return'],
-					['ctrl', 'alt', 'left', 'up', 'down', 'right']
-				],
-				'ABC!': [
-					['abc1', 'hide', 'numbers', 'symbols', 'full', 'mouse'],
-					['esc', 'tab', 'delete', 'settings'],
-					['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'],
-					['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-					['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-					['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'backspace'],
-					['os', 'space', 'return'],
-					['ctrl', 'alt', 'home', 'pgUp', 'pgDown', 'end']
-				],
-				symbols: [
-					['abc1', 'ABC!', 'numbers', 'hide', 'full', 'mouse'],
-					['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-					['`', '[', ']', '\\', ';', '\'', ',', '.', '/', '-', '='],
-					['~', '{', '}', '|', ':', '"', '<', '>', '?', '_', '+'],
-					['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', 'backspace'],
-					['delete', 'space', 'return'],
-					['tab', 'left', 'up', 'down', 'right']
-				],
-				numbers: [
-					['abc1', 'ABC!', 'hide', 'symbols', 'full', 'mouse'],
-					['1', '2', '3', 'backspace'],
-					['4', '5', '6', 'delete'],
-					['7', '8', '9', '.'],
-					['.', '0', '+', '-'],
-					['tab', 'space', 'return'],
-					['tab', 'left', 'up', 'down', 'right']
-				],
-				mouse: [
-					['lmb', 'rmb'],
-					['up', 'keyboard', 'down'],
-					['home', 'pgUp', 'pgDown', 'end']
-				],
-				hide: [
-					['keyboard']
-				]
-			},
-			layout: 'hide'
-		});
-
-		window.onbeforeunload = htpcRemote.keyboard.flushKeyup.bind(htpcRemote.keyboard);
-
-		htpcRemote.keyboard.on('keyDown', (evt) => {
-			htpcRemote.tactileResponse();
-
-			if(htpcRemote.keyboard.layouts[evt.key]) return;
-
-			if(htpcRemote.activeInput) return;
-
-			if({ lmb: 1, rmb: 1 }[evt.key]) socketClient.reply('mouseDown', evt.key === 'rmb' ? 'right' : 'left');
-
-			else if({ fakeShift: 1, settings: 1 }[evt.key]) return;
-
-			else if(evt.key) socketClient.reply('keyDown', evt);
-		});
-
-		htpcRemote.keyboard.on('keyUp', (evt) => {
-			if(htpcRemote.keyboard.layouts[evt.key]) htpcRemote.keyboard.setupLayout(evt.key);
-
-			else if(evt.key === 'settings'){
-				htpcRemote.keyboard.hide();
-
-				var settingsWrapper = dom.createElem('div');
-				var rainbowFingers = dom.createElem('input', { type: 'checkbox', checked: htpcRemote.options.rainbowFingers, appendTo: dom.createElem('label', { textContent: 'Rainbow Fingers', appendTo: settingsWrapper }) });
-				var cursorSpeed = dom.createElem('input', { readOnly: true, className: 'input number', validation: /^[0-9][0-9]?$/, validationWarning: 'Must be a valid number between 0 and 99', value: dom.storage.get('cursorSpeed'), appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: settingsWrapper }) });
-				var scrollSpeed = dom.createElem('input', { readOnly: true, className: 'input number', validation: /^[0-9][0-9]?$/, validationWarning: 'Must be a valid number between 0 and 99', value: dom.storage.get('scrollSpeed'), appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: settingsWrapper }) });
-
-				dialog('settings', 'Settings', settingsWrapper, 2);
-
-				dialog.resolve.settings = function(choice){
-					htpcRemote.keyboard.setupLayout('hide');
-
-					if(choice === 'Cancel') return;
-
-					htpcRemote.setOption('rainbowFingers', rainbowFingers.checked);
-					htpcRemote.setOption('cursorSpeed', parseFloat(cursorSpeed.value) || 5);
-					htpcRemote.setOption('scrollSpeed', parseFloat(scrollSpeed.value) || 1);
-				};
-			}
-
-			else if({ lmb: 1, rmb: 1 }[evt.key]) socketClient.reply('mouseUp', evt.key === 'rmb' ? 'right' : 'left');
-
-			else if(evt.key === 'fakeShift'){
-				if(htpcRemote.keyboard.layoutName.startsWith('basic')) htpcRemote.keyboard.setupLayout(htpcRemote.keyboard.layoutName === 'basic' ? 'basicFakeShift' : 'basic');
-
-				else htpcRemote.keyboard.setupLayout(htpcRemote.keyboard.layoutName === 'full' ? 'fullFakeShift' : 'full');
-			}
-
-			else if(htpcRemote.activeInput){
-				if(evt.key === 'BackSpace') htpcRemote.activeInput.value = htpcRemote.activeInput.value.slice(0, -1);
-
-				else if(evt.key === 'clear') htpcRemote.activeInput.value = '';
-
-				else htpcRemote.activeInput.value += evt.key.length > 1 ? evt.target.textContent : evt.key;
-			}
-
-			else if(evt.key){
-				socketClient.reply('keyUp', evt);
-
-				if(htpcRemote.keyboard.layoutName === 'basicFakeShift') htpcRemote.keyboard.setupLayout('basic');
-				else if(htpcRemote.keyboard.layoutName === 'fullFakeShift') htpcRemote.keyboard.setupLayout('full');
-			}
-		});
+		htpcRemote.keyboard.init();
 
 		dom.getElemById('wrapper').appendChild(htpcRemote.keyboard.elem);
 
@@ -316,7 +57,7 @@ const htpcRemote = {
 
 				htpcRemote.activeInput = evt.target;
 
-				htpcRemote.keyboard.setupLayout('numberInput');
+				htpcRemote.keyboard.setLayout('numberInput');
 			}
 		});
 
@@ -333,9 +74,11 @@ const htpcRemote = {
 	},
 	touchPad: {
 		init: function(){
-			document.oncontextmenu = (evt) => { evt.preventDefault();	};
+			htpcRemote.touchPad.elem = dom.getElemById('touchPad');
 
-			htpcRemote.touchPad.elem = dom.createElem('div', { id: 'touchPad', onPointerDown: htpcRemote.touchPad.touchStart, onPointerUp: htpcRemote.touchPad.touchEnd });
+			dom.onPointerDown(htpcRemote.touchPad.elem, htpcRemote.touchPad.touchStart);
+			dom.onPointerUp(htpcRemote.touchPad.elem, htpcRemote.touchPad.touchEnd);
+			// htpcRemote.touchPad.elem = dom.createElem('div', { id: 'touchPad', onPointerDown: htpcRemote.touchPad.touchStart, onPointerUp: htpcRemote.touchPad.touchEnd });
 
 			// htpcRemote.touchPad.updatePointer({ which: '1', clientX: 100, clientY: 100 })
 		},
@@ -403,7 +146,7 @@ const htpcRemote = {
 
 			var id = evt.changedTouches ? evt.changedTouches[0].identifier : evt.which;
 
-			if(!htpcRemote.touchPad.pointers[id] || thisMoveTime - htpcRemote.touchPad.pointers[id].lastMoveTime < 40) return;
+			if(!htpcRemote.touchPad.pointers[id] || thisMoveTime - htpcRemote.touchPad.pointers[id].lastMoveTime < 20) return;
 
 			htpcRemote.touchPad.pointers[id].lastMoveTime = thisMoveTime;
 
@@ -444,9 +187,9 @@ const htpcRemote = {
 
 				if(htpcRemote.touchPad.pointerCount < 4){
 					if(htpcRemote.touchPad.pointerCount === 3){
-						if(htpcRemote.keyboard.layoutName !== 'hide') htpcRemote.keyboard.setupLayout('hide');
+						if(htpcRemote.keyboard.layoutName !== 'hide') htpcRemote.keyboard.setLayout('hide');
 
-						else htpcRemote.keyboard.setupLayout('basic');
+						else htpcRemote.keyboard.setLayout('basic');
 					}
 
 					else socketClient.reply('click', htpcRemote.touchPad.pointerCount === 2 || evt.which === 2 ? 'right' : 'left');
@@ -460,7 +203,101 @@ const htpcRemote = {
 			document.removeEventListener('touchmove', htpcRemote.touchPad.touchMove);
 			document.removeEventListener('mousemove', htpcRemote.touchPad.touchMove);
 		}
+	},
+	keyboard: {
+		init: function(){
+			htpcRemote.keyboard.elem = dom.getElemById('keyboard');
+
+			window.onbeforeunload = htpcRemote.keyboard.elem.flushKeyup;
+
+			htpcRemote.keyboard.elem.on('keyDown', htpcRemote.keyboard.onKeyDown);
+			htpcRemote.keyboard.elem.on('keyUp', htpcRemote.keyboard.onKeyUp);
+		},
+		onKeyDown: function(evt){
+			var key = evt.detail.key;
+
+			htpcRemote.tactileResponse();
+
+			if(this.layouts[key]) return;
+
+			if(htpcRemote.activeInput) return;
+
+			if({ lmb: 1, rmb: 1 }[key]) socketClient.reply('mouseDown', key === 'rmb' ? 'right' : 'left');
+
+			else if({ fakeShift: 1, settings: 1 }[key]) return;
+
+			else if(key) socketClient.reply('keyDown', evt.detail);
+		},
+		onKeyUp: function(evt){
+			var key = evt.detail.key;
+
+			if(this.layouts[key]) this.setLayout(key);
+
+			else if(key === 'settings'){
+				this.hide();
+
+				var settingsWrapper = dom.createElem('div');
+				var rainbowFingers = dom.createElem('input', {
+					type: 'checkbox',
+					checked: htpcRemote.options.rainbowFingers,
+					appendTo: dom.createElem('label', { textContent: 'Rainbow Fingers', appendTo: settingsWrapper })
+				});
+				var cursorSpeed = dom.createElem('input', {
+					readOnly: true,
+					className: 'input number',
+					validation: /^[0-9][0-9]?$/,
+					validationWarning: 'Must be a valid number between 0 and 99',
+					value: dom.storage.get('cursorSpeed'),
+					appendTo: dom.createElem('label', { textContent: 'Cursor Speed', appendTo: settingsWrapper })
+				});
+				var scrollSpeed = dom.createElem('input', {
+					readOnly: true,
+					className: 'input number',
+					validation: /^[0-9][0-9]?$/,
+					validationWarning: 'Must be a valid number between 0 and 99',
+					value: dom.storage.get('scrollSpeed'),
+					appendTo: dom.createElem('label', { textContent: 'Scroll Speed', appendTo: settingsWrapper })
+				});
+
+				dialog('settings', 'Settings', settingsWrapper, 2);
+
+				dialog.resolve.settings = function(choice){
+					this.setLayout('hide');
+
+					if(choice === 'Cancel') return;
+
+					htpcRemote.setOption('rainbowFingers', rainbowFingers.checked);
+					htpcRemote.setOption('cursorSpeed', parseFloat(cursorSpeed.value) || 5);
+					htpcRemote.setOption('scrollSpeed', parseFloat(scrollSpeed.value) || 1);
+				};
+			}
+
+			else if({ lmb: 1, rmb: 1 }[key]) socketClient.reply('mouseUp', key === 'rmb' ? 'right' : 'left');
+
+			else if(key === 'fakeShift'){
+				if(this.layoutName.startsWith('basic')) this.setLayout(this.layoutName === 'basic' ? 'basicFakeShift' : 'basic');
+
+				else this.setLayout(this.layoutName === 'full' ? 'fullFakeShift' : 'full');
+			}
+
+			else if(htpcRemote.activeInput){
+				if(key === 'BackSpace') htpcRemote.activeInput.value = htpcRemote.activeInput.value.slice(0, -1);
+
+				else if(key === 'clear') htpcRemote.activeInput.value = '';
+
+				else htpcRemote.activeInput.value += key.length > 1 ? evt.detail.target.textContent : key;
+			}
+
+			else if(key){
+				socketClient.reply('keyUp', evt.detail);
+
+				if(this.layoutName === 'basicFakeShift') this.setLayout('basic');
+				else if(this.layoutName === 'fullFakeShift') this.setLayout('full');
+			}
+		}
 	}
 };
 
 dom.onLoad(htpcRemote.load);
+
+document.oncontextmenu = (evt) => { evt.preventDefault();	};
