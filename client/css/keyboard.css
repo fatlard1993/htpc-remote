@@ -188,15 +188,19 @@ soft-keyboard {
 			content: "\f3be";
 		}
 
-		&.active {
+		&.active, &.pressed {
 			background-color: $white;
 			color: $black;
 			transform: scale(2) translateY(-30px);
 			transition: transform .05s;
+
+			&.mod {
+				transform: unset !important
+			}
 		}
 
-		&.mod.active {
-			transform: unset !important
+		&.pressed {
+			background-color: $red;
 		}
 
 		&:first-of-type.active:not(:only-child) {

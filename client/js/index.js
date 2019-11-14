@@ -205,10 +205,21 @@ const htpcRemote = {
 		}
 	},
 	keyboard: {
+		modTimeouts: {},
 		init: function(){
 			htpcRemote.keyboard.elem = dom.getElemById('keyboard');
 
-			window.onbeforeunload = htpcRemote.keyboard.elem.flushKeyup;
+			window.addEventListener('beforeunload', () => {
+				htpcRemote.keyboard.elem.flushKeyup();
+
+				Array.from(htpcRemote.keyboard.elem.getElementsByClassName('pressed')).forEach((key) => {
+					var position = key.getAttribute('data-pos');
+
+					if(!position) return;
+
+					htpcRemote.keyboard.onKeyUp({ detail: Object.assign({ elem: key }, htpcRemote.keyboard.elem.keys[position]) });
+				});
+			});
 
 			htpcRemote.keyboard.elem.on('keyDown', htpcRemote.keyboard.onKeyDown);
 			htpcRemote.keyboard.elem.on('keyUp', htpcRemote.keyboard.onKeyUp);
@@ -222,6 +233,18 @@ const htpcRemote = {
 
 			if(htpcRemote.activeInput) return;
 
+			// todo if key is pressed send keyup
+			if(evt.detail.elem.classList.contains('pressed')) return evt.detail.elem.classList.remove('pressed');
+
+			if(evt.detail.elem.classList.contains('mod')){
+				htpcRemote.keyboard.modTimeouts[key] = setTimeout(() => {
+					log()('key held', key);
+
+					// todo set key to pressed
+					evt.detail.elem.classList.add('pressed');
+				}, 800);
+			}
+
 			if({ lmb: 1, rmb: 1 }[key]) socketClient.reply('mouseDown', key === 'rmb' ? 'right' : 'left');
 
 			else if({ fakeShift: 1, settings: 1 }[key]) return;
@@ -230,6 +253,11 @@ const htpcRemote = {
 		},
 		onKeyUp: function(evt){
 			var key = evt.detail.key;
+
+			if(htpcRemote.keyboard.modTimeouts[key]) clearTimeout(htpcRemote.keyboard.modTimeouts[key]);
+
+			// todo if key is pressed ignore keyup
+			if(evt.detail.elem.classList.contains('pressed')) return;
 
 			if(this.layouts[key]) this.setLayout(key);
 
@@ -285,7 +313,7 @@ const htpcRemote = {
 
 				else if(key === 'clear') htpcRemote.activeInput.value = '';
 
-				else htpcRemote.activeInput.value += key.length > 1 ? evt.detail.target.textContent : key;
+				else htpcRemote.activeInput.value += key.length > 1 ? evt.detail.elem.textContent : key;
 			}
 
 			else if(key){
