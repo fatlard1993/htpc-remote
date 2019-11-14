@@ -14,6 +14,18 @@ soft-keyboard {
 		font-size: 18px;
 		transition: transform .2s;
 
+		&.quit:after {
+			@extend .fas;
+
+			content: "\f410";
+		}
+
+		&.open:after {
+			@extend .fas;
+
+			content: "\f002";
+		}
+
 		&.os:after {
 			@extend .fab;
 
