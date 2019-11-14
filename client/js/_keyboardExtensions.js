@@ -36,6 +36,8 @@ SoftKeyboard.setKeyDefinitions({
 	next: { key: 'audio_next', text: '' },
 	prev: { key: 'audio_prev', text: '' },
 	keyboard: { key: 'basic', class: 'keyboard', text: '' },
+	quit: { mod: 'command', key: 'q' },
+	open: { mod: 'command', key: 'space' },
 	'!': { mod: 'shift', key: '1' },
 	'@': { mod: 'shift', key: '2' },
 	'#': { mod: 'shift', key: '3' },
@@ -108,19 +110,19 @@ SoftKeyboard.setLayouts({
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
 		['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
 		['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-		['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-		['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
-		['os', 'space', 'ctrl'],
-		['left', 'up', 'down', 'right']
+		['tab', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'backspace'],
+		['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.'],
+		['ctrl', 'space', 'return'],
+		['os', 'left', 'up', 'down', 'right', 'alt']
 	],
 	basicFakeShift: [
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
 		['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'],
 		['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-		['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-		['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'backspace'],
-		['os', 'space', 'ctrl'],
-		['left', 'up', 'down', 'right']
+		['tab', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'backspace'],
+		['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '/', '?'],
+		['ctrl', 'space', 'return'],
+		['os', 'home', 'pgUp', 'pgDown', 'end', 'alt']
 	],
 	numpad: [
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
@@ -132,9 +134,10 @@ SoftKeyboard.setLayouts({
 	],
 	media: [
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-		['esc', 'volMute', 'volDown', 'volUp'],
-		['play', 'pause', 'prev', 'next'],
-		['f', 'space', 'f11']
+		['esc', 'f', 'f11'],
+		['volMute', 'volDown', 'volUp'],
+		['prev', 'play', 'pause', 'next'],
+		['quit', 'space', 'open']
 	],
 	everything: [
 		['esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f8', 'f9', 'f10', 'f11', 'f12'],
