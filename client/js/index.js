@@ -187,7 +187,7 @@ const htpcRemote = {
 
 				if(htpcRemote.touchPad.pointerCount < 4){
 					if(htpcRemote.touchPad.pointerCount === 3){
-						if(htpcRemote.keyboard.layoutName !== 'hide') htpcRemote.keyboard.setLayout('hide');
+						if(htpcRemote.keyboard.layout !== 'hide') htpcRemote.keyboard.setLayout('hide');
 
 						else htpcRemote.keyboard.setLayout('basic');
 					}
@@ -275,9 +275,9 @@ const htpcRemote = {
 			else if({ lmb: 1, rmb: 1 }[key]) socketClient.reply('mouseUp', key === 'rmb' ? 'right' : 'left');
 
 			else if(key === 'fakeShift'){
-				if(this.layoutName.startsWith('basic')) this.setLayout(this.layoutName === 'basic' ? 'basicFakeShift' : 'basic');
+				if(this.layout.startsWith('basic')) this.setLayout(this.layout === 'basic' ? 'basicFakeShift' : 'basic');
 
-				else this.setLayout(this.layoutName === 'full' ? 'fullFakeShift' : 'full');
+				else this.setLayout(this.layout === 'full' ? 'fullFakeShift' : 'full');
 			}
 
 			else if(htpcRemote.activeInput){
@@ -291,8 +291,8 @@ const htpcRemote = {
 			else if(key){
 				socketClient.reply('keyUp', evt.detail);
 
-				if(this.layoutName === 'basicFakeShift') this.setLayout('basic');
-				else if(this.layoutName === 'fullFakeShift') this.setLayout('full');
+				if(this.layout === 'basicFakeShift') this.setLayout('basic');
+				else if(this.layout === 'fullFakeShift') this.setLayout('full');
 			}
 		}
 	}
