@@ -29,24 +29,15 @@ yargs.describe({
 	s: 'See what would happen, without making any changes'
 });
 
-var opts = yargs.argv;
 
-opts.rootFolder = rootFolder;
+const args = yargs.argv;
 
-delete opts._;
-delete opts.$0;
-delete opts.v;
-delete opts.p;
-delete opts.s;
+['_', '$0', 'v', 'p', 's'].forEach((item) => { delete args[item]; });
 
-opts.verbosity = Number(opts.verbosity);
+const opts = Object.assign(args, { args: Object.assign({}, args), rootFolder, verbosity: Number(args.verbosity) });
 
-//log args polyfill
-process.env.DBG = opts.verbosity;
-process.env.COLOR = true;
+const log = new (require('log'))({ tag: 'htpc-remote', color: true, verbosity: opts.verbosity });
 
-const log = require('log');
-
-log(1)(opts);
+log(1)('Options', opts);
 
 (require('./htpcRemote')).init(opts);

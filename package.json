@@ -31,7 +31,7 @@
 		"find-root": "^1.1.0",
 		"http-server": "github:fatlard1993/http-server#4.x.x",
 		"js-util": "github:fatlard1993/js-util#2.x.x",
-		"log": "github:fatlard1993/log#2.x.x",
+		"log": "github:fatlard1993/log#3.x.x",
 		"keyboard": "github:fatlard1993/keyboard",
 		"font-awesome": "github:fatlard1993/font-awesome",
 		"robotjs": "^0.6.0",

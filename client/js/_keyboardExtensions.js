@@ -1,6 +1,4 @@
-// includes keyboard
-// babel
-/* global SoftKeyboard */
+import SoftKeyboard from 'keyboard';
 
 SoftKeyboard.setKeyDefinitions({
 	esc: { key: 'escape', text: 'Esc' },

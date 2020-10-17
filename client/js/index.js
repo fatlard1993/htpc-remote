@@ -1,6 +1,10 @@
-// includes dom log socket-client dialog _keyboardExtensions js-util
-// babel
-/* global dom log socketClient dialog util */
+import Log from 'log';
+import util from 'js-util';
+import dom from 'dom';
+import socketClient from 'socket-client';
+import Keyboard from '_keyboardExtensions';
+
+const log = new Log();
 
 socketClient.stayConnected = function(){
 	if(socketClient.status === 'open') return;
