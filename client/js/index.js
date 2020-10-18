@@ -1,28 +1,11 @@
 import Log from 'log';
 import util from 'js-util';
 import dom from 'dom';
-import socketClient from 'socket-client';
-import Keyboard from '_keyboardExtensions';
+import dialog from 'dialog';
+import socketClient from '_socket';
+import SoftKeyboard from '_keyboard';
 
 const log = new Log();
-
-socketClient.stayConnected = function(){
-	if(socketClient.status === 'open') return;
-
-	var reload = 'soft';
-
-	if(reload === 'soft' && dom.triedSoftReload) reload = 'hard';
-
-	log()(`Reload: ${reload}`);
-
-	if(reload === 'hard') return window.location.reload(false);
-
-	socketClient.reconnect();
-
-	dom.triedSoftReload = true;
-
-	dom.resetSoftReset_TO = setTimeout(function(){ dom.triedSoftReload = false; }, 4000);
-};
 
 const htpcRemote = {
 	options: {},

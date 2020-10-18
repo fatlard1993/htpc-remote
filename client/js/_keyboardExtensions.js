@@ -194,3 +194,5 @@ SoftKeyboard.setLayouts({
 		['keyboard']
 	]
 });
+
+module.exports = SoftKeyboard;
