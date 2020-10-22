@@ -9,6 +9,7 @@ const htpcRemote = {
 		this.rootPath = function rootPath(){ return path.join(opts.rootFolder, ...arguments); };
 		this.opts = opts;
 
+		const fontAwesomePath = this.rootPath('node_modules/@fortawesome/fontawesome-free/webfonts');
 		const { app, staticServer } = require('http-server').init(opts.port, opts.rootFolder);
 		const socketServer = new (require('websocket-server'))({ server: app.server });
 
@@ -16,8 +17,7 @@ const htpcRemote = {
 
 		app.use('/fonts', staticServer(this.rootPath('client/fonts')));
 
-		if(fs.existsSync(this.rootPath('node_modules/font-awesome/fonts'))) app.use('/fonts', staticServer(this.rootPath('node_modules/font-awesome/fonts')));
-		else if(fs.existsSync(this.rootPath('../node_modules/font-awesome/fonts'))) app.use('/fonts', staticServer(this.rootPath('../node_modules/font-awesome/fonts')));
+		if(fs.existsSync(fontAwesomePath)) app.use('/webfonts', staticServer(fontAwesomePath));
 
 		app.get('/home', function(req, res, next){
 			res.sendPage('index');
