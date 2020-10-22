@@ -3,7 +3,7 @@ import util from 'js-util';
 import dom from 'dom';
 import dialog from 'dialog';
 import socketClient from '_socket';
-import SoftKeyboard from '_keyboard';
+import '_keyboard';
 
 const log = new Log({ verbosity: parseInt(dom.storage.get('logVerbosity') || 0) });
 
