@@ -28,3 +28,24 @@
 	font-weight: bold;
 	font-style: normal;
 }
+
+@define-mixin fontAwesome {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	line-height: 1;
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 400;
+}
+
+@define-mixin fontAwesomeBrands {
+	font-family: 'Font Awesome 5 Brands';
+	font-weight: normal;
+}
+
+@define-mixin fontAwesomeSolid {
+	font-weight: 900;
+}
