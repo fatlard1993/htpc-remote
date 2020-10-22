@@ -16,9 +16,8 @@ const htpcRemote = {
 
 		app.use('/fonts', staticServer(this.rootPath('client/fonts')));
 
-		if(fs.existsSync(this.rootPath('node_modules/font-awesome/src/fonts'))) app.use('/fonts', staticServer(this.rootPath('node_modules/font-awesome/src/fonts')));
-
-		else if(fs.existsSync(this.rootPath('../node_modules/font-awesome/src/fonts'))) app.use('/fonts', staticServer(this.rootPath('../node_modules/font-awesome/src/fonts')));
+		if(fs.existsSync(this.rootPath('node_modules/font-awesome/fonts'))) app.use('/fonts', staticServer(this.rootPath('node_modules/font-awesome/fonts')));
+		else if(fs.existsSync(this.rootPath('../node_modules/font-awesome/fonts'))) app.use('/fonts', staticServer(this.rootPath('../node_modules/font-awesome/fonts')));
 
 		app.get('/home', function(req, res, next){
 			res.sendPage('index');
