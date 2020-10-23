@@ -1,6 +1,6 @@
 {
 	"name": "htpc-remote",
-	"version": "1.3.1",
+	"version": "1.3.2",
 	"description": "BYOD htpc control",
 	"main": "src/index.js",
 	"author": "fatlard1993",
