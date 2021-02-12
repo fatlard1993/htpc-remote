@@ -1,33 +1,4 @@
-// includes @fortawesome/fontawesome-free/css/all.css
-
-@font-face {
-	font-display: swap;
-	font-family: 'Source Code Pro';
-	src: url('/fonts/SourceCodePro-Semibold.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-display: swap;
-	font-family: 'Source Code Pro';
-	src: url('/fonts/SourceCodePro-Bold.woff') format('woff');
-	font-weight: bold;
-	font-style: normal;
-}
-@font-face {
-	font-display: swap;
-	font-family: 'Source Sans Pro';
-	src: url('/fonts/SourceSansPro-Semibold.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-display: swap;
-	font-family: 'Source Sans Pro';
-	src: url('/fonts/SourceSansPro-Bold.woff') format('woff');
-	font-weight: bold;
-	font-style: normal;
-}
+// includes @fortawesome/fontawesome-free/css/all.css source-sans-pro/source-sans-pro.css
 
 @define-mixin fontAwesome {
 	-moz-osx-font-smoothing: grayscale;
@@ -42,10 +13,14 @@
 }
 
 @define-mixin fontAwesomeBrands {
+	@mixin fontAwesome;
+
 	font-family: 'Font Awesome 5 Brands';
 	font-weight: normal;
 }
 
 @define-mixin fontAwesomeSolid {
-	font-weight: 900;
+	@mixin fontAwesome;
+
+	font-weight: 600;
 }
