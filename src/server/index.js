@@ -1,43 +1,28 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const argi = require('argi');
 
-const yargs = require('yargs');
-const rootFolder = require('find-root')(__dirname);
-
-function rootPath(){ return path.join(rootFolder, ...arguments); }
-
-yargs.alias({
-	h: 'help',
-	ver: 'version',
-	v: 'verbosity',
-	p: 'port',
-	s: 'simulate'
+argi.parse({
+	verbosity: {
+		type: 'int',
+		alias: 'v',
+		defaultValue: 1
+	},
+	port: {
+		type: 'int',
+		alias: 'p',
+		defaultValue: 8793
+	},
+	simulate: {
+		type: 'boolean',
+		alias: 's',
+		description: 'See what would happen, without making any changes'
+	}
 });
 
-yargs.boolean(['h', 'ver', 's']);
+const options = argi.options.named;
+const log = new (require('log'))({ tag: 'htpc-remote', defaults: { verbosity: options.verbosity, color: true } });
 
-yargs.default({
-	v: 1,
-	p: 80
-});
+log(1)('Options', options);
 
-yargs.describe({
-	v: '<level>',
-	p: '<port>',
-	s: 'See what would happen, without making any changes'
-});
-
-
-const args = yargs.argv;
-
-['_', '$0', 'v', 'p', 's'].forEach((item) => { delete args[item]; });
-
-const opts = Object.assign(args, { args: Object.assign({}, args), rootFolder, verbosity: Number(args.verbosity) });
-
-const log = new (require('log'))({ tag: 'htpc-remote', color: true, defaultVerbosity: opts.verbosity });
-
-log(1)('Options', opts);
-
-(require('./htpcRemote')).init(opts);
+require('./htpcRemote').init(options);
