@@ -18,4 +18,4 @@ socketClient.stayConnected = function(){
 	socketClient.resetSoftReset_TO = setTimeout(function(){ socketClient.triedSoftReload = false; }, 4000);
 };
 
-module.exports = socketClient;
+if(typeof module === 'object') module.exports = socketClient;

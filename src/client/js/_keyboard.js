@@ -195,4 +195,4 @@ SoftKeyboard.setLayouts({
 	]
 });
 
-module.exports = SoftKeyboard;
+if(typeof module === 'object') module.exports = SoftKeyboard;
