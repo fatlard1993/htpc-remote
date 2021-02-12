@@ -21,7 +21,7 @@
 	},
 	"devDependencies": {
 		"babel-eslint": "^10.1.0",
-		"eslint": "^7.11.0",
+		"eslint": "^7.20.0",
 		"eslint-config-rules": "github:fatlard1993/eslint-config-rules#2.x.x"
 	},
 	"dependencies": {
@@ -29,7 +29,7 @@
 		"dialog": "github:fatlard1993/dialog#2.x.x",
 		"dom": "github:fatlard1993/dom#2.x.x",
 		"find-root": "^1.1.0",
-		"@fortawesome/fontawesome-free": "^5.15.1",
+		"@fortawesome/fontawesome-free": "^5.15.2",
 		"http-server": "github:fatlard1993/http-server#4.x.x",
 		"js-util": "github:fatlard1993/js-util#2.x.x",
 		"keyboard": "github:fatlard1993/keyboard",
@@ -37,6 +37,6 @@
 		"robotjs": "^0.6.0",
 		"socket-client": "github:fatlard1993/socket-client#2.x.x",
 		"websocket-server": "github:fatlard1993/websocket-server#2.x.x",
-		"yargs": "^16.1.0"
+		"yargs": "^16.2.0"
 	}
 }
