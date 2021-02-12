@@ -10,12 +10,12 @@ linux requires you first install: libxtst-dev libpng++-dev
 
 The main interface is a trackpad and a button to open the keyboard:
 
-![main interface](https://github.com/fatlard1993/htpc-remote/tree/master/img/main.jpg)
+![main interface](https://github.com/fatlard1993/htpc-remote/tree/master/img/main.png)
 
 The keyboard button will open the keyboard which has a few different keyboards:
 
-![basic interface](https://github.com/fatlard1993/htpc-remote/tree/master/img/basic.jpg)
+![basic interface](https://github.com/fatlard1993/htpc-remote/tree/master/img/basic.png)
 
 One of the keyboards offers mouse type controls:
 
-![mouse interface](https://github.com/fatlard1993/htpc-remote/tree/master/img/mouse.jpg)
+![mouse interface](https://github.com/fatlard1993/htpc-remote/tree/master/img/mouse.png)
