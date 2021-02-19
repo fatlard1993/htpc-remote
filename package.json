@@ -17,13 +17,8 @@
 		"url": "https://github.com/fatlard1993/htpc-remote/issues"
 	},
 	"homepage": "https://github.com/fatlard1993/htpc-remote#readme",
-	"eslintConfig": {
-		"extends": "rules"
-	},
 	"devDependencies": {
-		"babel-eslint": "^10.1.0",
-		"eslint": "^7.20.0",
-		"eslint-config-rules": "github:fatlard1993/eslint-config-rules#2.x.x"
+		"eslint": "^7.20.0"
 	},
 	"dependencies": {
 		"argi": "github:fatlard1993/argi",
