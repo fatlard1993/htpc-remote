@@ -2,25 +2,24 @@
 
 const argi = require('argi');
 
-argi.parse({
+const { options } = argi.parse({
 	verbosity: {
-		type: 'int',
+		type: 'number',
+		defaultValue: 1,
 		alias: 'v',
-		defaultValue: 1
 	},
 	port: {
-		type: 'int',
+		type: 'number',
+		defaultValue: 8793,
 		alias: 'p',
-		defaultValue: 8793
 	},
 	simulate: {
 		type: 'boolean',
+		description: 'See what would happen, without making any changes',
 		alias: 's',
-		description: 'See what would happen, without making any changes'
 	}
 });
 
-const options = argi.options.named;
 const log = new (require('log'))({ tag: 'htpc-remote', defaults: { verbosity: options.verbosity, color: true } });
 
 log(1)('Options', options);
