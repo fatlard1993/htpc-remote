@@ -9,10 +9,31 @@ soft-keyboard {
 
 	button {
 		background-color: $black;
-		height: 38px;
+		height: 42px;
 		color: $white;
-		font-size: 18px;
+		font-size: 20px;
 		transition: transform .2s;
+
+		&.kb-switch {
+			color: $orange;
+
+			&:after {
+				margin-top: 3px;
+			}
+
+			&.pressed {
+				transform: none !important;
+				background-color: $orange;
+			}
+		}
+
+		&.fakeShift {
+			color: $orange-lighter;
+
+			&.pressed {
+				background-color: $orange-lighter;
+			}
+		}
 
 		&:after {
 			@mixin fontAwesomeSolid;
@@ -20,6 +41,14 @@ soft-keyboard {
 
 		&.quit:after {
 			content: "\f410";
+		}
+
+		&.fullscreen:after {
+			content: "\f424";
+		}
+
+		&.refresh:after {
+			content: "\f2f1";
 		}
 
 		&.open:after {
@@ -34,6 +63,22 @@ soft-keyboard {
 
 		&.backspace:after {
 			content: "\f55a";
+		}
+
+		&.media:after {
+			content: "\f26c";
+		}
+
+		&.numpad:after {
+			content: "\f00a";
+		}
+
+		&.basic:after {
+			content: "\f11c";
+		}
+
+		&.full:after {
+			content: "\f552";
 		}
 
 		&.mouse:after {
@@ -115,7 +160,7 @@ soft-keyboard {
 			content: "\f3be";
 		}
 
-		&.home:after {
+		&.browserHome:after {
 			content: "\f015";
 		}
 
@@ -127,7 +172,7 @@ soft-keyboard {
 			content: "\f013";
 		}
 
-		&.shift:after {
+		&.shift:after, &.fakeShift:after {
 			content: "\f35b";
 		}
 
@@ -140,6 +185,14 @@ soft-keyboard {
 			content: "\f3be";
 		}
 
+		&.mod {
+			color: $red-light;
+
+			&.pressed {
+				background-color: $red;
+			}
+		}
+
 		&.active, &.pressed {
 			background-color: $white;
 			color: $black;
@@ -147,12 +200,8 @@ soft-keyboard {
 			transition: transform .05s;
 
 			&.mod {
-				transform: unset !important
+				transform: unset !important;
 			}
-		}
-
-		&.pressed {
-			background-color: $red;
 		}
 
 		&:first-of-type.active:not(:only-child) {
@@ -165,7 +214,7 @@ soft-keyboard {
 	}
 }
 
-@media (min-height: 600px) {
+/* @media (min-height: 600px) {
 	soft-keyboard button {
 		height: 48px;
 		font-size: 20px;
@@ -182,4 +231,4 @@ soft-keyboard {
 	soft-keyboard button {
 		font-size: 14px;
 	}
-}
+} */

@@ -32,7 +32,9 @@ const htpcRemote = {
 
 		dom.mobile.detect();
 
-		dom.interact.on('pointerDown', socketClient.stayConnected);
+		htpcRemote.keyboard.elem.setLayout('media');
+
+		document.querySelector(`.kb-switch.media`).classList.add('pressed');
 
 		dom.interact.on('pointerUp', (evt) => {
 			if(evt.target.classList.contains('input') && evt.target.classList.contains('number')){
@@ -121,6 +123,8 @@ const htpcRemote = {
 			}
 
 			htpcRemote.touchPad.started = true;
+
+			socketClient.stayConnected();
 
 			htpcRemote.touchPad.updatePointer(evt);
 		},
@@ -214,6 +218,8 @@ const htpcRemote = {
 		onKeyDown: function(evt){
 			var key = evt.detail.key;
 
+			socketClient.stayConnected();
+
 			htpcRemote.tactileResponse();
 
 			if(this.layouts[key]) return;
@@ -228,6 +234,8 @@ const htpcRemote = {
 					log()('key held', key);
 
 					// todo set key to pressed
+					socketClient.reply('keyHold', evt.detail);
+
 					evt.detail.elem.classList.add('pressed');
 				}, 800);
 			}
@@ -308,6 +316,18 @@ const htpcRemote = {
 
 				if(this.layout === 'basicFakeShift') this.setLayout('basic');
 				else if(this.layout === 'fullFakeShift') this.setLayout('full');
+			}
+
+			if (htpcRemote.layout !== htpcRemote.keyboard.elem.layout) {
+				htpcRemote.layout = htpcRemote.keyboard.elem.layout;
+
+				dom.classList(document.querySelectorAll('.kb-switch.pressed'), 'remove', 'pressed');
+
+				const layoutClass = htpcRemote.layout.replace(/.+FakeShift/, 'fakeShift');
+
+				document.querySelector(`.kb-switch.${layoutClass}`).classList.add('pressed');
+
+				if(layoutClass === 'fakeShift') document.querySelector(`.kb-switch.${htpcRemote.layout.replace('FakeShift', '')}`).classList.add('pressed');
 			}
 		}
 	}

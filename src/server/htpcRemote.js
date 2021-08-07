@@ -4,6 +4,7 @@ const log = new (require('log'))({ tag: 'htpc-remote' });
 const robot = require('robotjs');
 
 const htpcRemote = {
+	heldKeys: {},
 	rootPath: function(){ return path.join(__dirname, '../..', ...arguments); },
 	init: function(options){
 		this.options = options;
@@ -43,6 +44,11 @@ const htpcRemote = {
 			log(htpcRemote.options.simulate ? 0 : 1)(`type '${text}'`);
 
 			if(!htpcRemote.options.simulate) robot.typeString(text);
+		},
+		keyHold: function(evt){
+			log(htpcRemote.options.simulate ? 0 : 1)(`mod key hold ${evt.mod}`);
+
+			if (!htpcRemote.options.simulate) htpcRemote.heldKeys[evt.mod] = true;
 		},
 		keyPress: function(evt){
 			log(htpcRemote.options.simulate ? 0 : 1)(`key press ${evt.mod ? ' mod: '+ evt.mod : ''} ${evt.key}`);

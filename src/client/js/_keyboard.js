@@ -7,18 +7,23 @@ SoftKeyboard.setKeyDefinitions({
 	delete: { text: '' },
 	space: { text: '' },
 	settings: { text: '' },
-	mouse: { text: '' },
-	hide: { text: '' },
+	media: { text: '', class: 'kb-switch' },
+	numpad: { text: '', class: 'kb-switch' },
+	basic: { text: '', class: 'kb-switch' },
+	full: { text: '', class: 'kb-switch' },
+	mouse: { text: '', class: 'kb-switch' },
+	hide: { text: '', class: 'kb-switch' },
 	lmb: { text: '' },
 	rmb: { text: '' },
-	home: { text: '' },
 	left: { text: '' },
 	up: { text: '' },
 	down: { text: '' },
 	right: { text: '' },
+	home: { text: 'Home' },
+	browserHome: { key: 'browser_home', text: '' },
 	end: { text: 'End' },
 	shift: { class: 'mod', text: '' },
-	fakeShift: { class: 'shift', text: '' },
+	fakeShift: { class: 'kb-switch', text: '' },
 	ctrl: { key: 'control', text: 'Ctrl', class: 'mod' },
 	os: { key: 'command', class: 'mod', text: '' },
 	alt: { class: 'mod', text: 'Alt' },
@@ -33,8 +38,9 @@ SoftKeyboard.setKeyDefinitions({
 	stop: { key: 'audio_stop', text: '' },
 	next: { key: 'audio_next', text: '' },
 	prev: { key: 'audio_prev', text: '' },
-	keyboard: { key: 'basic', text: '' },
 	quit: { mod: 'command', key: 'q', text: '' },
+	refresh: { key: 'f5', text: '' },
+	fullscreen: { key: 'f11', text: '' },
 	open: { mod: 'command', key: 'space', text: '' },
 	'!': { mod: 'shift', key: '1' },
 	'@': { mod: 'shift', key: '2' },
@@ -97,7 +103,7 @@ SoftKeyboard.setLayouts({
 	],
 	fullFakeShift: [
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-		['esc', 'volMute', 'volDown', 'volUp', 'prev', 'play', 'pause', 'next', 'settings', 'f8', 'f9', 'f10', 'f11', 'f12', 'delete'],
+		['esc', 'volMute', 'volDown', 'volUp', 'prev', 'play', 'pause', 'next', 'settings', 'f8', 'f9', 'f10', 'f11', 'quit', 'delete'],
 		['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'backspace'],
 		['tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|'],
 		['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'return'],
@@ -106,19 +112,19 @@ SoftKeyboard.setLayouts({
 	],
 	basic: [
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-		['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-		['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+		['esc', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+		['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '-'],
 		['tab', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'backspace'],
-		['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.'],
+		['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
 		['ctrl', 'space', 'return'],
 		['os', 'left', 'up', 'down', 'right', 'alt']
 	],
 	basicFakeShift: [
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-		['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'],
-		['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+		['settings', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')'],
+		['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '_'],
 		['tab', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'backspace'],
-		['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '/', '?'],
+		['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '?', '"', '\\'],
 		['ctrl', 'space', 'return'],
 		['os', 'home', 'pgUp', 'pgDown', 'end', 'alt']
 	],
@@ -132,10 +138,11 @@ SoftKeyboard.setLayouts({
 	],
 	media: [
 		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-		['esc', 'f', 'f11'],
+		['esc', 'f', 'fullscreen', 'refresh', 'open'],
 		['volMute', 'volDown', 'volUp'],
 		['prev', 'play', 'pause', 'next'],
-		['quit', 'space', 'open']
+		['up', 'space', 'down'],
+		['home', 'pgUp', 'pgDown', 'end']
 	],
 	everything: [
 		['esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f8', 'f9', 'f10', 'f11', 'f12'],
@@ -187,11 +194,11 @@ SoftKeyboard.setLayouts({
 	],
 	mouse: [
 		['lmb', 'rmb'],
-		['up', 'keyboard', 'down'],
+		['up', 'media', 'basic', 'hide', 'down'],
 		['home', 'pgUp', 'pgDown', 'end']
 	],
 	hide: [
-		['keyboard']
+		['media', 'basic', 'mouse']
 	]
 });
 
