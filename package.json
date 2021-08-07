@@ -2,12 +2,12 @@
 	"name": "htpc-remote",
 	"version": "1.3.2",
 	"description": "BYOD htpc control",
-	"main": "src/srever/index.js",
+	"main": "src/server/index.js",
 	"author": "fatlard1993",
 	"license": "ISC",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "src/srever/index.js"
+		"start": "node src/server/index.js"
 	},
 	"repository": {
 		"type": "git",
