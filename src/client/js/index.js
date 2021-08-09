@@ -139,6 +139,8 @@ const htpcRemote = {
 
 			if(!htpcRemote.touchPad.pointers[id] || thisMoveTime - htpcRemote.touchPad.pointers[id].lastMoveTime < 20) return;
 
+			const timeDiff = thisMoveTime - htpcRemote.touchPad.pointers[id].lastMoveTime;
+
 			htpcRemote.touchPad.pointers[id].lastMoveTime = thisMoveTime;
 
 			var newPosition = dom.resolvePosition(evt);
@@ -150,6 +152,12 @@ const htpcRemote = {
 			positionDifference = htpcRemote.touchPad.pointerCount === 2 ? htpcRemote.touchPad.getScrollDistance(positionDifference) : htpcRemote.touchPad.getCursorDistance(positionDifference);
 
 			if(Math.abs(positionDifference.x) < 1 || Math.abs(positionDifference.y) < 1) return;
+
+			const timeMod = Math.max(1, Math.min(4, ((Math.abs(positionDifference.x) + Math.abs(positionDifference.y)) * timeDiff) * .002));
+
+
+			positionDifference.x *= timeMod;
+			positionDifference.y *= timeMod;
 
 			if(htpcRemote.touchPad.pointerCount < 3) socketClient.reply(htpcRemote.touchPad.pointerCount === 2 ? 'touchPadScroll' : 'touchPadMove', positionDifference);
 
