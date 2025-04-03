@@ -1,3 +1,6 @@
-**/node_modules
-
+# macos
 .DS_Store
+
+# build
+node_modules
+build

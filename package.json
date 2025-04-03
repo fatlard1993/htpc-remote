@@ -1,13 +1,31 @@
 {
 	"name": "htpc-remote",
 	"version": "1.5.0",
+	"type": "module",
+	"exports": {
+		"./package.json": "./package.json",
+		".": "./server/index.js"
+	},
 	"description": "BYOD htpc control",
-	"main": "src/server/index.js",
 	"author": "fatlard1993",
 	"license": "ISC",
+	"browserslist": [
+		"last 1 version",
+		"> 1%",
+		"not dead",
+		"not op_mini all"
+	],
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node src/server/index.js"
+		"prepare": "bun run build",
+		"build": "bun run build:clean && bun run client/build.js",
+		"build:clean": "rm -rf ./client/build/",
+		"build:watch": "bun run build -- --watch",
+		"start": "NODE_ENV=production bun server/index.js",
+		"dev": "NODE_ENV=development bun --hot server/index.js",
+		"lint": "bun --bun eslint",
+		"lint:fix": "bun --bun eslint --fix",
+		"format": "bun run lint:fix && bun --bun prettier --write .",
+		"version": "npm version"
 	},
 	"repository": {
 		"type": "git",
@@ -17,22 +35,28 @@
 		"url": "https://github.com/fatlard1993/htpc-remote/issues"
 	},
 	"homepage": "https://github.com/fatlard1993/htpc-remote#readme",
-	"devDependencies": {
-		"eslint": "^7.20.0"
-	},
 	"dependencies": {
-		"argi": "github:fatlard1993/argi",
-		"config-manager": "github:fatlard1993/config-manager#2.x.x",
-		"dialog": "github:fatlard1993/dialog#2.x.x",
-		"dom": "github:fatlard1993/dom#2.x.x",
-		"@fortawesome/fontawesome-free": "^5.15.2",
-		"http-server": "github:fatlard1993/http-server#4.x.x",
-		"js-util": "github:fatlard1993/js-util#2.x.x",
-		"keyboard": "github:fatlard1993/keyboard",
-		"log": "github:fatlard1993/log#3.x.x",
-		"robotjs": "^0.6.0",
-		"source-sans-pro": "^3.6.0",
-		"socket-client": "github:fatlard1993/socket-client#2.x.x",
-		"websocket-server": "github:fatlard1993/websocket-server#2.x.x"
+		"@jitsi/robotjs": "^0.6.13",
+		"argi": "github:fatlard1993/argi#fcac703",
+		"log": "github:fatlard1993/log#e4cb364",
+		"vanilla-bean-components": "github:fatlard1993/vanilla-bean-components#252ee19"
+	},
+	"devDependencies": {
+		"@eslint/compat": "^1.2.7",
+		"@eslint/js": "^9.23.0",
+		"@happy-dom/global-registrator": "^17.4.4",
+		"@testing-library/dom": "^10.4.0",
+		"@testing-library/jest-dom": "^6.6.3",
+		"bun-types": "^1.2.8",
+		"eslint": "^9.23.0",
+		"eslint-plugin-compat": "^6.0.2",
+		"eslint-plugin-import": "^2.31.0",
+		"eslint-plugin-jsdoc": "^50.6.9",
+		"eslint-plugin-spellcheck": "0.0.20",
+		"eslint-plugin-testing-library": "^7.1.1",
+		"eslint-plugin-unicorn": "^58.0.0",
+		"eslint-plugin-write-good-comments": "^0.2.0",
+		"globals": "^16.0.0",
+		"prettier": "3.5.3"
 	}
 }

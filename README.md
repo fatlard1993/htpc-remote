@@ -1,21 +1,9 @@
 # htpc-remote
 
-Provides BYOD style control of your Linux or Windows(untested) based HTPC via a node.js server.
+> BYOD style control of your Linux/Mac/Windows(untested) based HTPC via a web server.
 
-## robotjs
-
-linux requires you first install: libxtst-dev libpng++-dev
-
-## Screenshots
-
-The main interface is a trackpad and a button to open the keyboard:
-
-![main interface](./img/main.png)
-
-The keyboard button will open the keyboard which has a few different keyboards:
+The interface offers a trackpad and a few keyboard layouts for controlling your HTPC:
 
 ![basic interface](./img/basic.png)
-
-One of the keyboards offers mouse type controls:
 
 ![mouse interface](./img/mouse.png)

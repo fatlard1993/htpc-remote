@@ -1,11 +1,9 @@
-import SoftKeyboard from 'keyboard';
-
-SoftKeyboard.setKeyDefinitions({
+export const keyDefinitions = {
 	esc: { key: 'escape', text: 'Esc' },
-	backspace: { text: '' },
-	tab: { text: '' },
+	backspace: { text: '', class: 'u1_5' },
+	tab: { text: '', class: 'u1_5' },
 	delete: { text: '' },
-	space: { text: '' },
+	space: { text: '', class: 'u6' },
 	settings: { text: '' },
 	media: { text: '', class: 'kb-switch' },
 	numpad: { text: '', class: 'kb-switch' },
@@ -13,8 +11,8 @@ SoftKeyboard.setKeyDefinitions({
 	full: { text: '', class: 'kb-switch' },
 	mouse: { text: '', class: 'kb-switch' },
 	hide: { text: '', class: 'kb-switch' },
-	lmb: { text: '' },
-	rmb: { text: '' },
+	lmb: { text: '', command: 'click', payload: { button: 'left' } },
+	rmb: { text: '', command: 'click', payload: { button: 'right' } },
 	left: { text: '' },
 	up: { text: '' },
 	down: { text: '' },
@@ -23,7 +21,11 @@ SoftKeyboard.setKeyDefinitions({
 	browserHome: { key: 'browser_home', text: '' },
 	end: { text: 'End' },
 	shift: { class: 'mod', text: '' },
-	fakeShift: { class: 'kb-switch', text: '' },
+	fakeShift: { class: ['kb-switch', 'shift'], text: '' },
+	basicFakeShift: { class: ['kb-switch', 'shift'], text: '' },
+	backToBasic: { class: ['kb-switch', 'shift', 'pressed'], text: '', layout: 'basic' },
+	backToFull: { class: ['kb-switch', 'shift', 'pressed'], text: '', layout: 'full' },
+	fullFakeShift: { class: ['kb-switch', 'shift'], text: '' },
 	ctrl: { key: 'control', text: 'Ctrl', class: 'mod' },
 	os: { key: 'command', class: 'mod', text: '' },
 	alt: { class: 'mod', text: 'Alt' },
@@ -45,7 +47,7 @@ SoftKeyboard.setKeyDefinitions({
 	'!': { mod: 'shift', key: '1' },
 	'@': { mod: 'shift', key: '2' },
 	'#': { mod: 'shift', key: '3' },
-	'$': { mod: 'shift', key: '4' },
+	$: { mod: 'shift', key: '4' },
 	'%': { mod: 'shift', key: '5' },
 	'^': { mod: 'shift', key: '6' },
 	'&': { mod: 'shift', key: '7' },
@@ -53,7 +55,7 @@ SoftKeyboard.setKeyDefinitions({
 	'(': { mod: 'shift', key: '9' },
 	')': { mod: 'shift', key: '0' },
 	'~': { mod: 'shift', key: '`' },
-	'_': { mod: 'shift', key: '-' },
+	_: { mod: 'shift', key: '-' },
 	'+': { mod: 'shift', key: '=' },
 	'{': { mod: 'shift', key: '[' },
 	'}': { mod: 'shift', key: ']' },
@@ -63,86 +65,102 @@ SoftKeyboard.setKeyDefinitions({
 	'<': { mod: 'shift', key: ',' },
 	'>': { mod: 'shift', key: '.' },
 	'?': { mod: 'shift', key: '/' },
-	'Q': { mod: 'shift', key: 'q' },
-	'W': { mod: 'shift', key: 'w' },
-	'E': { mod: 'shift', key: 'e' },
-	'R': { mod: 'shift', key: 'r' },
-	'T': { mod: 'shift', key: 't' },
-	'Y': { mod: 'shift', key: 'y' },
-	'U': { mod: 'shift', key: 'u' },
-	'I': { mod: 'shift', key: 'i' },
-	'O': { mod: 'shift', key: 'o' },
-	'P': { mod: 'shift', key: 'p' },
-	'A': { mod: 'shift', key: 'a' },
-	'S': { mod: 'shift', key: 's' },
-	'D': { mod: 'shift', key: 'd' },
-	'F': { mod: 'shift', key: 'f' },
-	'G': { mod: 'shift', key: 'g' },
-	'H': { mod: 'shift', key: 'h' },
-	'J': { mod: 'shift', key: 'j' },
-	'K': { mod: 'shift', key: 'k' },
-	'L': { mod: 'shift', key: 'l' },
-	'Z': { mod: 'shift', key: 'z' },
-	'X': { mod: 'shift', key: 'x' },
-	'C': { mod: 'shift', key: 'c' },
-	'V': { mod: 'shift', key: 'v' },
-	'B': { mod: 'shift', key: 'b' },
-	'N': { mod: 'shift', key: 'n' },
-	'M': { mod: 'shift', key: 'm' }
-});
+	Q: { mod: 'shift', key: 'q' },
+	W: { mod: 'shift', key: 'w' },
+	E: { mod: 'shift', key: 'e' },
+	R: { mod: 'shift', key: 'r' },
+	T: { mod: 'shift', key: 't' },
+	Y: { mod: 'shift', key: 'y' },
+	U: { mod: 'shift', key: 'u' },
+	I: { mod: 'shift', key: 'i' },
+	O: { mod: 'shift', key: 'o' },
+	P: { mod: 'shift', key: 'p' },
+	A: { mod: 'shift', key: 'a' },
+	S: { mod: 'shift', key: 's' },
+	D: { mod: 'shift', key: 'd' },
+	F: { mod: 'shift', key: 'f' },
+	G: { mod: 'shift', key: 'g' },
+	H: { mod: 'shift', key: 'h' },
+	J: { mod: 'shift', key: 'j' },
+	K: { mod: 'shift', key: 'k' },
+	L: { mod: 'shift', key: 'l' },
+	Z: { mod: 'shift', key: 'z' },
+	X: { mod: 'shift', key: 'x' },
+	C: { mod: 'shift', key: 'c' },
+	V: { mod: 'shift', key: 'v' },
+	B: { mod: 'shift', key: 'b' },
+	N: { mod: 'shift', key: 'n' },
+	M: { mod: 'shift', key: 'm' },
+};
 
-SoftKeyboard.setLayouts({
+export const layouts = {
 	full: [
-		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
+		['media', 'basic', 'full', 'mouse', 'hide'],
 		['esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f8', 'f9', 'f10', 'f11', 'f12', 'delete'],
 		['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace'],
 		['tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
 		['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', `'`, 'return'],
-		['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'shift'],
-		['ctrl', 'os', 'alt', 'space', 'left', 'up', 'down', 'right']
+		['fullFakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'shift'],
+		['ctrl', 'os', 'alt', 'space', 'left', 'up', 'down', 'right'],
 	],
 	fullFakeShift: [
-		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
-		['esc', 'volMute', 'volDown', 'volUp', 'prev', 'play', 'pause', 'next', 'settings', 'f8', 'f9', 'f10', 'f11', 'quit', 'delete'],
+		['media', 'basic', 'full', 'mouse', 'hide'],
+		[
+			'esc',
+			'volMute',
+			'volDown',
+			'volUp',
+			'prev',
+			'play',
+			'pause',
+			'next',
+			'settings',
+			'f8',
+			'f9',
+			'f10',
+			'f11',
+			'quit',
+			'delete',
+		],
 		['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'backspace'],
 		['tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|'],
 		['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'return'],
-		['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 'shift'],
-		['ctrl', 'os', 'alt', 'space', 'home', 'pgUp', 'pgDown', 'end']
+		['backToFull', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 'shift'],
+		['ctrl', 'os', 'alt', 'space', 'home', 'pgUp', 'pgDown', 'end'],
 	],
 	basic: [
-		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
+		['media', 'basic', 'full', 'mouse', 'hide'],
 		['esc', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
 		['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '-'],
 		['tab', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'backspace'],
-		['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
+		['basicFakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
 		['ctrl', 'space', 'return'],
-		['os', 'left', 'up', 'down', 'right', 'alt']
+		['os', 'left', 'up', 'down', 'right', 'alt'],
 	],
 	basicFakeShift: [
-		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
+		['media', 'basic', 'full', 'mouse', 'hide'],
 		['settings', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')'],
 		['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '_'],
 		['tab', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'backspace'],
-		['fakeShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '?', '"', '\\'],
+		['backToBasic', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '?', '"', '\\'],
 		['ctrl', 'space', 'return'],
-		['os', 'home', 'pgUp', 'pgDown', 'end', 'alt']
+		['os', 'home', 'pgUp', 'pgDown', 'end', 'alt'],
 	],
 	numpad: [
-		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
+		['media', 'basic', 'full', 'mouse', 'hide'],
 		['1', '2', '3', 'backspace', 'delete'],
 		['4', '5', '6', '+', '-'],
 		['7', '8', '9', '*', '/'],
 		['.', '0', ',', 'tab', 'return'],
-		['left', 'up', 'down', 'right']
+		['left', 'up', 'down', 'right'],
 	],
 	media: [
-		['media', 'numpad', 'basic', 'full', 'mouse', 'hide'],
+		['media', 'basic', 'full', 'mouse', 'hide'],
 		['esc', 'f', 'fullscreen', 'refresh', 'open'],
 		['volMute', 'volDown', 'volUp'],
 		['prev', 'play', 'pause', 'next'],
 		['up', 'space', 'down'],
-		['home', 'pgUp', 'pgDown', 'end']
+		['home', 'pgUp', 'pgDown', 'end'],
 	],
 	everything: [
 		['esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f8', 'f9', 'f10', 'f11', 'f12'],
@@ -152,9 +170,9 @@ SoftKeyboard.setLayouts({
 		['tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
 		['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', `'`, 'return'],
 		['fakeShift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'shift'],
-		['ctrl', 'os', 'alt', 'space', 'left', 'up', 'down', 'right']
+		['ctrl', 'os', 'alt', 'space', 'left', 'up', 'down', 'right'],
 	],
-	'abc1': [
+	abc1: [
 		['hide', 'ABC!', 'numbers', 'symbols', 'full', 'mouse'],
 		['esc', 'tab', 'delete', 'settings'],
 		['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
@@ -162,7 +180,7 @@ SoftKeyboard.setLayouts({
 		['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
 		['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
 		['os', 'space', 'return'],
-		['ctrl', 'alt', 'left', 'up', 'down', 'right']
+		['ctrl', 'alt', 'left', 'up', 'down', 'right'],
 	],
 	'ABC!': [
 		['abc1', 'hide', 'numbers', 'symbols', 'full', 'mouse'],
@@ -172,16 +190,16 @@ SoftKeyboard.setLayouts({
 		['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
 		['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'backspace'],
 		['os', 'space', 'return'],
-		['ctrl', 'alt', 'home', 'pgUp', 'pgDown', 'end']
+		['ctrl', 'alt', 'home', 'pgUp', 'pgDown', 'end'],
 	],
 	symbols: [
 		['abc1', 'ABC!', 'numbers', 'hide', 'full', 'mouse'],
 		['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-		['`', '[', ']', '\\', ';', '\'', ',', '.', '/', '-', '='],
+		['`', '[', ']', '\\', ';', "'", ',', '.', '/', '-', '='],
 		['~', '{', '}', '|', ':', '"', '<', '>', '?', '_', '+'],
 		['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', 'backspace'],
 		['delete', 'space', 'return'],
-		['tab', 'left', 'up', 'down', 'right']
+		['tab', 'left', 'up', 'down', 'right'],
 	],
 	numbers: [
 		['abc1', 'ABC!', 'hide', 'symbols', 'full', 'mouse'],
@@ -190,16 +208,12 @@ SoftKeyboard.setLayouts({
 		['7', '8', '9', '.'],
 		['.', '0', '+', '-'],
 		['tab', 'space', 'return'],
-		['tab', 'left', 'up', 'down', 'right']
+		['tab', 'left', 'up', 'down', 'right'],
 	],
 	mouse: [
 		['lmb', 'rmb'],
 		['up', 'media', 'basic', 'hide', 'down'],
-		['home', 'pgUp', 'pgDown', 'end']
+		['home', 'pgUp', 'pgDown', 'end'],
 	],
-	hide: [
-		['media', 'basic', 'mouse']
-	]
-});
-
-if(typeof module === 'object') module.exports = SoftKeyboard;
+	hide: [['media', 'basic', 'mouse']],
+};
