@@ -1,6 +1,6 @@
 {
 	"name": "htpc-remote",
-	"version": "1.5.0",
+	"version": "2.0.0",
 	"type": "module",
 	"exports": {
 		"./package.json": "./package.json",
