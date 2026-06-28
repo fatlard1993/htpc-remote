@@ -1,13 +1,12 @@
-import { View as BaseView, rootContext } from 'vanilla-bean-components';
+import { View as BaseView } from '@vanilla-bean/components';
 
 import TouchPad from './TouchPad';
 import Keyboard from './Keyboard';
+import context from './context.js';
 
 export default class View extends BaseView {
-	async render() {
-		super.render();
-
-		rootContext.keyboard = new Keyboard({ appendTo: this.elem });
-		rootContext.touchPad = new TouchPad({ appendTo: this.elem });
+	build() {
+		context.keyboard = new Keyboard({ appendTo: this.elem });
+		context.touchPad = new TouchPad({ appendTo: this.elem });
 	}
 }

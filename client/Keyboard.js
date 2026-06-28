@@ -1,5 +1,5 @@
 /* eslint-disable spellcheck/spell-checker */
-import { Keyboard as BaseKeyboard } from 'vanilla-bean-components';
+import { Keyboard as BaseKeyboard } from '@vanilla-bean/components';
 
 import { keyDefinitions, layouts } from './constants';
 import socket from './socket';
@@ -17,7 +17,7 @@ export default class Keyboard extends BaseKeyboard {
 				width: 100%;
 				z-index: 999;
 
-				button {
+				& button {
 					background-color: ${colors.black};
 					height: 42px;
 					color: ${colors.white};

@@ -39,7 +39,7 @@
 		"@jitsi/robotjs": "^0.6.13",
 		"argi": "github:fatlard1993/argi#fcac703",
 		"log": "github:fatlard1993/log#e4cb364",
-		"vanilla-bean-components": "github:fatlard1993/vanilla-bean-components#252ee19"
+		"@vanilla-bean/components": "^1.0.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.7",

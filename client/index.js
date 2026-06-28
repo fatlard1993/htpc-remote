@@ -1,5 +1,6 @@
-import process from 'process';
-import { Page, Elem, Component, rootContext, removeExcessIndentation } from 'vanilla-bean-components';
+import { Page, Elem, Component, removeExcessIndentation } from '@vanilla-bean/components';
+
+import context from './context.js';
 
 import View from './View';
 
@@ -102,9 +103,9 @@ class Console extends Component {
 	}
 }
 
-rootContext.console = new Console();
+context.console = new Console();
 
 // If device is touch-primary
-if (matchMedia('(hover: none), (pointer: coarse)').matches) window.console = rootContext.console;
+if (matchMedia('(hover: none), (pointer: coarse)').matches) window.console = context.console;
 
-new Page({ appendTo: document.body, content: [rootContext.console, new View()] });
+new Page({ appendTo: document.body, content: [context.console, new View()] });

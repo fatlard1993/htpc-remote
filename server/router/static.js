@@ -7,7 +7,7 @@ const staticRouter = async request => {
 
 	// DEV support for zelda
 	if (!(await file.exists())) file = Bun.file(`../node_modules${path}`);
-	if (!(await file.exists())) file = Bun.file(`../node_modules/vanilla-bean-components/node_modules/${path}`);
+	if (!(await file.exists())) file = Bun.file(`../node_modules/@vanilla-bean/components/node_modules/${path}`);
 
 	if (!(await file.exists())) file = Bun.file(`node_modules${path}`);
 	if (!(await file.exists())) file = Bun.file(`client${path}`);

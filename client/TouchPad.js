@@ -1,4 +1,5 @@
-import { Component, throttle, tactileResponse, convertRange, rootContext } from 'vanilla-bean-components';
+import { Component, throttle, tactileResponse, convertRange } from '@vanilla-bean/components';
+import context from './context.js';
 import socket from './socket';
 
 export default class TouchPad extends Component {
@@ -22,7 +23,7 @@ export default class TouchPad extends Component {
 					colors.gray,
 				)} 1px, transparent 1px) !important;
 
-				div.pointer {
+				& div.pointer {
 					position: absolute;
 					pointer-events: none;
 					background-color: $teal-dark;
@@ -143,7 +144,7 @@ export default class TouchPad extends Component {
 		if (!this.pointerMoved && this.maxPointerCount < 4) {
 			tactileResponse();
 
-			if (this.maxPointerCount === 3 && rootContext.keyboard.layout !== 'hide') rootContext.keyboard.setLayout('hide');
+			if (this.maxPointerCount === 3 && context.keyboard.layout !== 'hide') context.keyboard.setLayout('hide');
 			else socket.send('click', { button: this.maxPointerCount === 2 ? 'right' : 'left' });
 		}
 
