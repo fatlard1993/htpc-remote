@@ -36,27 +36,27 @@
 	},
 	"homepage": "https://github.com/fatlard1993/htpc-remote#readme",
 	"dependencies": {
-		"@jitsi/robotjs": "^0.6.13",
+		"@jitsi/robotjs": "^0.6.24",
 		"argi": "github:fatlard1993/argi#fcac703",
 		"log": "github:fatlard1993/log#e4cb364",
-		"@vanilla-bean/components": "^1.0.0"
+		"@vanilla-bean/components": "^2.0.1"
 	},
 	"devDependencies": {
-		"@eslint/compat": "^1.2.7",
-		"@eslint/js": "^9.23.0",
-		"@happy-dom/global-registrator": "^17.4.4",
-		"@testing-library/dom": "^10.4.0",
-		"@testing-library/jest-dom": "^6.6.3",
-		"bun-types": "^1.2.8",
-		"eslint": "^9.23.0",
-		"eslint-plugin-compat": "^6.0.2",
-		"eslint-plugin-import": "^2.31.0",
-		"eslint-plugin-jsdoc": "^50.6.9",
+		"@eslint/compat": "^2.1.0",
+		"@eslint/js": "^9.39.5",
+		"@happy-dom/global-registrator": "^17.6.3",
+		"@testing-library/dom": "^10.4.1",
+		"@testing-library/jest-dom": "^6.9.1",
+		"bun-types": "^1.3.14",
+		"eslint": "^10.7.0",
+		"eslint-plugin-compat": "^7.0.2",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsdoc": "^50.8.0",
 		"eslint-plugin-spellcheck": "0.0.20",
-		"eslint-plugin-testing-library": "^7.1.1",
+		"eslint-plugin-testing-library": "^7.16.2",
 		"eslint-plugin-unicorn": "^58.0.0",
 		"eslint-plugin-write-good-comments": "^0.2.0",
-		"globals": "^16.0.0",
+		"globals": "^16.5.0",
 		"prettier": "3.5.3"
 	}
 }

@@ -81,7 +81,7 @@ class Console extends Component {
 				pointer-events: none;
 				max-height: 42%;
 				overflow: hidden;
-				background: ${theme.colors.black.setAlpha(0.5)};
+				background: ${theme.colors.alpha(theme.colors.black, 0.5)};
 			`,
 		});
 	}

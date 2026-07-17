@@ -29,4 +29,16 @@ module.exports = [
 			'no-console': 'off',
 		},
 	},
+	{
+		// app profile: jsdoc coverage and console policy are relaxed for application code
+		rules: {
+			'jsdoc/require-jsdoc': 'off',
+			'jsdoc/require-param': 'off',
+			'jsdoc/require-param-description': 'off',
+			'jsdoc/require-param-type': 'off',
+			'jsdoc/require-returns': 'off',
+			'jsdoc/require-returns-description': 'off',
+			'no-console': 'off',
+		},
+	},
 ];
