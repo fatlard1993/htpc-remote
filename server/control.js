@@ -31,7 +31,7 @@ const control = {
 	mouseUp: ({ button }) => {
 		robot.mouseToggle('up', button);
 	},
-	click: ({ button, double }) => {
+	click: ({ button, double = false }) => {
 		robot.mouseClick(button, double);
 	},
 };
