@@ -6,8 +6,6 @@ import View from './View';
 
 import './socket';
 
-window.process = process;
-
 // Fix RegExp stringify-ability
 RegExp.prototype.toJSON = RegExp.prototype.toString;
 
