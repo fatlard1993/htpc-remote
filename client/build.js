@@ -9,7 +9,7 @@ const build = async () => {
 		define: {
 			'process.env.AUTOPREFIXER_GRID': 'undefined',
 		},
-		...(import.meta.env === 'production' && { drop: ['console'] }),
+		...(process.env.NODE_ENV === 'production' && { drop: ['console'] }),
 	});
 
 	console.log(buildResults.success ? 'build.success' : buildResults.logs);
