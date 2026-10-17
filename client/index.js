@@ -67,6 +67,10 @@ class LogLine extends Component {
 	}
 }
 
+// What logs while a line is being written goes to the browser's console: through the overlay, it would write another line, forever
+const browserConsole = window.console;
+let writing = false;
+
 class Console extends Component {
 	constructor(options = {}) {
 		super({
@@ -86,20 +90,32 @@ class Console extends Component {
 		});
 	}
 
+	write(method, color, args) {
+		if (writing) return browserConsole[method](...args);
+
+		writing = true;
+
+		try {
+			this.prepend(new LogLine({ line: args.length === 1 ? args[0] : args, color }));
+		} finally {
+			writing = false;
+		}
+	}
+
 	log(...args) {
-		this.prepend(new LogLine({ line: args.length === 1 ? args[0] : args }));
+		this.write('log', 'green', args);
 	}
 
 	info(...args) {
-		this.prepend(new LogLine({ line: args.length === 1 ? args[0] : args, color: 'blue' }));
+		this.write('info', 'blue', args);
 	}
 
 	warn(...args) {
-		this.prepend(new LogLine({ line: args.length === 1 ? args[0] : args, color: 'yellow' }));
+		this.write('warn', 'yellow', args);
 	}
 
 	error(...args) {
-		this.prepend(new LogLine({ line: args.length === 1 ? args[0] : args, color: 'red' }));
+		this.write('error', 'red', args);
 	}
 }
 
