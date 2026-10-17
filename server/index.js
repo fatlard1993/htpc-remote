@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
 
+import { hotReload } from '@vanilla-bean/components/app';
 import Argi from 'argi';
 
-import server, { spawnBuild } from './server';
+import server from './server';
 
 import './exit';
 
@@ -20,6 +21,6 @@ server.init({ port: options.port, simulate: options.simulate });
 for await (const line of console) {
 	if (line === 'b') {
 		console.log('>> Building...');
-		spawnBuild();
+		hotReload.rebuild();
 	}
 }

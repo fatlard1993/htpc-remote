@@ -4,6 +4,8 @@ import context from './context.js';
 
 import View from './View';
 
+import '@vanilla-bean/components/app/reloadOnBuild';
+
 import './socket';
 
 // Fix RegExp stringify-ability

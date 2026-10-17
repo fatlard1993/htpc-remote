@@ -11,10 +11,7 @@ const connect = async () => {
 			resolve();
 		});
 
-		socket.addEventListener('message', event => {
-			if (process.env.NODE_ENV === 'development' && event.data === 'hotReload') window.location.reload();
-			else messageListeners.forEach(listener => listener(event));
-		});
+		socket.addEventListener('message', event => messageListeners.forEach(listener => listener(event)));
 
 		socket.addEventListener('error', error => {
 			console.error('WS Error:', error);

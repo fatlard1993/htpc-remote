@@ -1,8 +1,5 @@
 import { nanoid } from 'nanoid';
-
-import requestMatch from '../utils/requestMatch';
-
-import staticRoutes from './static';
+import { requestMatch, serveStatic } from '@vanilla-bean/components/app';
 
 const router = async (request, server) => {
 	try {
@@ -18,8 +15,7 @@ const router = async (request, server) => {
 			return success ? undefined : new Response('WebSocket upgrade error', { status: 400 });
 		}
 
-		const response = await staticRoutes(request);
-		if (response) return response;
+		return (await serveStatic(request)) ?? new Response('Not Found', { status: 404 });
 	} catch (error) {
 		console.error('An error was encountered processing a request\n', error);
 
