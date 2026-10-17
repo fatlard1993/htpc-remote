@@ -1,43 +1,8 @@
-const globals = require('globals');
-const vanillaBeanEslint = require('@vanilla-bean/components/eslint.config.cjs');
-const vanillaBeanSpellcheck = require('@vanilla-bean/components/spellcheck.config.cjs');
-const localSpellcheck = require('./spellcheck.config.cjs');
-
 module.exports = [
-	...vanillaBeanEslint,
+	...require('@vanilla-bean/components/eslint.app.config.cjs'),
 	{
+		// The page logs to its own on-screen console
 		rules: {
-			'spellcheck/spell-checker': [
-				'warn',
-				{
-					...vanillaBeanSpellcheck,
-					...localSpellcheck,
-					skipWords: [...vanillaBeanSpellcheck.skipWords, ...localSpellcheck.skipWords],
-				},
-			],
-		},
-	},
-	{
-		files: ['server/*.js', 'server/**/*.js', 'client/build.js'],
-		languageOptions: {
-			globals: {
-				...globals.node,
-				Bun: true,
-			},
-		},
-		rules: {
-			'no-console': 'off',
-		},
-	},
-	{
-		// app profile: jsdoc coverage and console policy are relaxed for application code
-		rules: {
-			'jsdoc/require-jsdoc': 'off',
-			'jsdoc/require-param': 'off',
-			'jsdoc/require-param-description': 'off',
-			'jsdoc/require-param-type': 'off',
-			'jsdoc/require-returns': 'off',
-			'jsdoc/require-returns-description': 'off',
 			'no-console': 'off',
 		},
 	},
