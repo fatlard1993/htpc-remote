@@ -1,9 +1,14 @@
 import { nanoid } from 'nanoid';
 import { requestMatch, serveStatic } from '@vanilla-bean/components/app';
 
+import { crossOrigin, foreignHost } from '../guard';
+
 const router = async (request, server) => {
 	try {
 		let match;
+
+		if (foreignHost(request)) return new Response('Unknown host', { status: 421 });
+		if (crossOrigin(request)) return new Response('Cross-origin request refused', { status: 403 });
 
 		match = requestMatch('GET', '/', request);
 		if (match) return new Response(Bun.file('client/build/index.html'));
