@@ -16,11 +16,16 @@
 		"not op_mini all"
 	],
 	"scripts": {
-		"prepare": "bun run build",
+		"prepare": "bun run prepare:githooks && bun run build",
+		"prepare:githooks": "[ -n \"$CI\" ] && exit 0 || (git config --local core.hooksPath .githooks || echo 'Cannot set core.hooksPath -- pre-commit checks will not run')",
 		"build": "bun run build:clean && bun run client/build.js",
 		"build:clean": "rm -rf ./client/build/",
 		"start": "NODE_ENV=production bun server/index.js",
 		"dev": "NODE_ENV=development bun --hot server/index.js",
+		"service:enable": "vbc-service enable --port 8793",
+		"service:disable": "vbc-service disable",
+		"service:reload": "vbc-service reload",
+		"deploy": "bun run build && bun run service:reload",
 		"test": "bun test",
 		"lint": "bun --bun eslint",
 		"lint:fix": "bun --bun eslint --fix",
@@ -39,7 +44,7 @@
 		"@jitsi/robotjs": "^0.6.24",
 		"argi": "github:fatlard1993/argi#fcac703",
 		"log": "github:fatlard1993/log#e4cb364",
-		"@vanilla-bean/components": "^4.4.0"
+		"@vanilla-bean/components": "^4.5.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
