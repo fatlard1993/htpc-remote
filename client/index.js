@@ -1,4 +1,4 @@
-import { Page, Elem, Component, removeExcessIndentation } from '@vanilla-bean/components';
+import { Page, Elem, Component, removeExcessIndentation, requestWakeLock } from '@vanilla-bean/components';
 
 import context from './context.js';
 
@@ -125,3 +125,6 @@ context.console = new Console();
 if (matchMedia('(hover: none), (pointer: coarse)').matches) window.console = context.console;
 
 new Page({ appendTo: document.body, content: [context.console, new View()] });
+
+// A remote in hand shouldn't go dark between presses
+requestWakeLock();
