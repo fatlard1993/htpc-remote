@@ -1,7 +1,7 @@
 import { hostname } from 'os';
 import { describe, expect, mock, test } from 'bun:test';
 
-import { crossOrigin, foreignHost, handleMessage } from './guard';
+import { foreignHost, handleMessage } from './guard';
 import router from './router';
 
 // Shaped like a request rather than built as one: the test DOM's Request drops Host and Origin, which are what's checked
@@ -33,25 +33,24 @@ describe('foreignHost', () => {
 	});
 });
 
-describe('crossOrigin', () => {
+describe('another site', () => {
 	const host = '192.168.1.20:8793';
+	const upgrading = { upgrade: () => true };
 
-	test("an upgrade or write from this page's own origin passes", () => {
-		expect(crossOrigin(request({ host, origin: `http://${host}`, upgrade: 'websocket' }))).toBe(false);
-		expect(crossOrigin(request({ host, origin: `http://${host}` }, { method: 'POST' }))).toBe(false);
+	test("an upgrade from this page's own origin is let through", async () => {
+		expect(
+			await router(request({ host, origin: `http://${host}`, upgrade: 'websocket' }, { path: '/ws' }), upgrading),
+		).toBeUndefined();
 	});
 
-	test("an upgrade or write from another site's page is refused", async () => {
-		const upgrade = request({ host, origin: 'http://evil.example', upgrade: 'websocket' }, { path: '/ws' });
+	test('an upgrade or write from another site\'s page, or from nowhere ("null"), is refused', async () => {
+		for (const origin of ['http://evil.example', 'null']) {
+			const upgrade = request({ host, origin, upgrade: 'websocket' }, { path: '/ws' });
 
-		expect(crossOrigin(upgrade)).toBe(true);
-		expect(crossOrigin(request({ host, origin: 'http://evil.example' }, { method: 'POST' }))).toBe(true);
-		expect(crossOrigin(request({ host, origin: 'null', upgrade: 'websocket' }))).toBe(true);
-		expect((await router(upgrade, { upgrade: () => true })).status).toBe(403);
-	});
+			expect((await router(upgrade, upgrading)).status).toBe(403);
+		}
 
-	test('a plain read from anywhere passes; it changes nothing', () => {
-		expect(crossOrigin(request({ host, origin: 'http://evil.example' }))).toBe(false);
+		expect((await router(request({ host, origin: 'http://evil.example' }, { method: 'POST' }))).status).toBe(403);
 	});
 });
 

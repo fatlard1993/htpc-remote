@@ -1,14 +1,16 @@
 import { nanoid } from 'nanoid';
-import { requestMatch, serveStatic } from '@vanilla-bean/components/app';
+import { requestMatch, sameOrigin, serveStatic } from '@vanilla-bean/components/app';
 
-import { crossOrigin, foreignHost } from '../guard';
+import { foreignHost } from '../guard';
 
 const router = async (request, server) => {
 	try {
 		let match;
 
 		if (foreignHost(request)) return new Response('Unknown host', { status: 421 });
-		if (crossOrigin(request)) return new Response('Cross-origin request refused', { status: 403 });
+		// Socket upgrades and writes from another site's page carry that site's Origin; WebSockets get no CORS protection,
+		// so without this any page a browser on the network visits could connect and type on this machine
+		if (!sameOrigin(request)) return new Response('Cross-origin request refused', { status: 403 });
 
 		match = requestMatch('GET', '/', request);
 		if (match) return new Response(Bun.file('client/build/index.html'));

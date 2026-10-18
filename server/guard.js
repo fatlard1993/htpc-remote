@@ -21,21 +21,6 @@ export const foreignHost = request => {
 	return host.split('.')[0] !== machine;
 };
 
-// Socket upgrades and writes from another site's page carry that site's Origin. WebSockets get no CORS protection, so
-// without this any page a browser on the network visits could connect and type on this machine.
-export const crossOrigin = request => {
-	const origin = request.headers.get('origin');
-	const guarded = request.method !== 'GET' || request.headers.get('upgrade');
-
-	if (!guarded || !origin) return false;
-
-	try {
-		return new URL(origin).host !== request.headers.get('host');
-	} catch {
-		return true;
-	}
-};
-
 // Runs a socket message's control, if it names one: malformed messages and anything that isn't control's own
 // function (__proto__, constructor, heldKeys) are dropped
 export const handleMessage = (control, buffer, { simulate } = {}) => {
