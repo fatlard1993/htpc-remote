@@ -27,14 +27,14 @@ const send = async (message, payload = {}, attempt = 0) => {
 		if (socket.readyState === 3) {
 			await connect();
 
-			await send(message, payload, ++attempt);
+			await send(message, payload, attempt + 1);
 		} else socket.send(JSON.stringify({ message, payload }));
 	} catch (error) {
 		if (attempt >= maxRetries) return console.error('failed to send', { error, socket });
 
 		await connect();
 
-		await send(message, payload, ++attempt);
+		await send(message, payload, attempt + 1);
 	}
 };
 
