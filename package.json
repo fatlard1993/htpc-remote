@@ -44,7 +44,7 @@
 		"@jitsi/robotjs": "^0.6.24",
 		"argi": "github:fatlard1993/argi#fcac703",
 		"log": "github:fatlard1993/log#e4cb364",
-		"@vanilla-bean/components": "^4.5.1"
+		"@vanilla-bean/components": "^4.5.2"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
