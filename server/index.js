@@ -1,11 +1,11 @@
 #!/usr/bin/env bun
 
-import { hotReload } from '@vanilla-bean/components/app';
+import { devConsole, handleExit } from '@vanilla-bean/components/app';
 import Argi from 'argi';
 
 import server from './server';
 
-import './exit';
+handleExit();
 
 const { options } = new Argi({
 	options: {
@@ -16,11 +16,6 @@ const { options } = new Argi({
 
 console.log('Options', options, process.env.NODE_ENV);
 
-server.init({ port: options.port, simulate: options.simulate });
+await server.init({ port: options.port, simulate: options.simulate });
 
-for await (const line of console) {
-	if (line === 'b') {
-		console.log('>> Building...');
-		hotReload.rebuild();
-	}
-}
+devConsole();

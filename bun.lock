@@ -8,7 +8,7 @@
         "@jitsi/robotjs": "^0.6.24",
         "@vanilla-bean/components": "^4.5.2",
         "argi": "github:fatlard1993/argi#fcac703",
-        "log": "github:fatlard1993/log#e4cb364",
+        "nanoid": "^6.0.0",
       },
       "devDependencies": {
         "@eslint/compat": "^2.1.0",
@@ -27,6 +27,7 @@
         "globals": "^17.7.0",
         "happy-dom": "^20.14.6",
         "prettier": "3.5.3",
+        "ws": "^8.22.0",
       },
     },
   },
@@ -414,8 +415,6 @@
     "lodash": ["lodash@4.18.1", "", {}, "sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q=="],
 
     "lodash.memoize": ["lodash.memoize@4.1.2", "", {}, "sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag=="],
-
-    "log": ["log@github:fatlard1993/log#e4cb364", {}, "fatlard1993-log-e4cb364", "sha512-glpfkPWjmEFpPknzA75hevwmHw6PJ3h3S+6HWydP5pgwjNqaNqztj/VXOAVI1qU+gw/Un57db+GgPhPFOXqBtA=="],
 
     "lz-string": ["lz-string@1.5.0", "", { "bin": { "lz-string": "bin/bin.js" } }, "sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ=="],
 

@@ -42,16 +42,6 @@ describe('another site', () => {
 			await router(request({ host, origin: `http://${host}`, upgrade: 'websocket' }, { path: '/ws' }), upgrading),
 		).toBeUndefined();
 	});
-
-	test('an upgrade or write from another site\'s page, or from nowhere ("null"), is refused', async () => {
-		for (const origin of ['http://evil.example', 'null']) {
-			const upgrade = request({ host, origin, upgrade: 'websocket' }, { path: '/ws' });
-
-			expect((await router(upgrade, upgrading)).status).toBe(403);
-		}
-
-		expect((await router(request({ host, origin: 'http://evil.example' }, { method: 'POST' }))).status).toBe(403);
-	});
 });
 
 describe('handleMessage', () => {

@@ -18,7 +18,7 @@
 	"scripts": {
 		"prepare": "bun run prepare:githooks && bun run build",
 		"prepare:githooks": "[ -n \"$CI\" ] && exit 0 || (git config --local core.hooksPath .githooks || echo 'Cannot set core.hooksPath -- pre-commit checks will not run')",
-		"build": "bun run build:clean && bun run client/build.js",
+		"build": "bun run build:clean && vbc-build",
 		"build:clean": "rm -rf ./client/build/",
 		"start": "NODE_ENV=production bun server/index.js",
 		"dev": "NODE_ENV=development bun --hot server/index.js",
@@ -43,7 +43,7 @@
 	"dependencies": {
 		"@jitsi/robotjs": "^0.6.24",
 		"argi": "github:fatlard1993/argi#fcac703",
-		"log": "github:fatlard1993/log#e4cb364",
+		"nanoid": "^6.0.0",
 		"@vanilla-bean/components": "^4.5.2"
 	},
 	"devDependencies": {
@@ -62,6 +62,7 @@
 		"eslint-plugin-write-good-comments": "^0.2.0",
 		"globals": "^17.7.0",
 		"happy-dom": "^20.14.6",
-		"prettier": "3.5.3"
+		"prettier": "3.5.3",
+		"ws": "^8.22.0"
 	}
 }

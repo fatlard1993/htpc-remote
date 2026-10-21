@@ -6,6 +6,7 @@ import server from './server';
 // Bun's ws client, not the test DOM's WebSocket: it sends the Origin header given, as another site's page would
 
 const control = { type: mock() };
+const DomResponse = globalThis.Response;
 let running;
 let base;
 
@@ -18,11 +19,16 @@ const connect = origin =>
 	});
 
 beforeAll(async () => {
+	// The server answers with Bun's own Response; the test DOM's is one Bun.serve refuses
+	globalThis.Response = (await Bun.fetch('data:,')).constructor;
 	running = await server.init({ port: 0, control });
 	base = `http://127.0.0.1:${running.port}`;
 });
 
-afterAll(() => running.stop(true));
+afterAll(() => {
+	running.stop(true);
+	globalThis.Response = DomResponse;
+});
 
 test("a socket from the remote's own page connects and drives its control", async () => {
 	const { socket, opened } = await connect(base);
@@ -39,8 +45,10 @@ test("a socket from the remote's own page connects and drives its control", asyn
 	socket.close();
 });
 
-test("a socket from another site's page is refused", async () => {
-	const { opened } = await connect('http://evil.example');
+test('a socket or write from another site\'s page, or from nowhere ("null"), is refused', async () => {
+	for (const origin of ['http://evil.example', 'null']) expect((await connect(origin)).opened).toBe(false);
 
-	expect(opened).toBe(false);
+	const write = await Bun.fetch(`${base}/`, { method: 'POST', headers: { origin: 'http://evil.example' } });
+
+	expect(write.status).toBe(403);
 });
