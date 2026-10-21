@@ -1,4 +1,3 @@
-/* eslint-disable spellcheck/spell-checker */
 import { Keyboard as BaseKeyboard } from '@vanilla-bean/components';
 
 import { keyDefinitions, layouts } from './constants';
@@ -10,14 +9,22 @@ export default class Keyboard extends BaseKeyboard {
 			layout: 'hide',
 			keyDefinitions,
 			layouts,
-			styles: ({ colors, fonts }) => `
+			styles: ({ colors, fonts, safeArea }) => `
 				position: absolute;
 				bottom: 0;
 				left: 0;
-				width: 100%;
+				right: 0;
 				z-index: 999;
+				box-sizing: border-box;
+				max-width: 720px;
+				margin: 0 auto;
+				/* Clear of the home indicator and a landscape notch */
+				padding: 0 ${safeArea.right} ${safeArea.bottom} ${safeArea.left};
+				background-color: ${colors.black};
 
 				& button {
+					min-width: 0;
+					padding-inline: 0;
 					background-color: ${colors.black};
 					height: 42px;
 					color: ${colors.white};
@@ -45,152 +52,25 @@ export default class Keyboard extends BaseKeyboard {
 						height: auto;
 					}
 
-					&.quit:before {
-						content: "\\f410";
-					}
-
-					&.fullscreen:before {
-						content: "\\f424";
-					}
-
-					&.refresh:before {
-						content: "\\f2f1";
-					}
-
-					&.open:before {
-						content: "\\f002";
+					/* The mouse buttons have their row to themselves, and nothing in them to give it a height */
+					&.lmb, &.rmb {
+						height: 42px;
 					}
 
 					&.os:before {
 						${fonts.fontAwesomeBrands};
-
-						content: "\\f7df";
-					}
-
-					&.backspace:before {
-						content: "\\f55a";
-					}
-
-					&.media:before {
-						content: "\\f26c";
-					}
-
-					&.numpad:before {
-						content: "\\f00a";
-					}
-
-					&.basic:before {
-						content: "\\f11c";
-					}
-
-					&.full:before {
-						content: "\\f552";
-					}
-
-					&.mouse:before {
-						content: "\\f245";
 					}
 
 					&.hide {
 						opacity: 1 !important;
-
-						&:before {
-							content: "\\f070";
-						}
 					}
 
 					&.delete:before {
 						transform: scale(-1, 1);
-						content: "\\f55a";
-					}
-
-					&.tab:before {
-						content: "\\f362";
-					}
-
-					&.volUp:before {
-						content: "\\f028";
-					}
-
-					&.volDown:before {
-						content: "\\f027";
-					}
-
-					&.volMute:before {
-						content: "\\f6a9";
-					}
-
-					&.play:before {
-						content: "\\f04b";
-					}
-
-					&.pause:before {
-						content: "\\f04c";
-					}
-
-					&.stop:before {
-						content: "\\f04d";
-					}
-
-					&.next:before {
-						content: "\\f04e";
-					}
-
-					&.prev:before {
-						content: "\\f04a";
-					}
-
-					&.left:before {
-						content: "\\f053";
-					}
-
-					&.up:before {
-						content: "\\f077";
-					}
-
-					&.down:before {
-						content: "\\f078";
-					}
-
-					&.right:before {
-						content: "\\f054";
-					}
-
-					&.pgUp:before {
-						content: "\\f3bf";
-					}
-
-					&.pgDown:before {
-						content: "\\f3be";
-					}
-
-					&.browserHome:before {
-						content: "\\f015";
-					}
-
-					&.space:before, &.lmb:before, &.rmb:before {
-						content: "";
-					}
-
-					&.settings:before {
-						content: "\\f013";
-					}
-
-					&.shift:before {
-						content: "\\f35b";
-					}
-
-					&.keyboard:before {
-						content: "\\f11c";
 					}
 
 					&.return:before {
 						transform: rotate(90deg);
-						content: "\\f3be";
-					}
-
-					&:focus {
-						top: 0;
 					}
 
 					&.space {
@@ -228,6 +108,11 @@ export default class Keyboard extends BaseKeyboard {
 					&:last-of-type.active:not(:only-child) {
 						transform: scale(2) translateY(-30px) translateX(-20px);
 					}
+				}
+
+				/* Fifteen keys to a row fit a phone in a smaller type */
+				&:is(.layout-full, .layout-fullFakeShift, .layout-everything) button:not(.kb-switch) {
+					font-size: 14px;
 				}
 			`,
 			onKeyPress: ({ detail: { key, keyDefinition } }) => {

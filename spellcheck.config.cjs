@@ -12,6 +12,8 @@ module.exports = {
 		'pageup',
 		'pos',
 		'rmb',
+		'tv',
+		'ubuntu',
 		'usr',
 		'zelda',
 	],
