@@ -26,8 +26,8 @@ export default class TouchPad extends Component {
 				& div.pointer {
 					position: absolute;
 					pointer-events: none;
-					background-color: $teal-dark;
-					border: 3px double $black;
+					background-color: ${colors.dark(colors.teal)};
+					border: 3px double ${colors.black};
 					opacity: 0.3;
 					border-radius: 50%;
 					z-index: 99999;
@@ -122,8 +122,6 @@ export default class TouchPad extends Component {
 		const timeDelta = thisMoveTime - this.pointers[pointerId].lastMoveTime || 0;
 
 		const timeModifier = Math.max(1, Math.min(4, convertRange(timeDelta, [150, 20], [1, 4])));
-
-		console.log(timeModifier);
 
 		positionDelta.x *= timeModifier;
 		positionDelta.y *= timeModifier;
