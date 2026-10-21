@@ -1,57 +1,7 @@
-// eslint-disable-next-line prefer-const
-let maxRetries = 3;
-let socket;
-const messageListeners = [];
+import { connectSocket } from '@vanilla-bean/components';
 
-const connect = async () => {
-	return new Promise(resolve => {
-		socket = new WebSocket(`ws://${window.location.host}/ws`);
+const socket = connectSocket('/ws');
 
-		socket.addEventListener('open', () => {
-			resolve();
-		});
+const send = (message, payload = {}) => socket.send({ message, payload });
 
-		socket.addEventListener('message', event => messageListeners.forEach(listener => listener(event)));
-
-		socket.addEventListener('error', error => {
-			console.error('WS Error:', error);
-
-			socket.close();
-		});
-	});
-};
-
-const send = async (message, payload = {}, attempt = 0) => {
-	// console.log(message, payload)
-	try {
-		if (socket.readyState === 3) {
-			await connect();
-
-			await send(message, payload, attempt + 1);
-		} else socket.send(JSON.stringify({ message, payload }));
-	} catch (error) {
-		if (attempt >= maxRetries) return console.error('failed to send', { error, socket });
-
-		await connect();
-
-		await send(message, payload, attempt + 1);
-	}
-};
-
-const onMessage = callback => {
-	messageListeners.push(event => {
-		let data;
-
-		try {
-			data = JSON.parse(event.data);
-		} catch {
-			data = { message: event.data };
-		}
-
-		callback({ ...event, ...data });
-	});
-};
-
-await connect();
-
-export default { ...socket, maxRetries, connect, send, onMessage };
+export default { send };
