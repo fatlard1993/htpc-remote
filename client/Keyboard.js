@@ -26,18 +26,19 @@ export default class Keyboard extends BaseKeyboard {
 				& button {
 					min-width: 0;
 					padding-inline: 0;
-					background-color: ${colors.black};
+					background-color: ${colors.dark(colors.gray)};
 					height: 42px;
 					color: ${colors.white};
 					font-size: 20px;
 					transition: transform .2s;
 
 					&.kb-switch {
-						color: ${colors.orange};
+						color: ${colors.light(colors.orange)};
 
 						&.pressed {
 							transform: none !important;
-							background-color: ${colors.orange};
+							background-color: ${colors.dark(colors.orange)};
+							color: ${colors.white};
 						}
 					}
 
@@ -45,17 +46,12 @@ export default class Keyboard extends BaseKeyboard {
 						color: ${colors.lighter(colors.orange)};
 
 						&.pressed {
-							background-color: ${colors.lighter(colors.orange)};
+							background-color: ${colors.orange};
 						}
 					}
 
-					&:empty {
+					&:empty:not(.lmb, .rmb) {
 						height: auto;
-					}
-
-					/* The mouse buttons have their row to themselves, and nothing in them to give it a height */
-					&.lmb, &.rmb {
-						height: 42px;
 					}
 
 					&.os:before {
@@ -88,6 +84,7 @@ export default class Keyboard extends BaseKeyboard {
 
 						&.pressed {
 							background-color: ${colors.red};
+							color: ${colors.white};
 						}
 					}
 
@@ -114,6 +111,11 @@ export default class Keyboard extends BaseKeyboard {
 				/* Fifteen keys to a row fit a phone in a smaller type */
 				&:is(.layout-full, .layout-fullFakeShift) button:not(.kb-switch) {
 					font-size: 14px;
+
+					/* A narrower space bar leaves Home and End their whole word */
+					&.space {
+						flex: 2;
+					}
 				}
 			`,
 			onKeyPress: ({ detail: { key, keyDefinition } }) => {
