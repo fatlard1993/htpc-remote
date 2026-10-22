@@ -111,7 +111,7 @@ export default class Keyboard extends BaseKeyboard {
 				}
 
 				/* Fifteen keys to a row fit a phone in a smaller type */
-				&:is(.layout-full, .layout-fullFakeShift, .layout-everything) button:not(.kb-switch) {
+				&:is(.layout-full, .layout-fullFakeShift) button:not(.kb-switch) {
 					font-size: 14px;
 				}
 			`,
