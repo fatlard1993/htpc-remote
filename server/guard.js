@@ -22,7 +22,7 @@ export const foreignHost = request => {
 };
 
 // Runs a socket message's control, if it names one: malformed messages and anything that isn't control's own
-// function (__proto__, constructor, heldKeys) are dropped
+// function (__proto__, constructor, a value) are dropped
 export const handleMessage = (control, buffer, { simulate } = {}) => {
 	let parsed;
 
