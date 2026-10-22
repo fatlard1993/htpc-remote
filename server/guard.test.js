@@ -1,5 +1,5 @@
 import { hostname } from 'os';
-import { describe, expect, mock, test } from 'bun:test';
+import { describe, expect, mock, spyOn, test } from 'bun:test';
 
 import { foreignHost, handleMessage } from './guard';
 import router from './router';
@@ -52,6 +52,24 @@ describe('handleMessage', () => {
 
 		expect(handleMessage(control, JSON.stringify({ message: 'type', payload: { text: 'hi' } }))).toBe(true);
 		expect(control.type).toHaveBeenCalledWith({ text: 'hi' });
+	});
+
+	test('a message is logged in development only: a moving pointer sends dozens a second', () => {
+		const log = spyOn(console, 'log').mockImplementation(() => {});
+		const environment = process.env.NODE_ENV;
+
+		try {
+			process.env.NODE_ENV = 'production';
+			handleMessage(controls(), JSON.stringify({ message: 'type', payload: { text: 'hi' } }));
+			expect(log).not.toHaveBeenCalled();
+
+			process.env.NODE_ENV = 'development';
+			handleMessage(controls(), JSON.stringify({ message: 'type', payload: { text: 'hi' } }));
+			expect(log).toHaveBeenCalledTimes(1);
+		} finally {
+			process.env.NODE_ENV = environment;
+			log.mockRestore();
+		}
 	});
 
 	test('malformed messages are dropped, not thrown', () => {

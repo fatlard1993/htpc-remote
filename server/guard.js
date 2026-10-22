@@ -38,13 +38,13 @@ export const handleMessage = (control, buffer, { simulate } = {}) => {
 		return false;
 	}
 
-	console.log({ message, payload });
-
 	if (simulate) {
 		console.log('SIMULATE', { message, payload });
 
 		return true;
 	}
+
+	if (process.env.NODE_ENV === 'development') console.log({ message, payload });
 
 	try {
 		control[message](payload);
