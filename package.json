@@ -42,9 +42,9 @@
 	"homepage": "https://github.com/fatlard1993/htpc-remote#readme",
 	"dependencies": {
 		"@jitsi/robotjs": "^0.6.24",
-		"argi": "github:fatlard1993/argi#fcac703",
-		"nanoid": "^6.0.0",
-		"@vanilla-bean/components": "^5.0.0"
+		"@vanilla-bean/components": "^5.0.0",
+		"argi-cli": "^1.0.0",
+		"nanoid": "^6.0.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",

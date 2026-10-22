@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { devConsole, handleExit } from '@vanilla-bean/components/app';
-import Argi from 'argi';
+import Argi from 'argi-cli';
 
 import server from './server';
 
