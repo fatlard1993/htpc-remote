@@ -1,13 +1,13 @@
 import { Component, throttle, tactileResponse, convertRange } from '@vanilla-bean/components';
 import context from './context.js';
+import { settings } from './settings';
 import socket from './socket';
 
 export default class TouchPad extends Component {
 	constructor(options = {}) {
 		super({
+			...settings(),
 			...options,
-			cursorSpeed: 1,
-			scrollSpeed: 2,
 			styles: ({ colors }) => `
 				position: absolute;
 				top: 0;

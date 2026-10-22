@@ -1,6 +1,7 @@
 import { Keyboard as BaseKeyboard } from '@vanilla-bean/components';
 
 import { keyDefinitions, layouts } from './constants';
+import { openSettings } from './settings';
 import socket from './socket';
 
 export default class Keyboard extends BaseKeyboard {
@@ -116,7 +117,8 @@ export default class Keyboard extends BaseKeyboard {
 				}
 			`,
 			onKeyPress: ({ detail: { key, keyDefinition } }) => {
-				if (layouts[key]) this.setLayout(key);
+				if (key === 'settings') openSettings();
+				else if (layouts[key]) this.setLayout(key);
 				else if (layouts[keyDefinition?.layout]) this.setLayout(keyDefinition.layout);
 				else {
 					socket.send(keyDefinition?.command || 'keyPress', keyDefinition?.payload || { key, mod: keyDefinition?.mod });
