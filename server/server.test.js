@@ -45,6 +45,13 @@ test("a socket from the remote's own page connects and drives its control", asyn
 	socket.close();
 });
 
+test('the page is revalidated on every load, so a phone never asks for chunks gone since the last deploy', async () => {
+	const page = await Bun.fetch(`${base}/`);
+
+	expect(page.status).toBe(200);
+	expect(page.headers.get('cache-control')).toBe('no-cache');
+});
+
 test('a socket or write from another site\'s page, or from nowhere ("null"), is refused', async () => {
 	for (const origin of ['http://evil.example', 'null']) expect((await connect(origin)).opened).toBe(false);
 
