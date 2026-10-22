@@ -4,12 +4,8 @@ import { describe, expect, mock, spyOn, test } from 'bun:test';
 import { foreignHost, handleMessage } from './guard';
 import router from './router';
 
-// Shaped like a request rather than built as one: the test DOM's Request drops Host and Origin, which are what's checked
-const request = (headers, { method = 'GET', path = '/' } = {}) => ({
-	method,
-	url: `http://${headers.host ?? 'remote.test'}${path}`,
-	headers: { get: name => headers[name] ?? null },
-});
+const request = (headers, { method = 'GET', path = '/' } = {}) =>
+	new Request(`http://${headers.host ?? 'remote.test'}${path}`, { method, headers });
 
 describe('foreignHost', () => {
 	test('an address, localhost or this machine by any local suffix is home', () => {

@@ -1,12 +1,8 @@
 import { afterAll, beforeAll, expect, mock, test } from 'bun:test';
-import { WebSocket } from 'ws';
 
 import server from './server';
 
-// Bun's ws client, not the test DOM's WebSocket: it sends the Origin header given, as another site's page would
-
 const control = { type: mock() };
-const DomResponse = globalThis.Response;
 let running;
 let base;
 
@@ -19,15 +15,12 @@ const connect = origin =>
 	});
 
 beforeAll(async () => {
-	// The server answers with Bun's own Response; the test DOM's is one Bun.serve refuses
-	globalThis.Response = (await Bun.fetch('data:,')).constructor;
 	running = await server.init({ port: 0, control });
 	base = `http://127.0.0.1:${running.port}`;
 });
 
 afterAll(() => {
 	running.stop(true);
-	globalThis.Response = DomResponse;
 });
 
 test("a socket from the remote's own page connects and drives its control", async () => {
@@ -46,7 +39,7 @@ test("a socket from the remote's own page connects and drives its control", asyn
 });
 
 test('the page is revalidated on every load, so a phone never asks for chunks gone since the last deploy', async () => {
-	const page = await Bun.fetch(`${base}/`);
+	const page = await fetch(`${base}/`);
 
 	expect(page.status).toBe(200);
 	expect(page.headers.get('cache-control')).toBe('no-cache');
@@ -55,7 +48,7 @@ test('the page is revalidated on every load, so a phone never asks for chunks go
 test('a socket or write from another site\'s page, or from nowhere ("null"), is refused', async () => {
 	for (const origin of ['http://evil.example', 'null']) expect((await connect(origin)).opened).toBe(false);
 
-	const write = await Bun.fetch(`${base}/`, { method: 'POST', headers: { origin: 'http://evil.example' } });
+	const write = await fetch(`${base}/`, { method: 'POST', headers: { origin: 'http://evil.example' } });
 
 	expect(write.status).toBe(403);
 });
