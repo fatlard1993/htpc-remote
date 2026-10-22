@@ -14,7 +14,7 @@ const { options } = new Argi({
 	},
 });
 
-console.log('Options', options, process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development') console.log('Options', options);
 
 await server.init({ port: options.port, simulate: options.simulate });
 
