@@ -41,13 +41,13 @@ describe('another site', () => {
 });
 
 describe('handleMessage', () => {
-	const controls = () => ({ heldKeys: {}, type: mock() });
+	const controls = () => ({ heldKeys: {}, keyPress: mock() });
 
 	test('a message naming a control runs it with the payload', () => {
 		const control = controls();
 
-		expect(handleMessage(control, JSON.stringify({ message: 'type', payload: { text: 'hi' } }))).toBe(true);
-		expect(control.type).toHaveBeenCalledWith({ text: 'hi' });
+		expect(handleMessage(control, JSON.stringify({ message: 'keyPress', payload: { key: 'a' } }))).toBe(true);
+		expect(control.keyPress).toHaveBeenCalledWith({ key: 'a' });
 	});
 
 	test('a message is logged in development only: a moving pointer sends dozens a second', () => {
@@ -56,11 +56,11 @@ describe('handleMessage', () => {
 
 		try {
 			process.env.NODE_ENV = 'production';
-			handleMessage(controls(), JSON.stringify({ message: 'type', payload: { text: 'hi' } }));
+			handleMessage(controls(), JSON.stringify({ message: 'keyPress', payload: { key: 'a' } }));
 			expect(log).not.toHaveBeenCalled();
 
 			process.env.NODE_ENV = 'development';
-			handleMessage(controls(), JSON.stringify({ message: 'type', payload: { text: 'hi' } }));
+			handleMessage(controls(), JSON.stringify({ message: 'keyPress', payload: { key: 'a' } }));
 			expect(log).toHaveBeenCalledTimes(1);
 		} finally {
 			process.env.NODE_ENV = environment;
@@ -71,10 +71,10 @@ describe('handleMessage', () => {
 	test('malformed messages are dropped, not thrown', () => {
 		const control = controls();
 
-		for (const buffer of ['{not json', 'null', '"type"', JSON.stringify({ message: 42 })]) {
+		for (const buffer of ['{not json', 'null', '"keyPress"', JSON.stringify({ message: 42 })]) {
 			expect(handleMessage(control, buffer)).toBe(false);
 		}
-		expect(control.type).not.toHaveBeenCalled();
+		expect(control.keyPress).not.toHaveBeenCalled();
 	});
 
 	test("only control's own functions can be called", () => {
@@ -89,8 +89,8 @@ describe('handleMessage', () => {
 		const control = controls();
 
 		expect(
-			handleMessage(control, JSON.stringify({ message: 'type', payload: { text: 'x' } }), { simulate: true }),
+			handleMessage(control, JSON.stringify({ message: 'keyPress', payload: { key: 'a' } }), { simulate: true }),
 		).toBe(true);
-		expect(control.type).not.toHaveBeenCalled();
+		expect(control.keyPress).not.toHaveBeenCalled();
 	});
 });

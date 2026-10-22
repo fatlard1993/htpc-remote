@@ -9,9 +9,6 @@ const control = {
 	scroll: ({ x, y }) => {
 		robot.scrollMouse(x, y);
 	},
-	type: ({ text }) => {
-		robot.typeString(text);
-	},
 	keyPress: ({ key, mod = [] }) => {
 		robot.keyTap(key, mod);
 	},

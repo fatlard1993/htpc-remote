@@ -2,7 +2,7 @@ import { afterAll, beforeAll, expect, mock, test } from 'bun:test';
 
 import server from './server';
 
-const control = { type: mock() };
+const control = { keyPress: mock() };
 let running;
 let base;
 
@@ -30,11 +30,11 @@ test("a socket from the remote's own page connects and drives its control", asyn
 
 	socket.send('{not json');
 	socket.send(JSON.stringify({ message: '__proto__', payload: {} }));
-	socket.send(JSON.stringify({ message: 'type', payload: { text: 'hi' } }));
+	socket.send(JSON.stringify({ message: 'keyPress', payload: { key: 'a' } }));
 	await new Promise(resolve => setTimeout(resolve, 50));
 
-	expect(control.type).toHaveBeenCalledTimes(1);
-	expect(control.type).toHaveBeenCalledWith({ text: 'hi' });
+	expect(control.keyPress).toHaveBeenCalledTimes(1);
+	expect(control.keyPress).toHaveBeenCalledWith({ key: 'a' });
 	socket.close();
 });
 
