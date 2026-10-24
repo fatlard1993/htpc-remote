@@ -42,7 +42,7 @@
 	"homepage": "https://github.com/fatlard1993/htpc-remote#readme",
 	"dependencies": {
 		"@jitsi/robotjs": "^0.6.24",
-		"@vanilla-bean/components": "^7.0.1",
+		"@vanilla-bean/components": "^7.0.2",
 		"argi-cli": "^1.0.0",
 		"nanoid": "^6.0.0"
 	},
