@@ -142,7 +142,7 @@ export default class TouchPad extends Component {
 		if (!this.pointerMoved && this.maxPointerCount < 4) {
 			tactileResponse();
 
-			if (this.maxPointerCount === 3 && context.keyboard.layout !== 'hide') context.keyboard.setLayout('hide');
+			if (this.maxPointerCount === 3 && !context.keyboard.hasClass('layout-hide')) context.keyboard.setLayout('hide');
 			else socket.send('click', { button: this.maxPointerCount === 2 ? 'right' : 'left' });
 		}
 
