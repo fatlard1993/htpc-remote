@@ -10,7 +10,7 @@ export default class Keyboard extends BaseKeyboard {
 			layout: 'hide',
 			keyDefinitions,
 			layouts,
-			styles: ({ colors, fonts, safeArea }) => `
+			styles: ({ colors, fontSize, fonts, safeArea }) => `
 				position: absolute;
 				bottom: 0;
 				left: 0;
@@ -29,7 +29,7 @@ export default class Keyboard extends BaseKeyboard {
 					background-color: ${colors.dark(colors.gray)};
 					height: 42px;
 					color: ${colors.white};
-					font-size: 20px;
+					font-size: ${fontSize.xl};
 					transition: transform .2s;
 
 					&.kb-switch {
@@ -110,7 +110,7 @@ export default class Keyboard extends BaseKeyboard {
 
 				/* Fifteen keys to a row fit a phone in a smaller type */
 				&:is(.layout-full, .layout-fullFakeShift) button:not(.kb-switch) {
-					font-size: 14px;
+					font-size: ${fontSize.sm};
 
 					/* A narrower space bar leaves Home and End their whole word */
 					&.space {
