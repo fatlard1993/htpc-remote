@@ -35,7 +35,7 @@ export default class Keyboard extends BaseKeyboard {
 					&.kb-switch {
 						color: ${colors.light(colors.orange)};
 
-						&.pressed {
+						&[aria-pressed='true'] {
 							transform: none !important;
 							background-color: ${colors.dark(colors.orange)};
 							color: ${colors.white};
@@ -45,7 +45,7 @@ export default class Keyboard extends BaseKeyboard {
 					&.shift {
 						color: ${colors.lighter(colors.orange)};
 
-						&.pressed {
+						&[aria-pressed='true'] {
 							background-color: ${colors.orange};
 						}
 					}
