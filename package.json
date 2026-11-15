@@ -49,6 +49,7 @@
 	"devDependencies": {
 		"@eslint/compat": "^2.1.1",
 		"@eslint/js": "^10.0.1",
+		"@happy-dom/global-registrator": "^21.0.4",
 		"bun-types": "^1.4.4",
 		"eslint": "^10.15.0",
 		"eslint-plugin-compat": "^7.0.2",
@@ -58,6 +59,7 @@
 		"eslint-plugin-testing-library": "^7.16.2",
 		"eslint-plugin-write-good-comments": "^0.2.0",
 		"globals": "^17.14.0",
+		"happy-dom": "^21.0.4",
 		"prettier": "3.10.1"
 	}
 }
