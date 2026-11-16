@@ -17,7 +17,9 @@ beforeAll(async () => {
 		},
 	}));
 
-	await import('./socket');
+	// A fresh copy: another test file may have loaded socket.js already, connected through a mock with no hooks to hear
+	// eslint-disable-next-line import/no-unresolved -- the query asks for a copy of its own
+	await import('./socket?hooks');
 });
 
 afterAll(() => GlobalRegistrator.unregister());

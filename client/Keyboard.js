@@ -4,6 +4,11 @@ import { keyDefinitions, layouts } from './constants';
 import { openSettings } from './settings';
 import socket from './socket';
 
+// The layout keys are a choice that stays chosen, so the one for the layout on screen is pressed. A shifted layout is
+// its keyboard's: on fullFakeShift it's Full keyboard
+const layoutKeys = ['media', 'basic', 'full', 'mouse', 'hide'];
+const layoutKeyFor = layout => layout.replace(/FakeShift$/, '');
+
 export default class Keyboard extends BaseKeyboard {
 	constructor(options = {}) {
 		super({
@@ -128,5 +133,17 @@ export default class Keyboard extends BaseKeyboard {
 			},
 			...options,
 		});
+	}
+
+	setLayout(name) {
+		super.setLayout(name);
+
+		const current = layoutKeyFor(this.options.layout);
+
+		layoutKeys.forEach(key =>
+			this.elem.querySelectorAll(`button.${key}`).forEach(({ _component: layoutKey }) => {
+				layoutKey.options.pressed = key === current;
+			}),
+		);
 	}
 }
