@@ -12,8 +12,8 @@ export const openSettings = () =>
 		header: 'Settings',
 		data: settings(),
 		inputs: [
-			{ key: 'cursorSpeed', type: 'number', step: 0.5, parse: parseFloat, validate: speed },
-			{ key: 'scrollSpeed', type: 'number', step: 0.5, parse: parseFloat, validate: speed },
+			{ key: 'cursorSpeed', type: 'number', step: 0.5, validate: speed },
+			{ key: 'scrollSpeed', type: 'number', step: 0.5, validate: speed },
 		],
 		onSave: ({ cursorSpeed, scrollSpeed }) => {
 			writeStorage('settings', { cursorSpeed, scrollSpeed });
