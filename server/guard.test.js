@@ -27,6 +27,15 @@ describe('foreignHost', () => {
 		expect(foreignHost(request({ host: 'evil.example:8793' }))).toBe(true);
 		expect((await router(request({ host: 'evil.example:8793' }))).status).toBe(421);
 	});
+
+	test('a name it is given, as a reverse proxy serves it under, is home', async () => {
+		expect(foreignHost(request({ host: 'Remote.Home' }), ['remote.home'])).toBe(false);
+		expect(foreignHost(request({ host: 'remote.home' }))).toBe(true);
+		expect(foreignHost(request({ host: 'evil.example' }), ['remote.home'])).toBe(true);
+		expect((await router(request({ host: 'remote.home' }), undefined, { names: ['remote.home'] })).status).not.toBe(
+			421,
+		);
+	});
 });
 
 describe('another site', () => {

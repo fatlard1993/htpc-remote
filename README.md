@@ -26,12 +26,13 @@ bun start
 bun run dev
 ```
 
-| Flag         | Alias | Default | Description                                                  |
-| ------------ | ----- | ------- | ------------------------------------------------------------ |
-| `--port`     | `-p`  | `8793`  | Server port                                                  |
-| `--simulate` | `-s`  |         | Log each mouse and keyboard command instead of performing it |
+| Flag | Alias | Default | Description |
+| --- | --- | --- | --- |
+| `--port` | `-p` | `8793` | Server port |
+| `--names` | `-n` |  | Other names the page answers to, comma-separated (a reverse proxy's, such as `remote.home`) |
+| `--simulate` | `-s` |  | Log each mouse and keyboard command instead of performing it |
 
-The page answers only when reached by an IP address, `localhost`, or this machine's own hostname (for a machine named `htpc`: `htpc`, `htpc.local`, `htpc.lan`).
+The page answers only when reached by an IP address, `localhost`, or this machine's own hostname (for a machine named `htpc`: `htpc`, `htpc.local`, `htpc.lan`), or a name given with `--names`.
 
 In development the server rebuilds the client when its files change and reloads open pages; type `b` (or `build`) in its terminal to rebuild by hand, or `stop` to end it.
 

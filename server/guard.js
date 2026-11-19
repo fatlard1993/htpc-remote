@@ -11,12 +11,15 @@ const hostOf = header => {
 	return host.split(':')[0];
 };
 
-// A name for this machine: an address, localhost, or its own hostname under any local suffix (htpc, htpc.local, htpc.lan).
+// A name for this machine: an address, localhost, its own hostname under any local suffix (htpc, htpc.local, htpc.lan),
+// or one of `names`, as a reverse proxy in front of it serves it under (remote.home).
 // A rebound DNS name (a site's own domain pointed at this address) is none of these.
-export const foreignHost = request => {
+export const foreignHost = (request, names = []) => {
 	const host = hostOf(request.headers.get('host'));
 
 	if (IPV4.test(host) || host.startsWith('[') || host === 'localhost') return false;
+
+	if (names.some(name => name.toLowerCase() === host)) return false;
 
 	return host.split('.')[0] !== machine;
 };
